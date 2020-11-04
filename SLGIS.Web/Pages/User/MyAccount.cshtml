@@ -1,0 +1,133 @@
+﻿@page
+@model SLGIS.Web.Pages.User.MyAccountModel
+@{
+    ViewBag.Title = "Thông tin tài khoản";
+    ViewBag.Breadcrumbs = "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
+    bool.TryParse(ViewData["IsUpdated"]?.ToString(), out bool isShowMessage);
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card mb-2 shadow-base">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    @if (isShowMessage)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <strong class="d-block d-sm-inline-block-force">Thông báo</strong> Cập nhật tài khoản thành công.
+                        </div>
+                    }
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.UserModel.Name)
+                        @Html.EditorFor(model => model.UserModel.Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.UserModel.Name, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.UserModel.Username)
+                        @Html.EditorFor(model => model.UserModel.Username, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.UserModel.Username, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <div class="ckbox ckbox-default">
+                            <label class="ckbox">
+                                @Html.CheckBoxFor(model => model.UserModel.IsChangePassword)
+                                <span>@Html.DisplayNameFor(model => model.UserModel.IsChangePassword)</span>
+                            </label>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.UserModel.IsChangePassword, "", new { @class = "text-danger" })
+                    </div>
+                    <div id="pwdBox" class="form-group">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.UserModel.OldPassword)
+                            @Html.PasswordFor(model => model.UserModel.OldPassword, new { @class = "form-control", rows = "5", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.UserModel.OldPassword, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.UserModel.NewPassword)
+                            @Html.PasswordFor(model => model.UserModel.NewPassword, new { @class = "form-control", rows = "5", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.UserModel.NewPassword, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.UserModel.ConfirmNewPassword)
+                            @Html.PasswordFor(model => model.UserModel.ConfirmNewPassword, new { @class = "form-control", rows = "5", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.UserModel.ConfirmNewPassword, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit" onclick="beforeSubmit();">Lưu</button>
+}
+
+@section Styles{
+    <link href="~/lib/jquery-toggles/toggles-full.css" rel="stylesheet" />
+    <style>
+        label[for=UserModel_IsLocked] {
+            float: left;
+            margin-top: 4px;
+        }
+
+        .toggle-wrapper {
+            float: left;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/lib/jquery-toggles/toggles.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var inputs = $("#pwdBox input");
+            inputs.val('123456');
+
+            setTimeout(function () {
+                $('input[readonly="readonly"]').removeAttr('readonly');
+
+                var isChangePwd = $("#UserModel_IsChangePassword").length > 0;
+                if (isChangePwd) {
+                    inputs.attr("readonly", "readonly");
+
+                    $("#UserModel_Username").attr("readonly", "readonly");
+                }
+            }, 1000);
+
+            $("#UserModel_IsChangePassword").click(function () {
+                var isChecked = $(this).is(":checked");
+                if (isChecked) {
+                    inputs.removeAttr("readonly");
+                    inputs.val('');
+                } else {
+                    inputs.attr("readonly", "readonly");
+                    inputs.val('123456');
+                }
+            });
+
+            // Toggles
+            var isLocked = $("#UserModel_IsLocked").val() === "True";
+            $('#IsLocked').toggles({
+                on: isLocked,
+                height: 26
+            });
+
+            $('#IsLocked').on('toggle', function (e, active) {
+                if (active) {
+                    $("#UserModel_IsLocked").val("True");
+                } else {
+                    $("#UserModel_IsLocked").val("False");
+                }
+            });
+        });
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

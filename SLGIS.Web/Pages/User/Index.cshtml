@@ -1,0 +1,97 @@
+﻿@page
+@model SLGIS.Web.Pages.User.IndexModel
+@{
+    ViewBag.Title = ViewBag.Breadcrumbs = "Danh sách thành viên";
+    ViewBag.Class = "fa fa-user";
+}
+
+@section Button {
+    <a href="@Url.Page("NewOrEdit")" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Get, new { role = "form", id = "frmSearch" }))
+{
+    <div class="row">
+        <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control" name="SearchText" placeholder="Tìm kiếm" value="@Model.FilterText">
+                <span class="input-group-btn" id="btnSearch">
+                    <button class="btn bd bg-white tx-gray-600" type="button"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row mt-2">
+    <div class="col-12">
+        <form method="post">
+            <div class="card shadow-base bd-0">
+                <div class="table-responsive">
+                    <table class="table mg-b-0" cellspacing="0">
+                        <tr>
+                            <th>STT</th>
+                            <th>
+                                Tài khoản
+                            </th>
+                            <th>
+                                Họ tên
+                            </th>
+                            <th>
+                                Trạng thái
+                            </th>
+                            <th>
+                                Ngày cập nhật
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @{
+                            var stt = 1;
+                            foreach (var item in Model.ViewModel.Items as IEnumerable<Core.User>)
+                            {
+                                <tr class="stat even">
+                                    <td class="ac">
+                                        @(stt++)
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="tx-14 tx-medium d-block">@item.UserName</a>
+                                    </td>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        @if (!item.IsLocked)
+                                        {
+                                            <span class="tx-11 d-block">
+                                                <span class="square-8 bg-success mg-r-5 rounded-circle"></span>
+                                                Đang hoạt động
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="tx-11 d-block">
+                                                <span class="square-8 bg-danger mg-r-5 rounded-circle"></span>
+                                                Đang bị khóa
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.Updated.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
+                                        <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">
+                                            Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+            <partial name="_PagerPartial" model="Model.ViewModel" />
+        </form>
+    </div>
+</div>

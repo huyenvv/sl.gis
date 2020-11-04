@@ -1,0 +1,42 @@
+﻿@page
+@model SLGIS.Web.Pages.Computer.NewOrEditModel
+
+@{
+    ViewBag.Title = Model.Computer.Id != Guid.Empty ? "Sửa lại" : "Tạo mới";
+    ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>Computer</a>" +
+                          "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
+
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card shadow-base mb-2">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Computer.Id)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Computer.Title)
+                        @Html.EditorFor(model => model.Computer.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Computer.Title, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Computer.IpAddress)
+                        @Html.EditorFor(model => model.Computer.IpAddress, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Computer.IpAddress, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Lưu</button>
+    <a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

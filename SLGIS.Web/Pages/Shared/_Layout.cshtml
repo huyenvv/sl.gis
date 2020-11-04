@@ -1,0 +1,206 @@
+﻿@using SLGIS.Core
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Core.User> SignInManager
+@{
+    ViewBag.HeadTitle = "GIS SƠN LA";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/png">
+    <title>@ViewBag.Title - @ViewBag.HeadTitle</title>
+
+    <!-- vendor css -->
+    <link href="@Url.Content("~/lib/font-awesome/css/font-awesome.css")" rel="stylesheet">
+    <link href="@Url.Content("~/lib/Ionicons/css/ionicons.css")" rel="stylesheet">
+    <link href="@Url.Content("~/lib/perfect-scrollbar/css/perfect-scrollbar.css")" rel="stylesheet">
+    <link href="@Url.Content("~/lib/jquery-switchbutton/jquery.switchButton.css")" rel="stylesheet">
+    <link href="@Url.Content("~/lib/rickshaw/rickshaw.min.css")" rel="stylesheet">
+
+    <!-- Bracket CSS -->
+    <link rel="stylesheet" href="@Url.Content("~/css/bracket.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/site.css")">
+
+    @RenderSection("Styles", false)
+</head>
+<body class="">
+    <!-- ########## START: LEFT PANEL ########## -->
+    <div class="br-logo">
+        <div class="text-center w-100">
+            <a href="@Url.Page("/Computer/Index")">
+                <img src="~/Images/logo.png" alt="@ViewBag.HeadTitle" class="logo-image">
+            </a>
+        </div>
+    </div>
+    <div class="br-sideleft overflow-y-auto">
+        <label class="sidebar-label pd-x-15 mg-t-20">Navigation</label>
+        <div class="br-sideleft-menu" id="LeftMenu">
+            <a asp-page="/Computer/Index" data-href="Index/Computer/NewOrEdit/" class="br-menu-link">
+                <div class="br-menu-item">
+                    <i class="menu-item-icon icon ion-ios-monitor-outline tx-22"></i>
+                    <span class="menu-item-label">Máy tính</span>
+                </div>
+            </a>
+            @if (User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.SupperAdmin))
+            {
+                <a asp-page="/User/Index" data-href="Index/User/NewOrEdit/" class="br-menu-link">
+                    <div class="br-menu-item">
+                        <i class="menu-item-icon icon ion-ios-person-outline tx-22"></i>
+                        <span class="menu-item-label">Thành viên</span>
+                    </div>
+                </a>
+            }
+            <a asp-page="/Contact/Index" data-href="Index/Contact/NewOrEdit/" class="br-menu-link">
+                <div class="br-menu-item">
+                    <i class="menu-item-icon icon ion-ios-chatboxes-outline tx-22"></i>
+                    <span class="menu-item-label">Contact</span>
+                </div>
+            </a>
+        </div><!-- br-sideleft-menu -->
+    </div><!-- info-lst -->
+    <!-- ########## END: LEFT PANEL ########## -->
+    <!-- ########## START: HEAD PANEL ########## -->
+    <div class="br-header">
+        <div class="br-header-left">
+            <div class="navicon-left hidden-md-down"><a id="btnLeftMenu" href=""><i class="icon ion-navicon-round"></i></a></div>
+            <div class="navicon-left hidden-lg-up"><a id="btnLeftMenuMobile" href=""><i class="icon ion-navicon-round"></i></a></div>
+        </div><!-- br-header-left -->
+        <div class="br-header-right">
+            <nav class="nav">
+                <div class="dropdown">
+                    <partial name="_LoginPartial" />
+                </div><!-- dropdown -->
+            </nav>
+        </div><!-- br-header-right -->
+    </div><!-- br-header -->
+    <!-- ########## END: HEAD PANEL ########## -->
+    <!-- ########## START: MAIN PANEL ########## -->
+    <div class="br-mainpanel">
+        <div class="br-pageheader pd-y-15 pd-l-20">
+            <nav class="breadcrumb pd-0 mg-0 tx-12">
+                @Html.Raw(ViewBag.Breadcrumbs)
+            </nav>
+        </div>
+
+        <div class="pd-x-30 pd-t-30">
+            @RenderSection("Button", required: false)
+            <h4 class="tx-gray-800 mg-b-5 panel-title">@ViewBag.Title</h4>
+        </div>
+        <div class="br-pagebody mg-t-5 pd-x-30">
+            @RenderBody()
+        </div><!-- br-pagebody -->
+        <footer class="br-footer">
+            <div class="footer-left">
+                <div class="mg-b-2">Copyright &copy; 2020. @ViewBag.HeadTitle. All Rights Reserved.</div>
+            </div>
+            <div class="footer-right d-flex align-items-center">
+                <span class="tx-uppercase mg-r-10">Share:</span>
+                <a target="_blank" class="pd-x-5" href="https://www.facebook.com/"><i class="fa fa-facebook tx-20"></i></a>
+                <a target="_blank" class="pd-x-5" href="https://twitter.com/"><i class="fa fa-twitter tx-20"></i></a>
+            </div>
+        </footer>
+    </div><!-- br-mainpanel -->
+    <!-- ########## END: MAIN PANEL ########## -->
+    <!-- Modal Default -->
+    <div class="modal fade" id="modalDefault" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    </div>
+
+    <script>
+        var iclassic = {
+            currentLink: "@ViewContext.RouteData.Values["page"]"
+        };
+    </script>
+
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/popper.js/popper.js"></script>
+    <script src="~/lib/bootstrap/bootstrap.js"></script>
+    <script src="~/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
+    <script src="~/lib/moment/moment.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.js"></script>
+    <script src="~/lib/jquery-switchbutton/jquery.switchButton.js"></script>
+    <script src="~/lib/peity/jquery.peity.js"></script>
+    <script src="~/lib/chartist/chartist.js"></script>
+    <script src="~/lib/jquery.sparkline.bower/jquery.sparkline.min.js"></script>
+    <script src="~/lib/d3/d3.js"></script>
+    <script src="~/lib/rickshaw/rickshaw.min.js"></script>
+
+    <script src="~/js/bracket.js"></script>
+    <script src="~/js/ResizeSensor.js"></script>
+    <script src="~/js/site.js"></script>
+    <script>
+        $(function () {
+            'use strict'
+
+            // FOR DEMO ONLY
+            // menu collapsed by default during first page load or refresh with screen
+            // having a size between 992px and 1299px. This is intended on this page only
+            // for better viewing of widgets demo.
+            $(window).resize(function () {
+                minimizeMenu();
+            });
+
+            minimizeMenu();
+
+            function minimizeMenu() {
+                if (window.matchMedia('(min-width: 992px)').matches && window.matchMedia('(max-width: 1299px)').matches) {
+                    // show only the icons and hide left menu label by default
+                    $('.menu-item-label,.menu-item-arrow').addClass('op-lg-0-force d-lg-none');
+                    $('body').addClass('collapsed-menu');
+                    $('.show-sub + .br-menu-sub').slideUp();
+                } else if (window.matchMedia('(min-width: 1300px)').matches && !$('body').hasClass('collapsed-menu')) {
+                    $('.menu-item-label,.menu-item-arrow').removeClass('op-lg-0-force d-lg-none');
+                    $('body').removeClass('collapsed-menu');
+                    $('.show-sub + .br-menu-sub').slideDown();
+                }
+            }
+        });
+    </script>
+
+    <script>
+        function alertSuccess(mess) {
+            jQuery.gritter.add({
+                position: 'center',
+                title: 'Thông báo',
+                text: mess,
+                class_name: 'growl-success',
+                image: '/images/screen.png',
+                sticky: false,
+                time: '10000'
+            });
+        }
+        function alertError(mess) {
+            jQuery.gritter.add({
+                title: 'Thông báo lỗi',
+                text: mess,
+                class_name: 'growl-danger',
+                image: '/images/screen.png',
+                sticky: false,
+                time: '10000'
+            });
+        }
+
+        function cfmDelete() {
+            var isConfirm = confirm("Bạn có chắc chắn muốn xóa bản ghi này?");
+            return isConfirm;
+        }
+
+        jQuery(document).ready(function () {
+            "use strict";
+
+            $(".btnConfirm").click(function () {
+                return cfmDelete();
+            });
+
+            $("#btnSearch").click(function () {
+                $("#frmSearch").submit();
+            });
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
