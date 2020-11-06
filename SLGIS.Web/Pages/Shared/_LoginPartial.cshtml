@@ -1,27 +1,40 @@
 ﻿@using SLGIS.Core
-@inject IUserRepository userRepository
-@{
-    var currentUser = userRepository.GetCurrentUser(User).GetAwaiter().GetResult();
-}
-<div class="show-reg-form d-none hidden">
-    <form asp-area="" asp-page="/Index" asp-page-handler="Logout" method="post" id="logoutForm" class="navbar-right">
-        <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out @currentUser.Name</button>
-    </form>
-</div>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
-<a href="#" class="nav-link nav-link-profile" data-toggle="dropdown">
-    <span class="logged-name hidden-md-down">@currentUser.Name</span>
-    <img src="~/images/user.png" class="wd-32 rounded-circle" alt="">
-</a>
-<div class="dropdown-menu dropdown-menu-header wd-200">
-    <ul class="list-unstyled user-profile-nav">
-        <li>
-            <a href="@Url.Page("/User/MyAccount")">
-                <i class="icon ion-ios-person"></i> Thông tin tài khoản
-            </a>
-        </li>
-        <li>
-            <a href="#" onclick="$('#logoutForm').submit()"><i class="icon ion-power"></i> Đăng xuất</a>
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="show-reg-form d-none hidden">
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+              asp-route-returnUrl="@Url.Page("/", new { area = "" })"
+              method="post" id="logoutForm">
+            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+        </form>
+    </div>
+
+    <a href="#" class="nav-link nav-link-profile" data-toggle="dropdown">
+        <span class="logged-name hidden-md-down">@User.Identity.Name!</span>
+        <img src="~/images/user.png" class="wd-32 rounded-circle" alt="">
+    </a>
+    <div class="dropdown-menu dropdown-menu-header wd-200">
+        <ul class="list-unstyled user-profile-nav">
+            <li>
+                <a href="@Url.Page("/User/MyAccount")">
+                    <i class="icon ion-ios-person"></i> Thông tin tài khoản
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="$('#logoutForm').submit()"><i class="icon ion-power"></i> Đăng xuất</a>
+            </li>
+        </ul>
+    </div><!-- dropdown-menu -->
+}
+else
+{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
         </li>
     </ul>
-</div><!-- dropdown-menu -->
+}

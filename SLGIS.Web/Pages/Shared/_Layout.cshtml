@@ -32,11 +32,15 @@
     <!-- ########## START: LEFT PANEL ########## -->
     <div class="br-logo">
         <div class="text-center w-100">
-            <a href="@Url.Page("/Computer/Index")">
-                <img src="~/Images/logo.png" alt="@ViewBag.HeadTitle" class="logo-image">
+            <a href="/">
+                @*<img src="~/Images/logo.png" alt="@ViewBag.HeadTitle" class="logo-image">*@
+                <span>[</span>GIS<span>]</span>
+            </a>
             </a>
         </div>
     </div>
+
+
     <div class="br-sideleft overflow-y-auto">
         <label class="sidebar-label pd-x-15 mg-t-20">Navigation</label>
         <div class="br-sideleft-menu" id="LeftMenu">
@@ -44,6 +48,18 @@
                 <div class="br-menu-item">
                     <i class="menu-item-icon icon ion-ios-monitor-outline tx-22"></i>
                     <span class="menu-item-label">Máy tính</span>
+                </div>
+            </a>
+            <a asp-page="/Computer/Index" data-href="" class="br-menu-link">
+                <div class="br-menu-item">
+                    <i class="menu-item-icon icon ion-ios-navigate-outline tx-24"></i>
+                    <span class="menu-item-label">Map</span>
+                </div>
+            </a>
+            <a asp-page="/Computer/Index" data-href="" class="br-menu-link">
+                <div class="br-menu-item">
+                    <i class="menu-item-icon ion-ios-pie-outline tx-20"></i>
+                    <span class="menu-item-label">Báo cáo</span>
                 </div>
             </a>
             @if (User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.SupperAdmin))

@@ -11,12 +11,11 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddImplementation(this IServiceCollection services, IConfiguration configuration)
         {
             return services
-                    .AddMongoSigleton(configuration)
                     .AddSingleton<IUserRepository, UserRepository>()
                     .AddSingleton<IComputerRepository, ComputerRepository>();
         }
 
-        private static IServiceCollection AddMongoSigleton(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddMongoSigleton(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 

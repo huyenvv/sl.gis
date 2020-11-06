@@ -48,9 +48,19 @@ namespace SLGIS.Web
 
             services.AddImplementation(Configuration);
 
+            services.AddAuthentication().AddGoogle(options =>
+             {
+                 IConfigurationSection googleAuthNSection =
+                     Configuration.GetSection("Authentication:Google");
+
+                 options.ClientId = googleAuthNSection["ClientId"];
+                 options.ClientSecret = googleAuthNSection["ClientSecret"];
+             });
+
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/User/Login";
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
@@ -84,6 +94,7 @@ namespace SLGIS.Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

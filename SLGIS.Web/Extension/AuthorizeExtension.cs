@@ -12,7 +12,6 @@ namespace SLGIS.Web
             {
                 options.Conventions.AuthorizeFolder("/Computer");
                 options.Conventions.AuthorizeFolder("/User");
-                options.Conventions.AllowAnonymousToPage("/User/Login");
             });
         }
     }

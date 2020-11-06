@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace SLGIS.Web
 {
@@ -16,7 +17,7 @@ namespace SLGIS.Web
 
             return new UserModel
             {
-                Id = user.Id,
+                Id = user.Id.ToString(),
                 Username = user.UserName,
                 Name = user.Name,
                 IsLocked = user.IsLocked
@@ -37,7 +38,7 @@ namespace SLGIS.Web
         public static Task<User> GetCurrentUser(this IUserRepository userRepository, ClaimsPrincipal user)
         {
             var userId = user?.FindFirstValue(ClaimTypes.NameIdentifier);
-            return userRepository.GetAsync(m => m.Id == userId);
+            return userRepository.GetAsync(m => m.Id == new ObjectId(userId));
         }
 
         public static async Task InitUserAndRoles(this IServiceProvider serviceProvider)

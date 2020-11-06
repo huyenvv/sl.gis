@@ -1,9 +1,10 @@
 ﻿@page
-@model SLGIS.Web.Pages.User.LoginModel
+@model LoginModel
 @{
     ViewBag.HeadTitle = "SLGIS";
     ViewData["Title"] = "Đăng nhập";
     Layout = null;
+    var externalLoginClasses = new Dictionary<string, string>() { {"Google", "btn-danger"}, { "Facebook", "btn-primary" } };
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -38,17 +39,31 @@
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <input asp-for="LoginInfoModel.Username" class="form-control" placeholder="Username" />
-                        <span asp-validation-for="LoginInfoModel.Username" class="text-danger"></span>
+                        <input asp-for="Input.Email" class="form-control" placeholder="Username" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
 
-                        <input asp-for="LoginInfoModel.Password" class="form-control" placeholder="Password" />
-                        <span asp-validation-for="LoginInfoModel.Password" class="text-danger"></span>
+                        <input asp-for="Input.Password" class="form-control" placeholder="Password" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
 
                         <button asp-page-handler="LogIn" class="btn btn-success btn-block">Đăng nhập</button>
-                    </form>
-                </div><!-- col-sm-5 -->
 
+                    </form>
+
+                    @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                    {
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                            <div>
+                                @foreach (var provider in Model.ExternalLogins)
+                                {
+                                    externalLoginClasses.TryGetValue(provider.Name, out var className);
+                                    <button type="submit" class="btn @className btn-block" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">Đăng nhập @provider.DisplayName</button>
+                                }
+                            </div>
+                        </form>
+                    }
+                </div><!-- col-sm-5 -->
             </div><!-- row -->
+
             <div class="signup-footer">
                 <div class="pull-left">
                     &copy; 2020. @ViewBag.HeadTitle

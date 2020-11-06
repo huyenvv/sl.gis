@@ -28,7 +28,7 @@ namespace SLGIS.Implementation
 
         public Task<User> GetById(string id)
         {
-            return _collection.Find(Builders<User>.Filter.Eq(m => m.Id, id)).FirstOrDefaultAsync();
+            return _collection.Find(Builders<User>.Filter.Eq(m => m.Id + "", id)).FirstOrDefaultAsync();
         }
 
         public override async Task<User> UpdateAsync(User model)
