@@ -1,0 +1,50 @@
+﻿@page
+@model SLGIS.Web.Pages.Map.IndexModel
+@{
+    ViewBag.Title = ViewBag.Breadcrumbs = "Map";
+}
+
+@section Button {
+    <a href="@Url.Page("NewOrEdit")" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
+}
+@section Styles {
+    <style type="text/css">
+      #map {
+        height: 600px;
+        width: 100%;
+      }
+    </style>
+}
+
+<div class="row mt-2">
+    <div class="col-12">
+        <h3>My Google Maps Demo</h3>
+        <div id="map"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArJ_vy6q2hPSpB3Z3PUMUSLTPUPd0ZzRM&callback=initMap&libraries=&v=weekly"
+      defer
+    ></script>
+
+    <script>
+      // Initialize and add the map
+      function initMap() {
+        // The location of Hanoi
+        const hanoi = { lat: 21.026613, lng: 105.833889 };
+
+        // The map, centered at hanoi
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 8,
+          center: hanoi,
+        });
+        // The marker, positioned at Uluru
+        const marker = new google.maps.Marker({
+          position: hanoi,
+          map: map,
+        });
+      }
+    </script>
+}
