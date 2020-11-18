@@ -12,7 +12,9 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             return services
                     .AddSingleton<IUserRepository, UserRepository>()
-                    .AddSingleton<IComputerRepository, ComputerRepository>();
+                    .AddSingleton<IComputerRepository, ComputerRepository>()
+                    .AddSingleton<IItemRepository, ItemRepository>()
+                    .AddSingleton<IFileService, FileService>();
         }
 
         public static IServiceCollection AddMongoSigleton(this IServiceCollection services, IConfiguration configuration)

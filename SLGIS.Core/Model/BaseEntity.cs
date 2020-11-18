@@ -7,7 +7,7 @@ namespace SLGIS.Core
 {
     public class BaseEntity
     {
-        [BsonId(IdGenerator = typeof(CombGuidGenerator))]        
+        [BsonId(IdGenerator = typeof(CombGuidGenerator))]
         public Guid Id { get; set; }
 
         [JsonIgnore]

@@ -50,3 +50,56 @@
     .custom-file-control::before {
         top: calc(50% - 20px);
     }
+
+#file-manager ul {
+    border-left: 1px dotted;
+    list-style: none;
+    padding-left: 17px;
+}
+
+    #file-manager ul li i {
+        width: 13px;
+    }
+
+    #file-manager ul li a {
+        display: none;
+    }
+
+    #file-manager ul li p a {
+        display: inline-block;
+    }
+
+    #file-manager li:hover > span > span > a {
+        display: inline-block;
+    }
+
+    #file-manager ul li a:hover {
+        text-decoration: underline;
+    }
+
+#file-manager > ul {
+    border-left: none;
+    padding-left: 10px;
+}
+
+#file-manager p {
+    margin-bottom: 0px;
+    padding-left: 18px;
+}
+
+#file-manager > p {
+    margin-bottom: 5px;
+    padding-left: 10px;
+}
+
+#file-manager .pointer {
+    cursor: pointer;
+}
+
+#file-manager form {
+    display: inline-block;
+}
+
+    #file-manager form input {
+        border: none;
+    }
