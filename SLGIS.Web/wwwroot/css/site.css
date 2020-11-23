@@ -61,21 +61,21 @@
         width: 13px;
     }
 
-    #file-manager ul li a {
-        display: none;
-    }
+        #file-manager ul li i.fa-times {
+            display: none;
+        }
 
     #file-manager ul li p a {
         display: inline-block;
     }
 
-    #file-manager li:hover > span > span > a {
-        display: inline-block;
-    }
+#file-manager li:hover > span > i.fa-times {
+    display: inline-block;
+}
 
-    #file-manager ul li a:hover {
-        text-decoration: underline;
-    }
+#file-manager ul li a:hover {
+    text-decoration: underline;
+}
 
 #file-manager > ul {
     border-left: none;

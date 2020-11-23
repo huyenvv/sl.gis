@@ -89,7 +89,11 @@ var Item = function (_React$Component2) {
                 "span",
                 { className: "text-secondary pointer" },
                 React.createElement("i", { className: item.isPrivate ? "fa fa-file text-danger  mr-1" : "fa fa-file mr-1" }),
-                item.title,
+                React.createElement(
+                    "a",
+                    { href: "/api/fileManager/" + item.id + "/Download", target: "_blank" },
+                    item.title
+                ),
                 React.createElement(
                     "span",
                     { className: "ml-4" },
@@ -128,6 +132,9 @@ var Item = function (_React$Component2) {
                 React.createElement("i", { className: "text-warning fa fa-folder mr-1" }),
                 React.createElement(NameForm, { name: item.title, onSave: function onSave(name) {
                         return _this5.rename(name);
+                    } }),
+                React.createElement("i", { className: "text-danger fa fa-times", onClick: function onClick() {
+                        return _this5.delete();
                     } }),
                 this.state.expand ? React.createElement(ItemList, { id: item.id }) : ""
             );
@@ -241,6 +248,11 @@ var ItemList = function (_React$Component3) {
             };
 
             fetch("/api/fileManager/" + item.id, requestOptions).then(function (result) {
+                if (result.status === 400) {
+                    alert("Không thể xóa folder đang chứa file hoặc folder!");
+                    return;
+                }
+
                 var items = _this10.state.folders.filter(function (m) {
                     return m.id !== item.id;
                 });

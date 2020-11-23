@@ -51,7 +51,7 @@ class Item extends React.Component {
         return (
             <span className="text-secondary pointer">
                 <i className={item.isPrivate ? "fa fa-file text-danger  mr-1" : "fa fa-file mr-1"}></i>
-                {item.title}
+                <a href={"/api/fileManager/" + item.id + "/Download"} target="_blank">{item.title}</a>
                 <span className="ml-4">
                     <a className="ml-2 text-primary" onClick={() => this.props.toggleShare()}>{item.isPrivate ? "Unshare" : "Share"}</a>
                     <a className="ml-2 text-danger" onClick={() => this.delete()}>Xóa</a>
@@ -67,7 +67,7 @@ class Item extends React.Component {
                 <i className="text-warning fa fa-folder mr-1"></i>
 
                 <NameForm name={item.title} onSave={(name) => this.rename(name)} />
-
+                <i className="text-danger fa fa-times" onClick={() => this.delete()}></i>
                 {this.state.expand ? <ItemList id={item.id} /> : ""}
             </span>
         )
@@ -156,6 +156,11 @@ class ItemList extends React.Component {
 
         fetch(`/api/fileManager/${item.id}`, requestOptions)
             .then((result) => {
+                if (result.status === 400) {
+                    alert("Không thể xóa folder đang chứa file hoặc folder!");
+                    return;
+                }
+
                 const items = this.state.folders.filter(m => m.id !== item.id);
                 this.setState({
                     folders: items

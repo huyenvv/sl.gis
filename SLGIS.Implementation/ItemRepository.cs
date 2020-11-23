@@ -24,6 +24,7 @@ namespace SLGIS.Implementation
                 ParentId = parentId,
                 IsFolder = true,
                 UpdatedBy = createdBy,
+                IsPrivate = false,
             };
 
             return AddAsync(item);
@@ -33,12 +34,12 @@ namespace SLGIS.Implementation
         {
             if (parentId.HasValue)
             {
-                return Find(m => m.ParentId == parentId && (m.UpdatedBy == username || !m.IsPrivate))
+                return Find(m => m.ParentId == parentId && (m.UpdatedBy == username || m.IsFolder || !m.IsPrivate))
                     .OrderByDescending(m => m.IsFolder);
             }
             else
             {
-                return Find(m => !m.ParentId.HasValue && (m.UpdatedBy == username || !m.IsPrivate))
+                return Find(m => !m.ParentId.HasValue && (m.UpdatedBy == username || m.IsFolder || !m.IsPrivate))
                     .OrderByDescending(m => m.IsFolder);
             }
         }
@@ -81,15 +82,20 @@ namespace SLGIS.Implementation
             return result;
         }
 
-        public override Task DeleteAsync(Guid id)
+        public override async Task DeleteAsync(Guid id)
         {
             var item = Get(id);
             if (!item.IsFolder)
             {
-                _fileService.DeleteAsync(item.FullPath);
+                _ = _fileService.DeleteAsync(item.FullPath);
             }
-            
-            return base.DeleteAsync(id);
+
+            if (item.IsFolder && Find(m => m.ParentId == id).Any())
+            {
+                throw new InvalidOperationException("Can not delete folder that has some folders or files");
+            }
+
+            await base.DeleteAsync(id);
         }
     }
 }

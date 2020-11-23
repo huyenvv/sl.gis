@@ -1,23 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SLGIS.Core;
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Threading.Tasks;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 namespace SLGIS.Web.API
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Constant.Role.SupperAdmin + "," + Constant.Role.Admin)]
     public class FileManagerController : ControllerBase
     {
         private readonly IItemRepository _itemRepository;
-        public FileManagerController(IItemRepository itemRepository)
+        private readonly IFileService _fileService;
+        public FileManagerController(IItemRepository itemRepository, IFileService fileService)
         {
             _itemRepository = itemRepository;
+            _fileService = fileService;
         }
 
         [HttpGet("{id?}")]
@@ -27,10 +30,33 @@ namespace SLGIS.Web.API
         }
 
         [HttpDelete("{id:Guid}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            _itemRepository.DeleteAsync(id);
-            return Ok();
+            try
+            {
+                await _itemRepository.DeleteAsync(id);
+                return Ok();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{id:Guid}/download")]
+        public async Task<IActionResult> Download(Guid id)
+        {
+            var item = await _itemRepository.GetAsync(id);
+            if (item == null || item.IsFolder || item.IsPrivate && item.CreatedBy != User.Identity.Name)
+            {
+                return BadRequest();
+            }
+
+            if (!System.IO.File.Exists(item.FullPath))
+                return Content("filename not present");
+
+            var memory = await _fileService.GetAsync(item.FullPath);
+            return File(memory, Common.GetContentType(item.FullPath), Path.GetFileName(item.FullPath));
         }
 
         [HttpPost("{id:Guid}/toggleShare")]
