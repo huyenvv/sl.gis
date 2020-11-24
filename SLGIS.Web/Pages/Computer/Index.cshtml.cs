@@ -14,9 +14,9 @@ namespace SLGIS.Web.Pages.Computer
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IComputerRepository _computerRepository;
+        private readonly IFactoryRepository _computerRepository;
 
-        public IndexModel(ILogger<IndexModel> logger, IComputerRepository computerRepository)
+        public IndexModel(ILogger<IndexModel> logger, IFactoryRepository computerRepository)
         {
             _logger = logger;
             _computerRepository = computerRepository;
@@ -27,23 +27,23 @@ namespace SLGIS.Web.Pages.Computer
 
         public void OnGet(string searchText = null, int? pageIndex = 1)
         {
-            FilterText = searchText;
-            Expression<Func<Core.Computer, bool>> predicate = m => m.UpdatedBy == User.Identity.Name;
-            if (!string.IsNullOrEmpty(FilterText))
-            {
-                predicate = m => m.Title.ToLower().Contains(FilterText.ToLower()) || m.IpAddress.ToLower().Contains(FilterText.ToLower());
-            }
+            //FilterText = searchText;
+            //Expression<Func<Core.Factory, bool>> predicate = m => m.UpdatedBy == User.Identity.Name;
+            //if (!string.IsNullOrEmpty(FilterText))
+            //{
+            //    predicate = m => m.Title.ToLower().Contains(FilterText.ToLower()) || m.IpAddress.ToLower().Contains(FilterText.ToLower());
+            //}
 
-            var computers = _computerRepository.Find(predicate).OrderByDescending(m => m.Created).AsEnumerable();
+            //var computers = _computerRepository.Find(predicate).OrderByDescending(m => m.Created).AsEnumerable();
 
-            var pager = new Pager(computers.Count(), pageIndex);
+            //var pager = new Pager(computers.Count(), pageIndex);
 
-            ViewModel = new PagerViewModel
-            {
-                BaseUrl = Url.Page("/Computer/Index"),
-                Items = computers.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
-                Pager = pager
-            };
+            //ViewModel = new PagerViewModel
+            //{
+            //    BaseUrl = Url.Page("/Computer/Index"),
+            //    Items = computers.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
+            //    Pager = pager
+            //};
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(Guid id)

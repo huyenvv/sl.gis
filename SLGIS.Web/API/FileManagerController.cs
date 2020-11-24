@@ -15,16 +15,16 @@ namespace SLGIS.Web.API
     [Authorize(Roles = Constant.Role.SupperAdmin + "," + Constant.Role.Admin)]
     public class FileManagerController : ControllerBase
     {
-        private readonly IItemRepository _itemRepository;
+        private readonly IFileFolderItemRepository _itemRepository;
         private readonly IFileService _fileService;
-        public FileManagerController(IItemRepository itemRepository, IFileService fileService)
+        public FileManagerController(IFileFolderItemRepository itemRepository, IFileService fileService)
         {
             _itemRepository = itemRepository;
             _fileService = fileService;
         }
 
         [HttpGet("{id?}")]
-        public IEnumerable<Item> Index(Guid? id = null)
+        public IEnumerable<FileFolderItem> Index(Guid? id = null)
         {
             return _itemRepository.FindBy(id, User.Identity.Name);
         }

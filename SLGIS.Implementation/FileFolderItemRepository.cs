@@ -8,17 +8,17 @@ using System.Linq;
 
 namespace SLGIS.Implementation
 {
-    public class ItemRepository : BaseRepository<Item>, IItemRepository
+    public class FileFolderItemRepository : BaseRepository<FileFolderItem>, IFileFolderItemRepository
     {
         private readonly IFileService _fileService;
-        public ItemRepository(IMongoDatabase db, IFileService fileService) : base(db)
+        public FileFolderItemRepository(IMongoDatabase db, IFileService fileService) : base(db)
         {
             _fileService = fileService;
         }
 
-        public Task<Item> CreateNewForlder(Guid? parentId, string createdBy, string folderName = "New Folder")
+        public Task<FileFolderItem> CreateNewForlder(Guid? parentId, string createdBy, string folderName = "New Folder")
         {
-            var item = new Item
+            var item = new FileFolderItem
             {
                 Title = "New Folder",
                 ParentId = parentId,
@@ -30,7 +30,7 @@ namespace SLGIS.Implementation
             return AddAsync(item);
         }
 
-        public IEnumerable<Item> FindBy(Guid? parentId, string username)
+        public IEnumerable<FileFolderItem> FindBy(Guid? parentId, string username)
         {
             if (parentId.HasValue)
             {
@@ -58,13 +58,13 @@ namespace SLGIS.Implementation
             await UpdateAsync(item);
         }
 
-        public async Task<IEnumerable<Item>> UploadFile(Guid? parentId, string createdBy, IEnumerable<IFormFile> files)
+        public async Task<IEnumerable<FileFolderItem>> UploadFile(Guid? parentId, string createdBy, IEnumerable<IFormFile> files)
         {
-            var result = new List<Item>();
+            var result = new List<FileFolderItem>();
             foreach (var file in files)
             {
                 var filePath = await _fileService.UpsertAsync(await file.GetBytes(), file.FileName, null, true);
-                var item = new Item
+                var item = new FileFolderItem
                 {
                     Title = file.FileName,
                     ParentId = parentId,

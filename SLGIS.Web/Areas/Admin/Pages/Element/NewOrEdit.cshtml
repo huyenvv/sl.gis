@@ -1,0 +1,46 @@
+﻿@page
+@model SLGIS.Web.Areas.Admin.Pages.Element.NewOrEditModel
+@{
+    ViewBag.Title = Model.Element.Id != Guid.Empty ? "Sửa lại" : "Tạo mới";
+    ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>Element</a>" +
+                          "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
+
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card shadow-base mb-2">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Element.Id)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Element.Title)
+                        @Html.EditorFor(model => model.Element.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Element.Title, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Element.Code)
+                        @Html.EditorFor(model => model.Element.Code, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Element.Code, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Element.Unit)
+                        @Html.EditorFor(model => model.Element.Unit, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Element.Unit, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Lưu</button>
+    <a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

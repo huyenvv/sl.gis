@@ -1,5 +1,5 @@
-﻿@*@page
-@model SLGIS.Web.Pages.Computer.IndexModel
+﻿@page
+@model SLGIS.Web.Pages.PostData.IndexModel
 @{
     ViewBag.Title = ViewBag.Breadcrumbs = "Danh sách cấu hình";
 }
@@ -31,39 +31,27 @@
                         <tr>
                             <th>STT</th>
                             <th>
-                                Tiêu đề
+                                Thời gian
                             </th>
                             <th>
-                                Địa chỉ IP
-                            </th>
-                            <th>
-                                User cập nhật
-                            </th>
-                            <th>
-                                Ngày cập nhật
+                                Dữ liệu
                             </th>
                             <th></th>
                         </tr>
 
                         @{
                             var stt = 1;
-                            foreach (var item in Model.ViewModel.Items as IEnumerable<Core.Computer>)
+                            foreach (var item in Model.ViewModel.Items as IEnumerable<Core.PostData>)
                             {
                                 <tr class="stat even">
                                     <td class="ac">
                                         @(stt++)
                                     </td>
                                     <td>
-                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })">@item.Title</a>
+                                        @item.Created.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
                                     </td>
                                     <td>
-                                        @item.IpAddress
-                                    </td>
-                                    <td>
-                                        @item.UpdatedBy
-                                    </td>
-                                    <td>
-                                        @item.Updated.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
+                                        <ul></ul>
                                     </td>
                                     <td>
                                         <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
@@ -80,4 +68,4 @@
             <partial name="_PagerPartial" model="Model.ViewModel" />
         </form>
     </div>
-</div>*@
+</div>
