@@ -1,44 +1,56 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SLGIS.Core;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace SLGIS.Web.Pages.PostData
 {
-    [Authorize(Constant.Role.Member)]
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IPostDataRepository _postDataRepository;
         private readonly IFactoryRepository _factoryRepository;
+        private readonly IElementRepository _elementRepository;
 
-        public IndexModel(ILogger<IndexModel> logger, IPostDataRepository postDataRepository, IFactoryRepository factoryRepository)
+        public IndexModel(ILogger<IndexModel> logger, IPostDataRepository postDataRepository, IFactoryRepository factoryRepository, IElementRepository elementRepository)
         {
             _logger = logger;
             _postDataRepository = postDataRepository;
             _factoryRepository = factoryRepository;
+            _elementRepository = elementRepository;
         }
 
         public string FilterText { get; set; }
         public PagerViewModel ViewModel { get; set; }
+        public List<Element> Elements { get; set; }
+        public Guid? FactoryId  { get; set; }
 
-        public async Task<IActionResult> OnGet(Guid? factoryId, DateTime? startDate, DateTime? endDate, int? pageIndex = 1)
+        public IActionResult OnGet(Guid? factoryId, DateTime? startDate, DateTime? endDate, int? pageIndex = 1)
         {
-            var factories = await _factoryRepository.Find(m => m.Owner == User.Identity.Name).ToListAsync();
+            var factories = _factoryRepository.Find(m => true).ToList();
+            if (User.IsInRole(Constant.Role.Member))
+            {
+                factories = factories.Where(m => m.Owner == User.Identity.Name).ToList();
+            }
+
             if (factories.Count == 0 || factoryId.HasValue && !factories.Any(m => m.Id == factoryId))
             {
                 return NotFound();
             }
 
-            factoryId ??= factories.First().Id;
+            ViewData["FactoryId"] = new SelectList(factories, "Id", "Title");
+            FactoryId = factoryId ?? factories.First().Id;
 
-            Expression<Func<Core.PostData, bool>> predicate = m => m.FactoryId == factoryId;
+            Expression<Func<Core.PostData, bool>> predicate = m => m.FactoryId == FactoryId;
             if (startDate.HasValue)
             {
                 predicate = m => m.Created >= startDate;
@@ -59,6 +71,7 @@ namespace SLGIS.Web.Pages.PostData
                 Pager = pager
             };
 
+            Elements = _elementRepository.Find(m => true).OrderBy(m => m.Id).ToList();
             return Page();
         }
 
