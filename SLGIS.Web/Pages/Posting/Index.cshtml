@@ -4,22 +4,12 @@
     ViewBag.Title = ViewBag.Breadcrumbs = "Dữ liệu vận hành";
 }
 
-@section Button {
-    <a href="@Url.Page("NewOrEdit")" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
+@section Factory {
+    <partial name="_FactorySelectPartial" />
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Get, new { role = "form", id = "frmSearch" }))
-{
-    <div class="row">
-        <div class="col-md-3">
-            <div class="input-group">
-                <select asp-for="FactoryId" class="form-control" asp-items="ViewBag.FactoryId"></select>
-                <span class="input-group-btn" id="btnSearch">
-                    <button class="btn bd bg-white tx-gray-600" type="button"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-        </div>
-    </div>
+@section Button {
+    <a href="@Url.Page("NewOrEdit", new { FactoryId = ViewData["FactoryId"] })" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
 }
 
 <div class="row mt-2">

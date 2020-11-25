@@ -46,7 +46,7 @@
         <span class="menu-item-label">Element</span>
     </div>
 </a>
-<a asp-area="" asp-page="/Posting/Index" data-href="Index/Posting/NewOrEdit/" class="br-menu-link">
+<a asp-area="" asp-page="/Posting/Index" asp-route-FactoryId="@ViewData["FactoryId"]" data-href="Posting/Index/Posting/NewOrEdit/" class="br-menu-link">
     <div class="br-menu-item">
         <i class="menu-item-icon icon ion-ios-chatboxes-outline tx-22"></i>
         <span class="menu-item-label">Dữ liệu vận hành</span>

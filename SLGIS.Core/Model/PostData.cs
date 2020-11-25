@@ -17,6 +17,8 @@ namespace SLGIS.Core
 
         [Required]
         public Guid FactoryId { get; set; }
+
+        public string Note { get; set; }
     }
 
     public class ElementValue
