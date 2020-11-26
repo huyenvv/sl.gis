@@ -37,12 +37,10 @@ namespace SLGIS.Web
             IMvcBuilder builder = services.AddRazorPages();
             builder.ConfigAuthorizes();
 
-            //#if DEBUG
-            //            if (Env.IsDevelopment())
-            //            {
-            //                builder.AddRazorRuntimeCompilation();
-            //            }
-            //#endif
+            if (Env.IsDevelopment())
+            {
+                builder.AddRazorRuntimeCompilation();
+            }
 
             services.AddControllers();
 
@@ -72,7 +70,7 @@ namespace SLGIS.Web
             });
 
 
-         
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
