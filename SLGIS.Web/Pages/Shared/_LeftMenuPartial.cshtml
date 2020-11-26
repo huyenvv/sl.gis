@@ -1,0 +1,61 @@
+﻿@using SLGIS.Core
+
+<a asp-page="/Computer/Index" data-href="Index/Computer/NewOrEdit/" class="br-menu-link">
+    <div class="br-menu-item">
+        <i class="menu-item-icon icon ion-ios-monitor-outline tx-22"></i>
+        <span class="menu-item-label">Máy tính</span>
+    </div>
+</a>
+<a asp-page="/Map/Index" data-href="Index/Map/NewOrEdit/" class="br-menu-link">
+    <div class="br-menu-item">
+        <i class="menu-item-icon icon ion-ios-navigate-outline tx-24"></i>
+        <span class="menu-item-label">Map</span>
+    </div>
+</a>
+<a asp-page="/FileManager/Index" data-href="Index/FileManager/NewOrEdit/" class="br-menu-link">
+    <div class="br-menu-item">
+        <i class="menu-item-icon icon ion-folder tx-24"></i>
+        <span class="menu-item-label">File Manager</span>
+    </div>
+</a>
+<a asp-page="/Computer/Index" data-href="" class="br-menu-link">
+    <div class="br-menu-item">
+        <i class="menu-item-icon ion-ios-pie-outline tx-20"></i>
+        <span class="menu-item-label">Báo cáo</span>
+    </div>
+</a>
+@if (User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.SupperAdmin))
+{
+    <a asp-page="/User/Index" data-href="Index/User/NewOrEdit/" class="br-menu-link">
+        <div class="br-menu-item">
+            <i class="menu-item-icon icon ion-ios-person-outline tx-22"></i>
+            <span class="menu-item-label">Thành viên</span>
+        </div>
+    </a>
+}
+
+<a asp-area="Admin" asp-page="/Factory/Index" data-href="Index/Admin/Factory/NewOrEdit/" class="br-menu-link">
+    <div class="br-menu-item">
+        <i class="menu-item-icon icon ion-ios-chatboxes-outline tx-22"></i>
+        <span class="menu-item-label">Factory</span>
+    </div>
+</a>
+<a asp-area="Admin" asp-page="/Element/Index" data-href="Index/Admin/Element/NewOrEdit/" class="br-menu-link">
+    <div class="br-menu-item">
+        <i class="menu-item-icon icon ion-ios-chatboxes-outline tx-22"></i>
+        <span class="menu-item-label">Element</span>
+    </div>
+</a>
+<a asp-area="" asp-page="/Posting/Index" asp-route-FactoryId="@ViewData["FactoryId"]" data-href="Posting/Index/Posting/NewOrEdit/" class="br-menu-link">
+    <div class="br-menu-item">
+        <i class="menu-item-icon icon ion-ios-chatboxes-outline tx-22"></i>
+        <span class="menu-item-label">Dữ liệu vận hành</span>
+    </div>
+</a>
+
+<a asp-page="/Contact/Index" data-href="Index/Contact/NewOrEdit/" class="br-menu-link">
+    <div class="br-menu-item">
+        <i class="menu-item-icon icon ion-ios-chatboxes-outline tx-22"></i>
+        <span class="menu-item-label">Contact</span>
+    </div>
+</a>

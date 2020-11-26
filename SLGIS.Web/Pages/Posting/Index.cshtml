@@ -1,0 +1,64 @@
+﻿@page
+@model SLGIS.Web.Pages.PostData.IndexModel
+@{
+    ViewBag.Title = ViewBag.Breadcrumbs = "Dữ liệu vận hành";
+}
+
+@section Factory {
+    <partial name="_FactorySelectPartial" />
+}
+
+@section Button {
+    <a href="@Url.Page("NewOrEdit", new { FactoryId = ViewData["FactoryId"] })" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
+}
+
+<div class="row mt-2">
+    <div class="col-12">
+        <form method="post">
+            <div class="card shadow-base bd-0">
+                <div class="table-responsive">
+                    <table class="table mg-b-0" cellspacing="0">
+                        <tr>
+                            <th>STT</th>
+                            <th>
+                                Thời gian
+                            </th>
+                            @foreach (var item in Model.Elements)
+                            {
+                                <th>@item.Title (@item.Unit)</th>
+                            }
+                            <th></th>
+                        </tr>
+
+                        @{
+                            var stt = 1;
+                            foreach (var item in Model.ViewModel.Items as IEnumerable<Core.PostData>)
+                            {
+                                <tr class="stat even">
+                                    <td class="ac">
+                                        @(stt++)
+                                    </td>
+                                    <td>
+                                        @item.Created.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
+                                    </td>
+                                    @foreach (var element in Model.Elements)
+                                    {
+                                        var elementValue = item.Values.FirstOrDefault(m => m.Code == element.Code);
+
+                                        <th>@elementValue?.Value</th>
+                                    }
+                                    <td>
+                                        <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">
+                                            Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+            <partial name="_PagerPartial" model="Model.ViewModel" />
+        </form>
+    </div>
+</div>

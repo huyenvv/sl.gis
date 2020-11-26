@@ -1,0 +1,23 @@
+﻿@page
+@model SLGIS.Web.Pages.FileManager.IndexModel
+@{
+    ViewBag.Title = ViewBag.Breadcrumbs = "Quản lý tài liệu";
+}
+
+<div class="card shadow-base my-2">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <div id="file-manager"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- Load our React component. -->
+    <script src="js/file_manager.js"></script>
+}
