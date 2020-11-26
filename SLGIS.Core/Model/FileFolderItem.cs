@@ -30,9 +30,6 @@ namespace SLGIS.Core
         [JsonIgnore]
         public string UpdatedBy { get; set; }
 
-        [JsonIgnore]
-        public string CreatedBy { get; set; }
-
         public DateTime Updated { get; set; }
 
         public string GetExtension()

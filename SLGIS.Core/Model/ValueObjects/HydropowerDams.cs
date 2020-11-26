@@ -1,15 +1,12 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using SLGIS.Core.Model.ValueObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace SLGIS.Core.Model
+namespace SLGIS.Core.Model.ValueObjects
 {
     /// <summary>
     /// Đập thủy điện
     /// </summary>
-    [BsonIgnoreExtraElements]
-    public class HydropowerDams : BaseEntity
+    public class HydropowerDams
     {
         /// <summary>
         /// Chủ đầu tư
@@ -25,7 +22,7 @@ namespace SLGIS.Core.Model
         /// </summary>
         public (string lat, string lng) Location { get; set; }
         /// <summary>
-        /// Nhiệm vụ chính (Cấp nước. Phát điện. Cắt, giảm lũ. Cấp nước sinh hoạt, Cấp nước cho nông nghiệp)
+        /// Nhiệm vụ chính (Cấp nước. Phát điện. Cắt, giảm lũ. Cấp nước sinh hoạt, Cấp nước cho nông nghiệp) multi select
         /// </summary>
         public List<string> Missions { get; set; } = new List<string>();
 
@@ -55,16 +52,6 @@ namespace SLGIS.Core.Model
         /// Những người có quyền Owner với record này
         /// </summary>
         public List<Guid> Owners { get; set; } = new List<Guid>();
-
-        /// <summary>
-        /// Liên kết với bảng HydropowerPlant
-        /// </summary>
-        public Guid HydropowerPlantId { get; set; }
-
-        /// <summary>
-        /// Phương án đấu nối. Trên giao diện sẽ chọn nối với trạm biến áp
-        /// </summary>
-        public List<Connection> Connections { get; set; } = new List<Connection>();
 
         /// <summary>
         /// Tổ chức, cá nhân khai thác đập

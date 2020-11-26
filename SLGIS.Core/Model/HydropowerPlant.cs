@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using SLGIS.Core.Model.ValueObjects;
 using System;
 using System.Collections.Generic;
 
@@ -10,6 +11,8 @@ namespace SLGIS.Core.Model
     [BsonIgnoreExtraElements]
     public class HydropowerPlant : BaseEntity
     {
+        public HydropowerDams HydropowerDams { get; set; } = new HydropowerDams();
+
         /// <summary>
         /// Chủ đầu tư
         /// </summary>
@@ -73,9 +76,9 @@ namespace SLGIS.Core.Model
         public List<Guid> Owners { get; set; } = new List<Guid>();
 
         /// <summary>
-        /// Liên kết với bảng HydropowerDams
+        /// Phương án đấu nối. Trên giao diện sẽ chọn nối với trạm biến áp
         /// </summary>
-        public Guid HydropowerDamsId { get; set; }
+        public List<Connection> Connections { get; set; } = new List<Connection>();
 
         public string Imange { get; set; }
     }
