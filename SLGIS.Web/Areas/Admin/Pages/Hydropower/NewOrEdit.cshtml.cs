@@ -4,31 +4,31 @@ using SLGIS.Core;
 using System;
 using System.Threading.Tasks;
 
-namespace SLGIS.Web.Areas.Admin.Pages.Factory
+namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
 {
     public class NewOrEditModel : PageModel
     {
-        private readonly IFactoryRepository _factoryRepository;
+        private readonly IHydropowerPlantRepository _hydropowerPlantRepository;
 
-        public NewOrEditModel(IFactoryRepository factoryRepository)
+        public NewOrEditModel(IHydropowerPlantRepository hydropowerPlantRepository)
         {
-            _factoryRepository = factoryRepository;
+            _hydropowerPlantRepository = hydropowerPlantRepository;
         }
 
         [BindProperty]
-        public Core.Factory Factory { get; set; }
+        public Core.HydropowerPlant HydropowerPlant { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null)
             {
-                Factory = new Core.Factory();
+                HydropowerPlant = new Core.HydropowerPlant();
                 return Page();
             }
 
-            Factory = await _factoryRepository.GetAsync(m => m.Id == id);
+            HydropowerPlant = await _hydropowerPlantRepository.GetAsync(m => m.Id == id);
 
-            if (Factory == null)
+            if (HydropowerPlant == null)
             {
                 return NotFound();
             }
@@ -42,7 +42,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Factory
                 return Page();
             }
 
-            await _factoryRepository.UpsertAsync(Factory);
+            await _hydropowerPlantRepository.UpsertAsync(HydropowerPlant);
 
             return RedirectToPage("./Index");
         }

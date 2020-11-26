@@ -5,7 +5,7 @@ namespace SLGIS.Core.Model.ValueObjects
     /// <summary>
     /// Trạm biến áp/ cột
     /// </summary>
-    public class Connection : BaseEntity
+    public class Connection
     {
         /// <summary>
         /// Tên nhà máy, quy mô TBA, cấp điện áp

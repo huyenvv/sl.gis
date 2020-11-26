@@ -1,9 +1,9 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using SLGIS.Core.Model.ValueObjects;
-using System;
 using System.Collections.Generic;
 
-namespace SLGIS.Core.Model
+namespace SLGIS.Core
 {
     /// <summary>
     /// Nhà máy thủy điện
@@ -69,17 +69,17 @@ namespace SLGIS.Core.Model
         /// <summary>
         /// Tọa độ công trình
         /// </summary>
-        public (string lat, string lng) Location { get; set; }
+        public Location Location { get; set; } = new Location();
         /// <summary>
         /// Những người có quyền Owner với record này
         /// </summary>
-        public List<Guid> Owners { get; set; } = new List<Guid>();
+        public List<ObjectId> Owners { get; set; } = new List<ObjectId>();
 
         /// <summary>
         /// Phương án đấu nối. Trên giao diện sẽ chọn nối với trạm biến áp
         /// </summary>
         public List<Connection> Connections { get; set; } = new List<Connection>();
 
-        public string Imange { get; set; }
+        public string Image { get; set; }
     }
 }

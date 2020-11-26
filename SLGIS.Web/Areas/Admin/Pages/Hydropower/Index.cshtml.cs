@@ -7,17 +7,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace SLGIS.Web.Areas.Admin.Pages.Factory
+namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IFactoryRepository _factoryRepository;
+        private readonly IHydropowerPlantRepository _hydropowerPlantRepository;
 
-        public IndexModel(ILogger<IndexModel> logger, IFactoryRepository factoryRepository)
+        public IndexModel(ILogger<IndexModel> logger, IHydropowerPlantRepository hydropowerPlantRepository)
         {
             _logger = logger;
-            _factoryRepository = factoryRepository;
+            _hydropowerPlantRepository = hydropowerPlantRepository;
         }
 
         public string FilterText { get; set; }
@@ -26,13 +26,13 @@ namespace SLGIS.Web.Areas.Admin.Pages.Factory
         public void OnGet(string searchText = null, int? pageIndex = 1)
         {
             FilterText = searchText;
-            Expression<Func<Core.Factory, bool>> predicate = m => true;
+            Expression<Func<HydropowerPlant, bool>> predicate = m => true;
             if (!string.IsNullOrEmpty(FilterText))
             {
-                predicate = m => m.Title.ToLower().Contains(FilterText.ToLower());
+                predicate = m => m.Name.ToLower().Contains(FilterText.ToLower());
             }
 
-            var computers = _factoryRepository.Find(predicate).OrderByDescending(m => m.Created).AsEnumerable();
+            var computers = _hydropowerPlantRepository.Find(predicate).OrderByDescending(m => m.Created).AsEnumerable();
 
             var pager = new Pager(computers.Count(), pageIndex);
 
@@ -51,8 +51,8 @@ namespace SLGIS.Web.Areas.Admin.Pages.Factory
                 return Page();
             }
 
-            await _factoryRepository.DeleteAsync(id);
-            _logger.LogInformation($"Deleted factory {id}");
+            await _hydropowerPlantRepository.DeleteAsync(id);
+            _logger.LogInformation($"Deleted hydropowerPlant {id}");
 
             return RedirectToPage("./Index");
         }

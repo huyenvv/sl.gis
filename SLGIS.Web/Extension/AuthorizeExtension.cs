@@ -1,6 +1,4 @@
-﻿using SLGIS.Core;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace SLGIS.Web
 {
@@ -10,8 +8,12 @@ namespace SLGIS.Web
         {
             builder.AddRazorPagesOptions(options =>
             {
-                options.Conventions.AuthorizeFolder("/Computer");
+                options.Conventions.AuthorizeFolder("/Admin/Element/");
+                options.Conventions.AuthorizeFolder("/Admin/Hydropower/");
                 options.Conventions.AuthorizeFolder("/User");
+                options.Conventions.AuthorizeFolder("/Posting");
+                options.Conventions.AuthorizeFolder("/Map");
+                options.Conventions.AuthorizeFolder("/FileManager");
             });
         }
     }

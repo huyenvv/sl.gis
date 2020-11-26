@@ -1,0 +1,122 @@
+﻿@model SLGIS.Web.Areas.Admin.Pages.Hydropower.NewOrEditModel
+
+<div class="col-md-12 mb-4">
+    <div class="row mt-2 row-item">
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.Name)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.Name, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.Address)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.Address, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.Address, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.Location)
+                    <div class="input-group">
+                        <span class="input-group-addon tx-size-sm lh-2">Lat=</span>
+                        @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.Location.Lat, new { htmlAttributes = new { @class = "form-control" } })
+                        <span class="input-group-addon tx-size-sm lh-2">Lng=</span>
+                        @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.Location.Lng, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.Missions)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.Missions, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.Missions, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.StartBuild)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.StartBuild, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.StartBuild, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.EndBuild)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.EndBuild, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.EndBuild, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.NguonVon)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.NguonVon, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.NguonVon, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.OwnerName)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.OwnerName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.OwnerName, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.OwnerAddress)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.OwnerAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.OwnerAddress, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.OwnerPhone)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.OwnerPhone, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.OwnerPhone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.OwnerFax)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.OwnerFax, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.OwnerFax, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.OwnerEmail)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.OwnerEmail, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.OwnerEmail, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.OwnerWebsite)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.OwnerWebsite, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.OwnerWebsite, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.ExploitName)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.ExploitName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.ExploitName, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.ExploitAddress)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.ExploitAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.ExploitAddress, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.ExploitPhone)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.ExploitPhone, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.ExploitPhone, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.ExploitFax)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.ExploitFax, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.ExploitFax, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.ExploitEmail)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.ExploitEmail, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.ExploitEmail, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.Description)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.Description, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.Image)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.Image, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.Image, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.HydropowerPlant.HydropowerDams.Owners)
+                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.Owners, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.Owners, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+</div>
+

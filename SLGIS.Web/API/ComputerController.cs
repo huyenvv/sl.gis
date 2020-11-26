@@ -9,14 +9,14 @@ namespace SLGIS.Web.API
     [ApiController]
     public class ComputerController : ControllerBase
     {
-        private readonly IFactoryRepository _computerRepository;
-        public ComputerController(IFactoryRepository computerRepository)
+        private readonly IHydropowerPlantRepository _computerRepository;
+        public ComputerController(IHydropowerPlantRepository computerRepository)
         {
             _computerRepository = computerRepository;
         }
 
         [HttpGet()]
-        public IEnumerable<Factory> Index()
+        public IEnumerable<HydropowerPlant> Index()
         {
             return _computerRepository.Find(m => true);
         }

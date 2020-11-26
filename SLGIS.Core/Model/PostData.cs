@@ -16,7 +16,7 @@ namespace SLGIS.Core
         public IEnumerable<ElementValue> Values { get; set; }
 
         [Required]
-        public Guid FactoryId { get; set; }
+        public Guid HydropowerPlantId { get; set; }
 
         public string Note { get; set; }
     }

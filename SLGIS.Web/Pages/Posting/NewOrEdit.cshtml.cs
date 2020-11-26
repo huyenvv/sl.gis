@@ -17,14 +17,14 @@ namespace SLGIS.Web.Pages.PostData
     {
         private readonly ILogger<NewOrEditModel> _logger;
         private readonly IPostDataRepository _postDataRepository;
-        private readonly IFactoryRepository _factoryRepository;
+        private readonly IHydropowerPlantRepository _hydropowerPlantRepository;
         private readonly IElementRepository _elementRepository;
 
-        public NewOrEditModel(ILogger<NewOrEditModel> logger, IPostDataRepository postDataRepository, IFactoryRepository factoryRepository, IElementRepository elementRepository)
+        public NewOrEditModel(ILogger<NewOrEditModel> logger, IPostDataRepository postDataRepository, IHydropowerPlantRepository hydropowerPlantRepository, IElementRepository elementRepository)
         {
             _logger = logger;
             _postDataRepository = postDataRepository;
-            _factoryRepository = factoryRepository;
+            _hydropowerPlantRepository = hydropowerPlantRepository;
             _elementRepository = elementRepository;
         }
 
@@ -32,21 +32,21 @@ namespace SLGIS.Web.Pages.PostData
         public Core.PostData PostData { get; set; }
         public List<Core.Element> Elements { get; set; }
 
-        public IActionResult OnGet(Guid? factoryId)
+        public IActionResult OnGet(Guid? hydropowerPlantId)
         {
-            var factories = ListFactories();
+            var hydropowerPlants = ListFactories();
 
-            if (factories.Count == 0 || factoryId.HasValue && !factories.Any(m => m.Id == factoryId))
+            if (hydropowerPlants.Count == 0 || hydropowerPlantId.HasValue && !hydropowerPlants.Any(m => m.Id == hydropowerPlantId))
             {
                 return NotFound();
             }
 
-            CreateViewData(factoryId);
+            CreateViewData(hydropowerPlantId);
 
             PostData = new Core.PostData
             {
                 Time = DateTime.Now,
-                FactoryId = factoryId.Value
+                HydropowerPlantId = hydropowerPlantId.Value
             };
 
             return Page();
@@ -56,12 +56,12 @@ namespace SLGIS.Web.Pages.PostData
         {
             if (!ModelState.IsValid)
             {
-                CreateViewData(PostData.FactoryId);
+                CreateViewData(PostData.HydropowerPlantId);
                 return Page();
             }
 
-            var factories = ListFactories();
-            if (!factories.Any(m => m.Id == PostData.FactoryId))
+            var hydropowerPlants = ListFactories();
+            if (!hydropowerPlants.Any(m => m.Id == PostData.HydropowerPlantId))
             {
                 return NotFound();
             }
@@ -70,31 +70,31 @@ namespace SLGIS.Web.Pages.PostData
 
             _logger.LogInformation($"Add postData {PostData.Id}");
 
-            return RedirectToPage("./Index", new { PostData.FactoryId });
+            return RedirectToPage("./Index", new { PostData.HydropowerPlantId });
         }
 
-        private List<Core.Factory> ListFactories()
+        private List<Core.HydropowerPlant> ListFactories()
         {
             if (Factories == null || Factories.Count == 0)
             {
-                Factories = _factoryRepository.Find(m => true).ToList();
+                Factories = _hydropowerPlantRepository.Find(m => true).ToList();
             }
 
-            var factories = Factories;
+            var hydropowerPlants = Factories;
             if (User.IsInRole(Constant.Role.Member))
             {
-                factories = factories.Where(m => m.Owner == User.Identity.Name).ToList();
+                hydropowerPlants = hydropowerPlants.Where(m => m.Owners.Contains(User.GetId())).ToList();
             }
 
-            return factories;
+            return hydropowerPlants;
         }
 
 
-        private List<Core.Factory> Factories { get; set; }
-        private void CreateViewData(Guid? factoryId)
+        private List<Core.HydropowerPlant> Factories { get; set; }
+        private void CreateViewData(Guid? hydropowerPlantId)
         {
-            var factories = ListFactories();
-            ViewData["FactoryId"] = factoryId ?? factories.First().Id;
+            var hydropowerPlants = ListFactories();
+            ViewData["HydropowerPlantId"] = hydropowerPlantId ?? hydropowerPlants.First().Id;
             Elements = _elementRepository.Find(m => true).OrderBy(m => m.Id).ToList();
         }
     }

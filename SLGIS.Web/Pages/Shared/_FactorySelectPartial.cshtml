@@ -1,27 +1,30 @@
 ﻿@using SLGIS.Core
-@inject IFactoryRepository factoryRepository
+@inject IHydropowerPlantRepository hydropowerPlantRepository
 @{
-    var factoryId = (Guid)ViewData["FactoryId"];
-    var factories = factoryRepository.Find(m=> true).ToList();
+    var hydropowerPlantId = (Guid)ViewData["HydropowerPlantId"];
+    var hydropowerPlants = hydropowerPlantRepository.Find(m=> true).ToList();
     if (User.IsInRole(Constant.Role.Member))
     {
-        factories = factories.Where(m => m.Owner == User.Identity.Name).ToList();
+        hydropowerPlants = hydropowerPlants.Where(m => m.Owners.Contains(User.GetId())).ToList();
     }
 
-    var selected = factories.First(m => m.Id == factoryId);
+    var selected = hydropowerPlants.First(m => m.Id == hydropowerPlantId);
     var url = $"{Context.Request.Path}";
 }
 
-<div id="factory" class="text-center" data-id="@selected.Id">
+<div id="hydropowerPlant" class="text-center" data-id="@selected.Id">
     <div class="dropdown">
-        <a class="dropdown-toggle" href="javascript:void(0)" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            @selected.Title
+        <a class="dropdown-toggle text-uppercase" href="javascript:void(0)" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <strong>@selected.Name</strong>
         </a>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            @foreach (var factory in factories.Where(m => m.Id != selected.Id))
-            {
-                <a class="dropdown-item text-uppercase" href="@($"{url}?factoryId={factory.Id}")"><strong>@factory.Title</strong></a>
-            }
-        </div>
+        @if (hydropowerPlants.Count > 1)
+        {
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                @foreach (var hydropowerPlant in hydropowerPlants.Where(m => m.Id != selected.Id))
+                {
+                    <a class="dropdown-item text-uppercase" href="@($"{url}?hydropowerPlantId={hydropowerPlant.Id}")"><strong>@hydropowerPlant.Name</strong></a>
+                }
+            </div>
+        }
     </div>
 </div>

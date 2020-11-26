@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-md-6">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <input type="hidden" name="PostData.FactoryId" value="@ViewData["FactoryId"]" />
+                    <input type="hidden" name="PostData.HydropowerPlantId" value="@ViewData["HydropowerPlantId"]" />
                     <div class="form-group">
                         @Html.LabelFor(model => model.PostData.Time)
                         @Html.EditorFor(model => model.PostData.Time, new { htmlAttributes = new { @class = "form-control" } })

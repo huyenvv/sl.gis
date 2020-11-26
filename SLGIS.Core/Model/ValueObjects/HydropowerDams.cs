@@ -20,7 +20,7 @@ namespace SLGIS.Core.Model.ValueObjects
         /// <summary>
         /// Tọa độ công trình
         /// </summary>
-        public (string lat, string lng) Location { get; set; }
+        public Location Location { get; set; } = new Location();
         /// <summary>
         /// Nhiệm vụ chính (Cấp nước. Phát điện. Cắt, giảm lũ. Cấp nước sinh hoạt, Cấp nước cho nông nghiệp) multi select
         /// </summary>
@@ -70,6 +70,6 @@ namespace SLGIS.Core.Model.ValueObjects
         /// <summary>
         /// Ảnh đại diện
         /// </summary>
-        public string Imange { get; set; }
+        public string Image { get; set; }
     }
 }

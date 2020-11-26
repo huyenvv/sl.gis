@@ -16,32 +16,32 @@ namespace SLGIS.Web.Pages.PostData
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IPostDataRepository _postDataRepository;
-        private readonly IFactoryRepository _factoryRepository;
+        private readonly IHydropowerPlantRepository _hydropowerPlantRepository;
         private readonly IElementRepository _elementRepository;
 
-        public IndexModel(ILogger<IndexModel> logger, IPostDataRepository postDataRepository, IFactoryRepository factoryRepository, IElementRepository elementRepository)
+        public IndexModel(ILogger<IndexModel> logger, IPostDataRepository postDataRepository, IHydropowerPlantRepository hydropowerPlantRepository, IElementRepository elementRepository)
         {
             _logger = logger;
             _postDataRepository = postDataRepository;
-            _factoryRepository = factoryRepository;
+            _hydropowerPlantRepository = hydropowerPlantRepository;
             _elementRepository = elementRepository;
         }
 
         public PagerViewModel ViewModel { get; set; }
         public List<Core.Element> Elements { get; set; }
 
-        public IActionResult OnGet(Guid? factoryId, DateTime? startDate, DateTime? endDate, int? pageIndex = 1)
+        public IActionResult OnGet(Guid? hydropowerPlantId, DateTime? startDate, DateTime? endDate, int? pageIndex = 1)
         {
-            var factories = ListFactories();
-            if (factories.Count == 0 || factoryId.HasValue && !factories.Any(m => m.Id == factoryId))
+            var hydropowerPlants = ListFactories();
+            if (hydropowerPlants.Count == 0 || hydropowerPlantId.HasValue && !hydropowerPlants.Any(m => m.Id == hydropowerPlantId))
             {
                 return NotFound();
             }
 
-            factoryId ??= factories.First().Id;
-            ViewData["FactoryId"] = factoryId;
+            hydropowerPlantId ??= hydropowerPlants.First().Id;
+            ViewData["HydropowerPlantId"] = hydropowerPlantId;
 
-            Expression<Func<Core.PostData, bool>> predicate = m => m.FactoryId == factoryId;
+            Expression<Func<Core.PostData, bool>> predicate = m => m.HydropowerPlantId == hydropowerPlantId;
             if (startDate.HasValue)
             {
                 predicate = m => m.Created >= startDate;
@@ -57,7 +57,7 @@ namespace SLGIS.Web.Pages.PostData
 
             ViewModel = new PagerViewModel
             {
-                BaseUrl = Url.Page("./Index", new { factoryId, startDate, endDate }),
+                BaseUrl = Url.Page("./Index", new { hydropowerPlantId, startDate, endDate }),
                 Items = postDatas.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
                 Pager = pager
             };
@@ -79,15 +79,15 @@ namespace SLGIS.Web.Pages.PostData
             return RedirectToPage("./Index");
         }
 
-        private List<Core.Factory> ListFactories()
+        private List<Core.HydropowerPlant> ListFactories()
         {
-            var factories = _factoryRepository.Find(m => true).ToList();
+            var hydropowerPlants = _hydropowerPlantRepository.Find(m => true).ToList();
             if (User.IsInRole(Constant.Role.Member))
             {
-                factories = factories.Where(m => m.Owner == User.Identity.Name).ToList();
+                hydropowerPlants = hydropowerPlants.Where(m => m.Owners.Contains(User.GetId())).ToList();
             }
 
-            return factories;
+            return hydropowerPlants;
         }
     }
 }

@@ -40,6 +40,12 @@ namespace SLGIS.Web
             var userId = user?.FindFirstValue(ClaimTypes.NameIdentifier);
             return userRepository.GetAsync(m => m.Id == new ObjectId(userId));
         }
+        
+        public static ObjectId GetId(this ClaimsPrincipal user)
+        {
+            var userId = user?.FindFirstValue(ClaimTypes.NameIdentifier);
+            return new ObjectId(userId);
+        }
 
         public static async Task InitUserAndRoles(this IServiceProvider serviceProvider)
         {

@@ -12,7 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             return services
                     .AddSingleton<IUserRepository, UserRepository>()
-                    .AddSingleton<IFactoryRepository, FactoryRepository>()
+                    .AddSingleton<IHydropowerPlantRepository, HydropowerPlantRepository>()
                     .AddSingleton<IFileFolderItemRepository, FileFolderItemRepository>()
                     .AddSingleton<IElementRepository, ElementRepository>()
                     .AddSingleton<IPostDataRepository, PostDataRepository>()

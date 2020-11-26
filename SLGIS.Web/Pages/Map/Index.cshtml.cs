@@ -14,9 +14,9 @@ namespace SLGIS.Web.Pages.Map
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IFactoryRepository _computerRepository;
+        private readonly IHydropowerPlantRepository _computerRepository;
 
-        public IndexModel(ILogger<IndexModel> logger, IFactoryRepository computerRepository)
+        public IndexModel(ILogger<IndexModel> logger, IHydropowerPlantRepository computerRepository)
         {
             _logger = logger;
             _computerRepository = computerRepository;

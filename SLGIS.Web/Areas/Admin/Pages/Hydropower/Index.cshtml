@@ -1,7 +1,7 @@
-﻿@*@page
-@model SLGIS.Web.Pages.Computer.IndexModel
+﻿@page
+@model SLGIS.Web.Areas.Admin.Pages.Hydropower.IndexModel
 @{
-    ViewBag.Title = ViewBag.Breadcrumbs = "Danh sách cấu hình";
+    ViewBag.Title = ViewBag.Breadcrumbs = "Danh sách nhà máy thủy điện";
 }
 
 @section Button {
@@ -31,39 +31,46 @@
                         <tr>
                             <th>STT</th>
                             <th>
-                                Tiêu đề
+                                Tên
                             </th>
                             <th>
-                                Địa chỉ IP
+                               Chủ đầu tư
                             </th>
                             <th>
-                                User cập nhật
+                               Người đại diện
                             </th>
                             <th>
-                                Ngày cập nhật
+                                Địa chỉ
+                            </th>
+                            <th>
+                                Ngày tạo
                             </th>
                             <th></th>
                         </tr>
 
                         @{
                             var stt = 1;
-                            foreach (var item in Model.ViewModel.Items as IEnumerable<Core.Computer>)
+                            foreach (var item in Model.ViewModel.Items as IEnumerable<SLGIS.Core.HydropowerPlant>)
                             {
                                 <tr class="stat even">
                                     <td class="ac">
                                         @(stt++)
                                     </td>
                                     <td>
-                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })">@item.Title</a>
+                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })">@item.Name</a>
                                     </td>
                                     <td>
-                                        @item.IpAddress
+                                        @item.OwnerName
                                     </td>
                                     <td>
-                                        @item.UpdatedBy
+                                        @item.PersonOwnerName <br />
+                                        @item.Phone
                                     </td>
                                     <td>
-                                        @item.Updated.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
+                                        @item.Address
+                                    </td>
+                                    <td>
+                                        @item.Created.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
                                     </td>
                                     <td>
                                         <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
@@ -80,4 +87,4 @@
             <partial name="_PagerPartial" model="Model.ViewModel" />
         </form>
     </div>
-</div>*@
+</div>
