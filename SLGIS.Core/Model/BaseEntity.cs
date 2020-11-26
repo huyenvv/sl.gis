@@ -11,6 +11,8 @@ namespace SLGIS.Core
         public Guid Id { get; set; }
 
         [JsonIgnore]
-        public DateTime Created { get; protected set; } = DateTime.Now;
+        public DateTime Created { get; protected set; } = DateTime.UtcNow.AddHours(7);
+
+        public Guid CreatedBy { get; set; }
     }
 }
