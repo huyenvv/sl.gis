@@ -1,0 +1,82 @@
+﻿@page
+@model SLGIS.Web.Pages.PostData.NewOrEditModel
+
+@{
+    ViewBag.Title = Model.PostData.Id != Guid.Empty ? "Sửa lại" : "Thêm mới dữ liệu vận hành";
+    ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>PostData</a>" +
+                          "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
+
+}
+
+@section Factory {
+    <partial name="_FactorySelectPartial" />
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card shadow-base mb-2">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <input type="hidden" name="PostData.FactoryId" value="@ViewData["FactoryId"]" />
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PostData.Time)
+                        @Html.EditorFor(model => model.PostData.Time, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.PostData.Time, "", new { @class = "text-danger" })
+                    </div>
+                    <div id="elements">
+
+                    </div>
+                    @foreach (var item in Model.Elements)
+                    {
+                        <div class="form-group">
+                            @Html.Label(item.Title) (@Html.Label(item.Unit))
+                            @Html.Editor(item.Title, new { htmlAttributes = new { @class = "form-control inputElement", data_code = item.Code } })
+                        </div>
+                    }
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PostData.Note)
+                        @Html.EditorFor(model => model.PostData.Note, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.PostData.Note, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="return beforeSubmit();" type="submit">Lưu</button>
+    <a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function beforeSubmit() {
+            var values = [];
+            $(".inputElement").each(function () {
+                var $this = $(this);
+                if ($this.val() == "") {
+                    return;
+                }
+
+                values.push({ code: $this.data("code"), value: $this.val() });
+            });
+
+            var html = buildHtml(values);
+            $("#elements").html(html);
+            return true;
+        }
+
+        function buildHtml(values) {
+            var html = "";
+            for (var i = 0; i < values.length; i++) {
+                html += "<input type='hidden' name='PostData.Values[" + i + "].Code' value='" + values[i].code + "' />";
+                html += "<input type='hidden' name='PostData.Values[" + i + "].Value' value='" + values[i].value + "' />";
+            }
+            return html;
+        }
+    </script>
+}

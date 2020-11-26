@@ -10,7 +10,7 @@ namespace SLGIS.Core
     /// <summary>
     ///  File or Folder
     /// </summary>
-    public class Item : BaseEntity
+    public class FileFolderItem : BaseEntity
     {
         [Display(Name = "Tiêu đề")]
         [Required(ErrorMessage = "Trường yêu cầu bắt buộc")]
