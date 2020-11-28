@@ -3,6 +3,8 @@ using SLGIS.Core;
 using SLGIS.Implementation;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
+using SLGIS.Core.Repositories;
+using SLGIS.Implementation.Repositories;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -16,7 +18,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     .AddSingleton<IFileFolderItemRepository, FileFolderItemRepository>()
                     .AddSingleton<IElementRepository, ElementRepository>()
                     .AddSingleton<IPostDataRepository, PostDataRepository>()
-                    .AddSingleton<IFileService, FileService>();
+                    .AddSingleton<IFileService, FileService>()
+                    .AddSingleton<ISubstationRepository, SubstationRepository>();
         }
 
         public static IServiceCollection AddMongoSigleton(this IServiceCollection services, IConfiguration configuration)

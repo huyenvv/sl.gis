@@ -17,7 +17,7 @@ namespace SLGIS.Core.Model
         /// <summary>
         /// Tọa độ
         /// </summary>
-        public (string lat, string lng) Location { get; set; }
+        public Location Location { get; set; }
 
         /// <summary>
         /// Vị trí cột
