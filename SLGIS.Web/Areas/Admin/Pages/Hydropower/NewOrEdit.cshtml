@@ -45,6 +45,26 @@
     <a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>
 }
 
+@section Styles {
+    <link href="~/lib/summernote/summernote-bs4.css" rel="stylesheet" />
+    <style>
+        .select2-results__option[aria-selected="true"] {
+            display: none;
+        }
+    </style>
+}
+
 @section Scripts {
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/select2/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#HydropowerPlant_HydropowerDams_Description').summernote({
+                height: 300,
+            });
+
+            $(".select2").select2({ width: '100%' });
+        });
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
