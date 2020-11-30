@@ -8,7 +8,6 @@
         $(window).resize(function () {
             $('.js-fullheight').css('height', $(window).height());
         });
-
     };
     fullHeight();
 
@@ -16,4 +15,6 @@
         $('#sidebar').toggleClass('active');
     });
     $('#search-marker').select2();
+
+    $('input[name=layerSelect]').click(showMarkers());
 })(jQuery);

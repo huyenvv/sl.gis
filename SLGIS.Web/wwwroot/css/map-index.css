@@ -16,3 +16,8 @@
 .dams-img {
     width: 100%;
 }
+
+#sidebar {
+    overflow: auto !important;
+    height: calc(100%);
+}
