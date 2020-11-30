@@ -4,6 +4,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using SLGIS.Core;
 using SLGIS.Core.Model.ValueObjects;
+using SLGIS.Core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

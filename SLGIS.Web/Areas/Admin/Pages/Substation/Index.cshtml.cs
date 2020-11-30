@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SLGIS.Core;
+using SLGIS.Core.Repositories;
 using System;
 using System.Linq;
 using System.Linq.Expressions;

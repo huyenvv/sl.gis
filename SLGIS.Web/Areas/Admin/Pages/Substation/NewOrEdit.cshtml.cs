@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SLGIS.Core;
+using SLGIS.Core.Repositories;
 using System;
 using System.Threading.Tasks;
 
