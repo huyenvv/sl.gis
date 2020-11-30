@@ -1,0 +1,53 @@
+﻿@page
+@model SLGIS.Web.Areas.Admin.Pages.Substation.NewOrEditModel
+@{
+    ViewBag.Title = Model.Substation.Id != Guid.Empty ? "Sửa lại" : "Tạo mới";
+    ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>Substation</a>" +
+                          "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
+
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card shadow-base mb-2">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Substation.Id)
+                    <div class="form-group">
+                        <label>Tên trạm biến áp</label>
+                        @Html.EditorFor(model => model.Substation.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Substation.Name, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <label>Vị trí cột</label>
+                        @Html.EditorFor(model => model.Substation.ColumnNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Substation.ColumnNumber, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <label>Tên đường dây</label>
+                        @Html.EditorFor(model => model.Substation.LineName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Substation.LineName, "", new { @class = "text-danger" })
+                    </div>
+                    <label>Tọa độ</label>
+                    <div class="input-group">
+                        <span class="input-group-addon tx-size-sm lh-2">Lat=</span>
+                        @Html.EditorFor(model => model.Substation.Location.Lat, new { htmlAttributes = new { @class = "form-control" } })
+                        <span class="input-group-addon tx-size-sm lh-2">Lng=</span>
+                        @Html.EditorFor(model => model.Substation.Location.Lng, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Lưu</button>
+    <a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

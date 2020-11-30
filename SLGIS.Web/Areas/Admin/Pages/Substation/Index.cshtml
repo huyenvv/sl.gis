@@ -1,0 +1,83 @@
+﻿@page
+@model SLGIS.Web.Areas.Admin.Pages.Substation.IndexModel
+@{
+    ViewBag.Title = ViewBag.Breadcrumbs = "Danh sách Trạm biến áp/ cột";
+}
+
+@section Button {
+    <a href="@Url.Page("NewOrEdit")" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Get, new { role = "form", id = "frmSearch" }))
+{
+    <div class="row">
+        <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control" name="SearchText" placeholder="Tìm kiếm" value="@Model.FilterText">
+                <span class="input-group-btn" id="btnSearch">
+                    <button class="btn bd bg-white tx-gray-600" type="button"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row mt-2">
+    <div class="col-12">
+        <form method="post">
+            <div class="card shadow-base bd-0">
+                <div class="table-responsive">
+                    <table class="table mg-b-0" cellspacing="0">
+                        <tr>
+                            <th>STT</th>
+                            <th>
+                                Tên trạm biến áp
+                            </th>
+                            <th>
+                                Vị trí cột
+                            </th>
+                            <th>
+                                Tên đường dây
+                            </th>
+                            <th>
+                                Tọa độ
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @{
+                            var stt = 1;
+                            foreach (var item in Model.ViewModel.Items as IEnumerable<Core.Model.Substation>)
+                            {
+                                <tr class="stat even">
+                                    <td class="ac">
+                                        @(stt++)
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })">@item.Name</a>
+                                    </td>
+                                    <td>
+                                        @item.ColumnNumber
+                                    </td>
+                                    <td>
+                                        @item.LineName
+                                    </td>
+                                    <td>
+                                        @item.Location.ToString()
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
+                                        <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">
+                                            Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+            <partial name="_PagerPartial" model="Model.ViewModel" />
+        </form>
+    </div>
+</div>

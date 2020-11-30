@@ -15,6 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return services
                     .AddSingleton<IUserRepository, UserRepository>()
                     .AddSingleton<IHydropowerPlantRepository, HydropowerPlantRepository>()
+                    .AddSingleton<ISubstationRepository, SubstationRepository>()
                     .AddSingleton<IFileFolderItemRepository, FileFolderItemRepository>()
                     .AddSingleton<IElementRepository, ElementRepository>()
                     .AddSingleton<IPostDataRepository, PostDataRepository>()

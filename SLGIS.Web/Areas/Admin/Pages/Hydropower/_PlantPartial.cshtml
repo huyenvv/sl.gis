@@ -6,93 +6,118 @@
         <div class="col-sm-6">
             <div class="form-group">
                 @Html.LabelFor(model => model.HydropowerPlant.Image)
-                @Html.EditorFor(model => model.HydropowerPlant.Image, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.HydropowerPlant.Image, new { htmlAttributes = new { @class = "form-control", type = "file" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Image, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.Name)
+                <label>Tên công trình</label>
                 @Html.EditorFor(model => model.HydropowerPlant.Name, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Name, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.OwnerName)
+                <label>Chủ đầu tư</label>
                 @Html.EditorFor(model => model.HydropowerPlant.OwnerName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.OwnerName, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.PersonOwnerName)
+                <label>Người đại diện</label>
                 @Html.EditorFor(model => model.HydropowerPlant.PersonOwnerName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.PersonOwnerName, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.Address)
+                <label>Địa chỉ</label>
                 @Html.EditorFor(model => model.HydropowerPlant.Address, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Address, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.Phone)
+                <label>Số điện thoại (của người đại diện)</label>
                 @Html.EditorFor(model => model.HydropowerPlant.Phone, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Phone, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.Email)
+                <label>Email (của người đại diện)</label>
                 @Html.EditorFor(model => model.HydropowerPlant.Email, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Email, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.Wattage)
+                <label>Công suất lắp máy</label>
                 @Html.EditorFor(model => model.HydropowerPlant.Wattage, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Wattage, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="col-sm-6">
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.Level)
+                <label>Cấp công trình</label>
                 @Html.EditorFor(model => model.HydropowerPlant.Level, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Level, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.BuildAddress)
+                <label>Địa điểm xây dựng</label>
                 @Html.EditorFor(model => model.HydropowerPlant.BuildAddress, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.BuildAddress, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.Area)
+                <label>Diện tích đất</label>
                 @Html.EditorFor(model => model.HydropowerPlant.Area, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Area, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.StartBuild)
+                <label>Năm khởi công xây dựng</label>
                 @Html.EditorFor(model => model.HydropowerPlant.StartBuild, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.StartBuild, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.EndBuild)
+                <label>Năm hoàn thành</label>
                 @Html.EditorFor(model => model.HydropowerPlant.EndBuild, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.EndBuild, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.TotalInvestment)
+                <label>Tổng mức đầu tư</label>
                 @Html.EditorFor(model => model.HydropowerPlant.TotalInvestment, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.TotalInvestment, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.Location)
+                <label>Tọa độ công trình</label>
                 <div class="input-group">
                     <span class="input-group-addon tx-size-sm lh-2">Lat=</span>
-                    @Html.EditorFor(model => model.HydropowerPlant.Location.Lat, new { htmlAttributes = new { @class = "form-control"} })
+                    @Html.EditorFor(model => model.HydropowerPlant.Location.Lat, new { htmlAttributes = new { @class = "form-control" } })
                     <span class="input-group-addon tx-size-sm lh-2">Lng=</span>
-                    @Html.EditorFor(model => model.HydropowerPlant.Location.Lng, new { htmlAttributes = new { @class = "form-control"} })
+                    @Html.EditorFor(model => model.HydropowerPlant.Location.Lng, new { htmlAttributes = new { @class = "form-control" } })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.Connections)
-                @Html.EditorFor(model => model.HydropowerPlant.Connections, new { htmlAttributes = new { @class = "form-control" } })
+                <label>Phương án đấu nối. Trên giao diện sẽ chọn nối với trạm biến áp</label>
+                
+                <select name="SelectedConnections" class="form-control select2" data-placeholder="Connections" multiple="multiple" tabindex="-1" aria-hidden="true">
+                    @foreach (var item in Model.Substations)
+                    {
+                        if (Model.HydropowerPlant.Connections.Any(m => m.SubstationId == item.Id))
+                        {
+                            <option value="@item.Id" selected>@item.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </select>
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Connections, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HydropowerPlant.Owners)
-                @Html.EditorFor(model => model.HydropowerPlant.Owners, new { htmlAttributes = new { @class = "form-control" } })
+                <label>Những người có quyền</label>
+                <select name="SelectedHydropowerPlantOwners" class="form-control select2" data-placeholder="Người quản trị" multiple="multiple" tabindex="-1" aria-hidden="true">
+                    @foreach (var item in Model.Members)
+                    {
+                        if (Model.HydropowerPlant.Owners.Contains(item.Id))
+                        {
+                            <option value="@item.Id" selected>@item.UserName</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Id">@item.UserName</option>
+                        }
+                    }
+                </select>
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Owners, "", new { @class = "text-danger" })
             </div>
         </div>

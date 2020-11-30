@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 
 namespace SLGIS.Core.Model.ValueObjects
@@ -51,7 +52,7 @@ namespace SLGIS.Core.Model.ValueObjects
         /// <summary>
         /// Những người có quyền Owner với record này
         /// </summary>
-        public List<Guid> Owners { get; set; } = new List<Guid>();
+        public List<ObjectId> Owners { get; set; } = new List<ObjectId>();
 
         /// <summary>
         /// Tổ chức, cá nhân khai thác đập
@@ -71,5 +72,14 @@ namespace SLGIS.Core.Model.ValueObjects
         /// Ảnh đại diện
         /// </summary>
         public string Image { get; set; }
+
+        public static List<string> AllMissions = new List<string>
+        {
+            "Cấp nước",
+            "Phát điện",
+            "Cắt, giảm lũ",
+            "Cấp nước sinh hoạt",
+            "Cấp nước cho nông nghiệp"
+        };
     }
 }
