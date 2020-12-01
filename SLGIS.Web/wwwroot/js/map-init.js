@@ -7,19 +7,18 @@ var hydropowers = [];
 var substation = [];
 
 function initMap() {
-    const hanoi = { lat: 21.026613, lng: 105.833889 };
-
-    map = new google.maps.Map(document.getElementById("content"), {
-        zoom: 8,
-        center: hanoi,
-    });
     $.get("/api/hydropower/map", function (data) {
         hydropowers = data;
         $.get("/api/substation/map", function (data) {
             substation = data;
             plantMarkers = makeMarkers(hydropowers, "hydropower-plant");
 
-            showMarkers("hydropower-plant")
+            map = new google.maps.Map(document.getElementById("content"), {
+                zoom: 8,
+                center: plantMarkers[0].getPosition(),
+            });
+
+            showMarkers("hydropower-plant");
         });
     });
 }
