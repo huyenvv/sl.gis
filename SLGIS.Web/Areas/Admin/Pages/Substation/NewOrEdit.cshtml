@@ -32,12 +32,10 @@
                         @Html.EditorFor(model => model.Substation.LineName, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Substation.LineName, "", new { @class = "text-danger" })
                     </div>
-                    <label>Tọa độ</label>
+                    <label>Tọa độ công trình (vd: 21.0222089,105.8085448)</label>
                     <div class="input-group">
-                        <span class="input-group-addon tx-size-sm lh-2">Lat=</span>
-                        @Html.EditorFor(model => model.Substation.Location.Lat, new { htmlAttributes = new { @class = "form-control" } })
-                        <span class="input-group-addon tx-size-sm lh-2">Lng=</span>
-                        @Html.EditorFor(model => model.Substation.Location.Lng, new { htmlAttributes = new { @class = "form-control" } })
+                        <span class="input-group-addon tx-size-sm lh-2">Lat,Lng=</span>
+                        @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control", pattern = @"[-]?[\d]+[.][\d]*" } })
                     </div>
                 </div>
             </div>

@@ -68,7 +68,8 @@ namespace SLGIS.Web
                 c.CustomOperationIds(
                     d => (d.ActionDescriptor as ControllerActionDescriptor)?.ActionName);
             });
-
+            services.AddApplicationInsightsTelemetry();
+            //services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 
 
         }

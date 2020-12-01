@@ -16,5 +16,5 @@
     });
     $('#search-marker').select2();
 
-    $('input[name=layerSelect]').click(showMarkers());
+    $('input[name=layerSelect]').click(showMarkers);
 })(jQuery);

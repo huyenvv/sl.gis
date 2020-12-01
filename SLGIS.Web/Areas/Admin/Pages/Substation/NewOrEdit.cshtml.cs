@@ -19,6 +19,9 @@ namespace SLGIS.Web.Areas.Admin.Pages.Substation
         [BindProperty]
         public Core.Model.Substation Substation { get; set; }
 
+        [BindProperty]
+        public string Location { get; set; }
+
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null)
@@ -33,6 +36,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Substation
             {
                 return NotFound();
             }
+            Location = Substation.Location.ToString();
             return Page();
         }
 
@@ -42,7 +46,11 @@ namespace SLGIS.Web.Areas.Admin.Pages.Substation
             {
                 return Page();
             }
-
+            if (Location != null && Location.Split(',').Length >= 2)
+            {
+                Substation.Location.Lat = Location.Split(',')[0].Trim();
+                Substation.Location.Lng = Location.Split(',')[1].Trim();
+            }
             await _substationRepository.UpsertAsync(Substation);
 
             return RedirectToPage("./Index");

@@ -15,7 +15,7 @@ namespace SLGIS.Implementation
 
         public Task<string> UpsertAsync(byte[] bytes, string fileName, string rootFolder, bool createSubDateFolder = true)
         {
-            var subFolder = createSubDateFolder ? $"{DateTime.Now:yyyy/MM}/" : null;
+            var subFolder = createSubDateFolder ? $"{DateTime.Now:yyyy/MM-dd/HH-mm-ss-tt}" : null;
             rootFolder = string.IsNullOrEmpty(rootFolder) ? _rootFolder : $"{rootFolder}/";
 
             var folderDestination = $"{rootFolder}{subFolder}";

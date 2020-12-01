@@ -31,6 +31,12 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
         }
 
         [BindProperty]
+        public string PlantLocation { get; set; }
+
+        [BindProperty]
+        public string DamsLocation { get; set; }
+
+        [BindProperty]
         public Core.HydropowerPlant HydropowerPlant { get; set; }
 
         [BindProperty]
@@ -57,6 +63,8 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
             ViewModel.SelectedHydropowerPlantOwners = HydropowerPlant.Owners.Select(m => m.ToString()).ToList();
             ViewModel.SelectedHydropowerDamsOwners = HydropowerPlant.HydropowerDams?.Owners?.Select(m => m.ToString()).ToList();
             ViewModel.SelectedConnections = HydropowerPlant.Connections?.Select(m => m.SubstationId.ToString()).ToList();
+            PlantLocation = HydropowerPlant.Location.ToString();
+            DamsLocation = HydropowerPlant.HydropowerDams.Location.ToString();
             return Page();
         }
 
@@ -70,7 +78,17 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
             HydropowerPlant.Owners = ViewModel.SelectedHydropowerPlantOwners?.Select(m => new ObjectId(m)).ToList();
             HydropowerPlant.HydropowerDams.Owners = ViewModel.SelectedHydropowerDamsOwners?.Select(m => new ObjectId(m)).ToList();
             HydropowerPlant.Connections = ViewModel.SelectedConnections?.Select(m => new Connection { SubstationId = Guid.Parse(m) }).ToList();
-            
+            if (PlantLocation != null && PlantLocation.Split(',').Length >= 2)
+            {
+                HydropowerPlant.Location.Lat = PlantLocation.Split(',')[0].Trim();
+                HydropowerPlant.Location.Lng = PlantLocation.Split(',')[1].Trim();
+            }
+
+            if (DamsLocation != null && DamsLocation.Split(',').Length >= 2)
+            {
+                HydropowerPlant.HydropowerDams.Location.Lat = DamsLocation.Split(',')[0].Trim();
+                HydropowerPlant.HydropowerDams.Location.Lng = DamsLocation.Split(',')[1].Trim();
+            }
             await UpsertImage();
             await _hydropowerPlantRepository.UpsertAsync(HydropowerPlant);
 
