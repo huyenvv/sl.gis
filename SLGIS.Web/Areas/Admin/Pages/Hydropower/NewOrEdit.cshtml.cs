@@ -64,8 +64,8 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
             SelectedHydropowerPlantOwners = HydropowerPlant.Owners.Select(m => m.ToString()).ToList();
             SelectedHydropowerDamsOwners = HydropowerPlant.HydropowerDams?.Owners?.Select(m => m.ToString()).ToList();
             SelectedConnections = HydropowerPlant.Connections?.Select(m => m.SubstationId.ToString()).ToList();
-            PlantLocation = $"{HydropowerPlant.Location.Lat},{HydropowerPlant.Location.Lng}";
-            DamsLocation = $"{HydropowerPlant.HydropowerDams.Location.Lat},{HydropowerPlant.HydropowerDams.Location.Lng}";
+            PlantLocation = HydropowerPlant.Location.ToString();
+            DamsLocation = HydropowerPlant.HydropowerDams.Location.ToString();
 
             return Page();
         }
