@@ -5,6 +5,8 @@ using MongoDB.Driver;
 using SLGIS.Core;
 using SLGIS.Core.Model.ValueObjects;
 using SLGIS.Core.Repositories;
+using SLGIS.Implementation;
+using SLGIS.Web.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,25 +19,22 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
         private readonly IHydropowerPlantRepository _hydropowerPlantRepository;
         private readonly ISubstationRepository _substationRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IFileService _fileService;
 
-        public NewOrEditModel(IHydropowerPlantRepository hydropowerPlantRepository, ISubstationRepository substationRepository, IUserRepository userRepository)
+        public NewOrEditModel(IHydropowerPlantRepository hydropowerPlantRepository, ISubstationRepository substationRepository,
+            IUserRepository userRepository, IFileService fileService)
         {
             _hydropowerPlantRepository = hydropowerPlantRepository;
             _substationRepository = substationRepository;
             _userRepository = userRepository;
+            _fileService = fileService;
         }
 
         [BindProperty]
         public Core.HydropowerPlant HydropowerPlant { get; set; }
 
         [BindProperty]
-        public List<string> SelectedHydropowerPlantOwners { get; set; } = new List<string>();
-
-        [BindProperty]
-        public List<string> SelectedHydropowerDamsOwners { get; set; } = new List<string>();
-        
-        [BindProperty]
-        public List<string> SelectedConnections { get; set; } = new List<string>();
+        public HydropowerViewModel ViewModel { get; set; } = new HydropowerViewModel();
 
         public List<User> Members { get { return _userRepository.Find(m => m.Roles.Count == 0).ToList(); } }
         public List<Core.Model.Substation> Substations { get { return _substationRepository.Find(m => true).ToList(); } }
@@ -55,9 +54,9 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
                 return NotFound();
             }
 
-            SelectedHydropowerPlantOwners = HydropowerPlant.Owners.Select(m => m.ToString()).ToList();
-            SelectedHydropowerDamsOwners = HydropowerPlant.HydropowerDams?.Owners?.Select(m => m.ToString()).ToList();
-            SelectedConnections = HydropowerPlant.Connections?.Select(m => m.SubstationId.ToString()).ToList();
+            ViewModel.SelectedHydropowerPlantOwners = HydropowerPlant.Owners.Select(m => m.ToString()).ToList();
+            ViewModel.SelectedHydropowerDamsOwners = HydropowerPlant.HydropowerDams?.Owners?.Select(m => m.ToString()).ToList();
+            ViewModel.SelectedConnections = HydropowerPlant.Connections?.Select(m => m.SubstationId.ToString()).ToList();
             return Page();
         }
 
@@ -68,12 +67,29 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
                 return Page();
             }
 
-            HydropowerPlant.Owners = SelectedHydropowerPlantOwners?.Select(m => new ObjectId(m)).ToList();
-            HydropowerPlant.HydropowerDams.Owners = SelectedHydropowerDamsOwners?.Select(m => new ObjectId(m)).ToList();
-            HydropowerPlant.Connections = SelectedConnections?.Select(m => new Connection { SubstationId = Guid.Parse(m) }).ToList();
+            HydropowerPlant.Owners = ViewModel.SelectedHydropowerPlantOwners?.Select(m => new ObjectId(m)).ToList();
+            HydropowerPlant.HydropowerDams.Owners = ViewModel.SelectedHydropowerDamsOwners?.Select(m => new ObjectId(m)).ToList();
+            HydropowerPlant.Connections = ViewModel.SelectedConnections?.Select(m => new Connection { SubstationId = Guid.Parse(m) }).ToList();
+            
+            await UpsertImage();
             await _hydropowerPlantRepository.UpsertAsync(HydropowerPlant);
 
             return RedirectToPage("./Index");
+        }
+
+        private async Task UpsertImage()
+        {
+            if (ViewModel.HydropowerPlantImage != null)
+            {
+                var filePath = await _fileService.UpsertAsync(await ViewModel.HydropowerPlantImage.GetBytes(), ViewModel.HydropowerPlantImage.FileName, null, true);
+                HydropowerPlant.Image = filePath.Replace("wwwroot", "");
+            }
+
+            if (ViewModel.HydropowerDamsImage != null)
+            {
+                var filePath = await _fileService.UpsertAsync(await ViewModel.HydropowerDamsImage.GetBytes(), ViewModel.HydropowerDamsImage.FileName, null, true);
+                HydropowerPlant.HydropowerDams.Image = filePath.Replace("wwwroot", "");
+            }
         }
     }
 }

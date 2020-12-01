@@ -3,6 +3,14 @@
 <div class="col-md-12 mb-4">
     <div class="row mt-2 row-item">
         <div class="col-sm-6">
+            <div class="form-group gisimage">
+                <label>Ảnh</label>
+                @Html.HiddenFor(model => model.HydropowerPlant.HydropowerDams.Image)
+                <img src="@(Model.HydropowerPlant.HydropowerDams?.Image ?? "/images/no-image-768x576.png")" class="img-fluid img-thumbnail" />
+
+                @Html.EditorFor(model => model.ViewModel.HydropowerDamsImage, new { htmlAttributes = new { @class = "form-control", accept = "image/*" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.Image, "", new { @class = "text-danger" })
+            </div>
             <div class="form-group">
                 <label>Chủ đầu tư</label>
                 @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.Name, new { htmlAttributes = new { @class = "form-control" } })
@@ -39,7 +47,7 @@
                         }
                     }
                 </select>
-                
+
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.Missions, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
@@ -57,6 +65,8 @@
                 @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.NguonVon, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.NguonVon, "", new { @class = "text-danger" })
             </div>
+        </div>
+        <div class="col-sm-6">
             <div class="form-group">
                 <label>Tên chủ sở hữu đập</label>
                 @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.OwnerName, new { htmlAttributes = new { @class = "form-control" } })
@@ -72,8 +82,6 @@
                 @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.OwnerPhone, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.OwnerPhone, "", new { @class = "text-danger" })
             </div>
-        </div>
-        <div class="col-sm-6">
             <div class="form-group">
                 <label>Fax chủ sở hữu</label>
                 @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.OwnerFax, new { htmlAttributes = new { @class = "form-control" } })
@@ -115,13 +123,8 @@
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.ExploitEmail, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                <label>Ảnh đại diện</label>
-                @Html.EditorFor(model => model.HydropowerPlant.HydropowerDams.Image, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.HydropowerPlant.HydropowerDams.Image, "", new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
                 <label>Những người có quyền</label>
-                <select name="SelectedHydropowerDamsOwners" class="form-control select2" data-placeholder="Người quản trị" multiple="multiple" tabindex="-1" aria-hidden="true">
+                <select name="ViewModel.SelectedHydropowerDamsOwners" class="form-control select2" data-placeholder="Người quản trị" multiple="multiple" tabindex="-1" aria-hidden="true">
                     @foreach (var item in Model.Members)
                     {
                         if (Model.HydropowerPlant.HydropowerDams.Owners.Contains(item.Id))

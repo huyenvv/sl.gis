@@ -7,8 +7,7 @@
 
 }
 
-@using (Html.BeginForm())
-{
+<form enctype="multipart/form-data" method="post">
     @Html.AntiForgeryToken()
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -43,7 +42,7 @@
 
     <button class="btn btn-primary" type="submit">Lưu</button>
     <a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>
-}
+</form>
 
 @section Styles {
     <link href="~/lib/summernote/summernote-bs4.css" rel="stylesheet" />
@@ -64,7 +63,25 @@
             });
 
             $(".select2").select2({ width: '100%' });
+
+            $(".gisimage input[type='file']").change(function () {
+                readURL(this, function (base64Image) {
+                    $('.gisimage img').attr('src', base64Image);
+                });
+            })
         });
+
+        function readURL(input, callback) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    callback(e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
     </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
