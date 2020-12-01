@@ -1,36 +1,33 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SLGIS.Core;
+using SLGIS.Core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace SLGIS.Web.Pages.PostData
+namespace SLGIS.Web.Pages.Report
 {
-    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IPostDataRepository _postDataRepository;
+        private readonly IReportRepository _reportRepository;
         private readonly IHydropowerPlantRepository _hydropowerPlantRepository;
-        private readonly IElementRepository _elementRepository;
 
-        public IndexModel(ILogger<IndexModel> logger, IPostDataRepository postDataRepository, IHydropowerPlantRepository hydropowerPlantRepository, IElementRepository elementRepository)
+        public IndexModel(ILogger<IndexModel> logger, IReportRepository reportRepository, IHydropowerPlantRepository hydropowerPlantRepository)
         {
             _logger = logger;
-            _postDataRepository = postDataRepository;
+            _reportRepository = reportRepository;
             _hydropowerPlantRepository = hydropowerPlantRepository;
-            _elementRepository = elementRepository;
         }
 
+        public string FilterText { get; set; }
         public PagerViewModel ViewModel { get; set; }
-        public List<Core.Element> Elements { get; set; }
 
-        public IActionResult OnGet(Guid? hydropowerPlantId, DateTime? startDate, DateTime? endDate, int? pageIndex = 1)
+        public IActionResult OnGet(Guid? hydropowerPlantId, DateTime? startDate, DateTime? endDate, string searchText = null, int? pageIndex = 1)
         {
             var hydropowerPlants = ListFactories();
             if (hydropowerPlants.Count == 0 || hydropowerPlantId.HasValue && !hydropowerPlants.Any(m => m.Id == hydropowerPlantId))
@@ -41,7 +38,13 @@ namespace SLGIS.Web.Pages.PostData
             hydropowerPlantId ??= hydropowerPlants.First().Id;
             ViewData["HydropowerPlantId"] = hydropowerPlantId;
 
-            var list = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).AsQueryable();
+            FilterText = searchText;
+            var list = _reportRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).AsQueryable();
+            if (!string.IsNullOrEmpty(FilterText))
+            {
+                list = list.Where(m => m.Title.Contains(FilterText.ToLower()));
+            }
+
             if (startDate.HasValue)
             {
                 list = list.Where(m => m.Created >= startDate);
@@ -52,17 +55,15 @@ namespace SLGIS.Web.Pages.PostData
                 list = list.Where(m => m.Created <= endDate);
             }
 
-            var postDatas = list.OrderByDescending(m => m.Created).AsEnumerable();
-            var pager = new Pager(postDatas.Count(), pageIndex);
-
+            var result = list.OrderByDescending(m => m.Created).AsEnumerable();
+            var pager = new Pager(list.Count(), pageIndex);
             ViewModel = new PagerViewModel
             {
-                BaseUrl = Url.Page("./Index", new { hydropowerPlantId, startDate, endDate }),
-                Items = postDatas.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
+                BaseUrl = Url.Page("./Index"),
+                Items = list.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
                 Pager = pager
             };
 
-            Elements = _elementRepository.Find(m => true).OrderBy(m => m.Id).ToList();
             return Page();
         }
 
@@ -73,8 +74,8 @@ namespace SLGIS.Web.Pages.PostData
                 return Page();
             }
 
-            await _postDataRepository.DeleteAsync(id);
-            _logger.LogInformation($"Deleted postData {id}");
+            await _reportRepository.DeleteAsync(id);
+            _logger.LogInformation($"Deleted report {id}");
 
             return RedirectToPage("./Index");
         }

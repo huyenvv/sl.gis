@@ -1,0 +1,90 @@
+﻿@page
+@model SLGIS.Web.Pages.Report.IndexModel
+@{
+    ViewBag.Title = ViewBag.Breadcrumbs = "Danh sách báo cáo";
+}
+
+@section Factory {
+    <partial name="_FactorySelectPartial" />
+}
+
+@section Button {
+    <a href="@Url.Page("NewOrEdit")" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Get, new { role = "form", id = "frmSearch" }))
+{
+    <div class="row">
+        <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control" name="SearchText" placeholder="Tìm kiếm" value="@Model.FilterText">
+                <span class="input-group-btn" id="btnSearch">
+                    <button class="btn bd bg-white tx-gray-600" type="button"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row mt-2">
+    <div class="col-12">
+        <form method="post">
+            <div class="card shadow-base bd-0">
+                <div class="table-responsive">
+                    <table class="table mg-b-0" cellspacing="0">
+                        <tr>
+                            <th>STT</th>
+                            <th>
+                                Tiêu đề
+                            </th>
+                            <th>
+                                Nội dung
+                            </th>
+                            <th>
+                                File báo cáo
+                            </th>
+                            <th>
+                                Thời gian
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @{
+                            var stt = 1;
+                            foreach (var item in Model.ViewModel.Items as IEnumerable<Core.Report>)
+                            {
+                                <tr class="stat even">
+                                    <td class="ac">
+                                        @(stt++)
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })">@item.Title</a>
+                                    </td>
+                                    <td>
+                                        @item.Content
+                                    </td>
+                                    <td>
+                                        @foreach (var file in item.Files)
+                                        {
+                                            <p>@System.IO.Path.GetFileName(file)</p>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.Created.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id, hydropowerPlantId = item.HydropowerPlantId })" class="btn btn-sm btn-primary">Sửa</a>
+                                        <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">
+                                            Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+            <partial name="_PagerPartial" model="Model.ViewModel" />
+        </form>
+    </div>
+</div>
