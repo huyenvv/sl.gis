@@ -41,6 +41,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\home\js\bootstrap.min.js" />
+    <None Include="wwwroot\home\js\jquery.easing.min.js" />
+    <None Include="wwwroot\home\js\jquery.min.js" />
+    <None Include="wwwroot\home\js\scripts.js" />
+    <None Include="wwwroot\home\js\wow.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="Areas\Admin\Pages\Hydropower\_PlantPartial.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
