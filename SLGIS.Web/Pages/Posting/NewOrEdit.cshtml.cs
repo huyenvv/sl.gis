@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using SLGIS.Core;
+using SLGIS.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +13,17 @@ using System.Threading.Tasks;
 namespace SLGIS.Web.Pages.PostData
 {
     [Authorize]
-    public class NewOrEditModel : PageModel
+    public class NewOrEditModel : PageModelBase
     {
         private readonly ILogger<NewOrEditModel> _logger;
         private readonly IPostDataRepository _postDataRepository;
-        private readonly IHydropowerPlantRepository _hydropowerPlantRepository;
         private readonly IElementRepository _elementRepository;
 
-        public NewOrEditModel(ILogger<NewOrEditModel> logger, IPostDataRepository postDataRepository, IHydropowerPlantRepository hydropowerPlantRepository, IElementRepository elementRepository)
+        public NewOrEditModel(ILogger<NewOrEditModel> logger, IPostDataRepository postDataRepository, HydropowerService hydropowerService, IElementRepository elementRepository)
+             : base(hydropowerService)
         {
             _logger = logger;
             _postDataRepository = postDataRepository;
-            _hydropowerPlantRepository = hydropowerPlantRepository;
             _elementRepository = elementRepository;
         }
 
@@ -32,21 +31,14 @@ namespace SLGIS.Web.Pages.PostData
         public Core.PostData PostData { get; set; }
         public List<Core.Element> Elements { get; set; }
 
-        public IActionResult OnGet(Guid? hydropowerPlantId)
+        public IActionResult OnGet()
         {
-            var hydropowerPlants = ListFactories();
-
-            if (hydropowerPlants.Count == 0 || hydropowerPlantId.HasValue && !hydropowerPlants.Any(m => m.Id == hydropowerPlantId))
-            {
-                return NotFound();
-            }
-
+            var hydropowerPlantId = GetCurrentHydropower().Id;
             CreateViewData(hydropowerPlantId);
 
             PostData = new Core.PostData
             {
                 Time = DateTime.Now,
-                HydropowerPlantId = hydropowerPlantId.Value
             };
 
             return Page();
@@ -60,10 +52,9 @@ namespace SLGIS.Web.Pages.PostData
                 return Page();
             }
 
-            var hydropowerPlants = ListFactories();
-            if (!hydropowerPlants.Any(m => m.Id == PostData.HydropowerPlantId))
+            if (PostData.HydropowerPlantId != GetCurrentHydropower().Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             await _postDataRepository.AddAsync(PostData);
@@ -73,28 +64,9 @@ namespace SLGIS.Web.Pages.PostData
             return RedirectToPage("./Index", new { PostData.HydropowerPlantId });
         }
 
-        private List<Core.HydropowerPlant> ListFactories()
-        {
-            if (Factories == null || Factories.Count == 0)
-            {
-                Factories = _hydropowerPlantRepository.Find(m => true).ToList();
-            }
-
-            var hydropowerPlants = Factories;
-            if (User.IsInRole(Constant.Role.Member))
-            {
-                hydropowerPlants = hydropowerPlants.Where(m => m.Owners.Contains(User.GetId())).ToList();
-            }
-
-            return hydropowerPlants;
-        }
-
-
-        private List<Core.HydropowerPlant> Factories { get; set; }
         private void CreateViewData(Guid? hydropowerPlantId)
         {
-            var hydropowerPlants = ListFactories();
-            ViewData["HydropowerPlantId"] = hydropowerPlantId ?? hydropowerPlants.First().Id;
+            ViewData["HydropowerPlantId"] = hydropowerPlantId;
             Elements = _elementRepository.Find(m => true).OrderBy(m => m.Id).ToList();
         }
     }

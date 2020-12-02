@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using SLGIS.Core;
 using SLGIS.Core.Repositories;
 using SLGIS.Implementation;
@@ -11,16 +10,14 @@ using System.Threading.Tasks;
 
 namespace SLGIS.Web.Pages.Report
 {
-    public class NewOrEditModel : PageModel
+    public class NewOrEditModel : PageModelBase
     {
         private readonly IReportRepository _reportRepository;
-        private readonly IHydropowerPlantRepository _hydropowerPlantRepository;
         private readonly IFileService _fileService;
 
-        public NewOrEditModel(IReportRepository reportRepository, IHydropowerPlantRepository hydropowerPlantRepository, IFileService fileService)
+        public NewOrEditModel(IReportRepository reportRepository, HydropowerService hydropowerService, IFileService fileService) : base(hydropowerService)
         {
             _reportRepository = reportRepository;
-            _hydropowerPlantRepository = hydropowerPlantRepository;
             _fileService = fileService;
         }
 
@@ -32,14 +29,7 @@ namespace SLGIS.Web.Pages.Report
 
         public async Task<IActionResult> OnGetAsync(Guid? hydropowerPlantId, Guid? id)
         {
-            var hydropowerPlants = ListFactories();
-
-            if (hydropowerPlants.Count == 0 || hydropowerPlantId.HasValue && !hydropowerPlants.Any(m => m.Id == hydropowerPlantId))
-            {
-                return NotFound();
-            }
-
-            CreateViewData(hydropowerPlantId);
+            ViewData["HydropowerPlantId"] = GetCurrentHydropower().Id;
 
             if (id == null)
             {
@@ -59,14 +49,13 @@ namespace SLGIS.Web.Pages.Report
         {
             if (!ModelState.IsValid)
             {
-                CreateViewData(Report.HydropowerPlantId);
+                ViewData["HydropowerPlantId"] = Report.HydropowerPlantId;
                 return Page();
             }
 
-            var hydropowerPlants = ListFactories();
-            if (!hydropowerPlants.Any(m => m.Id == Report.HydropowerPlantId))
+            if (Report.HydropowerPlantId != GetCurrentHydropower().Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if (Files?.Count() > 0)
@@ -84,29 +73,6 @@ namespace SLGIS.Web.Pages.Report
             await _reportRepository.UpsertAsync(Report);
 
             return RedirectToPage("./Index");
-        }
-
-        private List<Core.HydropowerPlant> ListFactories()
-        {
-            if (Factories == null || Factories.Count == 0)
-            {
-                Factories = _hydropowerPlantRepository.Find(m => true).ToList();
-            }
-
-            var hydropowerPlants = Factories;
-            if (User.IsInRole(Constant.Role.Member))
-            {
-                hydropowerPlants = hydropowerPlants.Where(m => m.Owners.Contains(User.GetId())).ToList();
-            }
-
-            return hydropowerPlants;
-        }
-        private List<Core.HydropowerPlant> Factories { get; set; }
-
-        private void CreateViewData(Guid? hydropowerPlantId)
-        {
-            var hydropowerPlants = ListFactories();
-            ViewData["HydropowerPlantId"] = hydropowerPlantId ?? hydropowerPlants.First().Id;
         }
     }
 }

@@ -1,41 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using SLGIS.Core;
 using SLGIS.Core.Repositories;
+using SLGIS.Implementation;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace SLGIS.Web.Pages.Report
 {
-    public class IndexModel : PageModel
+    public class IndexModel : PageModelBase
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IReportRepository _reportRepository;
-        private readonly IHydropowerPlantRepository _hydropowerPlantRepository;
 
-        public IndexModel(ILogger<IndexModel> logger, IReportRepository reportRepository, IHydropowerPlantRepository hydropowerPlantRepository)
+        public IndexModel(ILogger<IndexModel> logger, IReportRepository reportRepository, HydropowerService hydropowerService) : base(hydropowerService)
         {
             _logger = logger;
             _reportRepository = reportRepository;
-            _hydropowerPlantRepository = hydropowerPlantRepository;
         }
 
         public string FilterText { get; set; }
         public PagerViewModel ViewModel { get; set; }
 
-        public IActionResult OnGet(Guid? hydropowerPlantId, DateTime? startDate, DateTime? endDate, string searchText = null, int? pageIndex = 1)
+        public IActionResult OnGet(DateTime? startDate, DateTime? endDate, string searchText = null, int? pageIndex = 1)
         {
-            var hydropowerPlants = ListFactories();
-            if (hydropowerPlants.Count == 0 || hydropowerPlantId.HasValue && !hydropowerPlants.Any(m => m.Id == hydropowerPlantId))
-            {
-                return NotFound();
-            }
-
-            hydropowerPlantId ??= hydropowerPlants.First().Id;
+            var hydropowerPlantId = GetCurrentHydropower().Id;
             ViewData["HydropowerPlantId"] = hydropowerPlantId;
 
             FilterText = searchText;
@@ -78,17 +67,6 @@ namespace SLGIS.Web.Pages.Report
             _logger.LogInformation($"Deleted report {id}");
 
             return RedirectToPage("./Index");
-        }
-
-        private List<Core.HydropowerPlant> ListFactories()
-        {
-            var hydropowerPlants = _hydropowerPlantRepository.Find(m => true).ToList();
-            if (User.IsInRole(Constant.Role.Member))
-            {
-                hydropowerPlants = hydropowerPlants.Where(m => m.Owners.Contains(User.GetId())).ToList();
-            }
-
-            return hydropowerPlants;
         }
     }
 }

@@ -21,19 +21,19 @@ namespace SLGIS.Implementation
             _userRepository = userRepository;
         }
 
-        public async Task<HydropowerPlant> GetCurrent(ObjectId currentUserId)
+        public HydropowerPlant GetCurrent(ObjectId currentUserId)
         {
             if (!_currentHydropowerId.ContainsKey(currentUserId))
             {
                 var listHydropowers = _hydropowerPlantRepository.Find(m => true);
-                var user = await _userRepository.GetById(currentUserId.ToString());
-                var currentHydropower = user.Roles?.Count > 0 ? listHydropowers.FirstOrDefault() 
+                var user = _userRepository.Find(m => m.Id == currentUserId).FirstOrDefault();
+                var currentHydropower = user.Roles?.Count > 0 ? listHydropowers.FirstOrDefault()
                     : listHydropowers.Where(m => m.Owners.Contains(currentUserId)).FirstOrDefault();
                 _currentHydropowerId.GetOrAdd(currentUserId, currentHydropower);
             }
 
             _currentHydropowerId.TryGetValue(currentUserId, out var hydropower);
-           return hydropower;
+            return hydropower;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace SLGIS.Web
 
         public HydropowerPlant GetCurrentHydropower()
         {
-            return _hydropowerService.GetCurrent(User.GetId()).GetAwaiter().GetResult();
+            return _hydropowerService.GetCurrent(User.GetId());
         }
     }
 }
