@@ -19,10 +19,16 @@
     <link href="~/css/map-index.css" rel="stylesheet" />
 </head>
 <body>
-
+    <div class="show-reg-form d-none hidden">
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+              asp-route-returnUrl="@Url.Page("/", new { area = "" })"
+              method="post" id="logoutForm">
+            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+        </form>
+    </div>
     <div class="wrapper d-flex align-items-stretch">
         <nav id="sidebar">
-           
+
             <div class="info-scroll">
                 <div>
                     <select class="form-control" id="search-marker">
@@ -95,6 +101,7 @@
                         <a href="#" title="Thông tin chi tiết"><i class="fa fa-info-circle circle-outline"> </i> <span class="pr-3"></span></a>
                         <a href="#" title="Chỉnh sửa thông tin"><i class="fa fa-edit circle-outline"> </i> <span class="pr-3"></span></a>
                         <a href="#" title="Dữ liệu báo cáo"><i class="fa fa-reply circle-outline"> </i> <span class="pr-3"></span></a>
+                        <a href="#" onclick="$('#logoutForm').submit()" title="Thoát"><i class="fa fa-sign-out circle-outline"> </i> <span class="pr-3"></span></a>
                     </div>
 
                     <!-- information  -->

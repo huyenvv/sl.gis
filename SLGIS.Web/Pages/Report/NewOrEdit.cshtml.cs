@@ -27,14 +27,16 @@ namespace SLGIS.Web.Pages.Report
         [BindProperty]
         public List<IFormFile> Files { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(Guid? hydropowerPlantId, Guid? id)
+        public async Task<IActionResult> OnGetAsync(Guid? id)
         {
-            if (GetCurrentHydropower() == null)
+            var currentHydropower = GetCurrentHydropower();
+            if (currentHydropower == null)
             {
                 return RedirectToPage("/Map/Index");
             }
 
-            ViewData["HydropowerPlantId"] = GetCurrentHydropower().Id;
+            
+            ViewData["HydropowerPlantId"] = currentHydropower.Id;
 
             if (id == null)
             {
@@ -43,7 +45,7 @@ namespace SLGIS.Web.Pages.Report
             }
 
             Report = await _reportRepository.GetAsync(m => m.Id == id);
-            if (Report == null || Report.HydropowerPlantId != hydropowerPlantId)
+            if (Report == null || Report.HydropowerPlantId != currentHydropower.Id)
             {
                 return NotFound();
             }
