@@ -29,6 +29,11 @@ namespace SLGIS.Implementation
                 var user = _userRepository.Find(m => m.Id == currentUserId).FirstOrDefault();
                 var currentHydropower = user.Roles?.Count > 0 ? listHydropowers.FirstOrDefault()
                     : listHydropowers.Where(m => m.Owners.Contains(currentUserId)).FirstOrDefault();
+                if (currentHydropower == null)
+                {
+                    return null;
+                }
+
                 _currentHydropowerId.GetOrAdd(currentUserId, currentHydropower);
             }
 

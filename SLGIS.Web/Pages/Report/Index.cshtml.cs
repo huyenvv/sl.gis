@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SLGIS.Core;
 using SLGIS.Core.Repositories;
 using SLGIS.Implementation;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,11 +14,13 @@ namespace SLGIS.Web.Pages.Report
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IReportRepository _reportRepository;
+        private readonly IFileService _fileService;
 
-        public IndexModel(ILogger<IndexModel> logger, IReportRepository reportRepository, HydropowerService hydropowerService) : base(hydropowerService)
+        public IndexModel(ILogger<IndexModel> logger, IReportRepository reportRepository, IFileService fileService, HydropowerService hydropowerService) : base(hydropowerService)
         {
             _logger = logger;
             _reportRepository = reportRepository;
+            _fileService = fileService;
         }
 
         public string FilterText { get; set; }
@@ -24,6 +28,11 @@ namespace SLGIS.Web.Pages.Report
 
         public IActionResult OnGet(DateTime? startDate, DateTime? endDate, string searchText = null, int? pageIndex = 1)
         {
+            if (GetCurrentHydropower() == null)
+            {
+                return RedirectToPage("/Map/Index");
+            }
+
             var hydropowerPlantId = GetCurrentHydropower().Id;
             ViewData["HydropowerPlantId"] = hydropowerPlantId;
 
@@ -54,6 +63,32 @@ namespace SLGIS.Web.Pages.Report
             };
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnGetDownloadFileAsync(Guid id, string fileName)
+        {
+            if (id == Guid.Empty)
+            {
+                return NotFound();
+            }
+
+            var report = await _reportRepository.GetAsync(id);
+            if (report == null)
+            {
+                return NotFound();
+            }
+
+            var filePath = report.Files.FirstOrDefault(m => System.IO.Path.GetFileName(m) == fileName);
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return NotFound();
+            }
+
+            if (!System.IO.File.Exists(filePath))
+                return Content("filename not present");
+
+            var memory = await _fileService.GetAsync(filePath);
+            return File(memory, Common.GetContentType(filePath), Path.GetFileName(filePath));
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(Guid id)

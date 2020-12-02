@@ -29,6 +29,11 @@ namespace SLGIS.Web.Pages.Report
 
         public async Task<IActionResult> OnGetAsync(Guid? hydropowerPlantId, Guid? id)
         {
+            if (GetCurrentHydropower() == null)
+            {
+                return RedirectToPage("/Map/Index");
+            }
+
             ViewData["HydropowerPlantId"] = GetCurrentHydropower().Id;
 
             if (id == null)
