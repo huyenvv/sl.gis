@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
 {
+    [Authorize]
     public class NewOrEditModel : PageModel
     {
         private readonly IHydropowerPlantRepository _hydropowerPlantRepository;

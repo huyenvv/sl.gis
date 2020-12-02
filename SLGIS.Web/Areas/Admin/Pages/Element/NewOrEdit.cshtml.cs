@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SLGIS.Core;
 using System;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace SLGIS.Web.Areas.Admin.Pages.Element
 {
+    [Authorize]
     public class NewOrEditModel : PageModel
     {
         private readonly IElementRepository _elementRepository;

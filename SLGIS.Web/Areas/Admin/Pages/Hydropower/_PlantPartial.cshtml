@@ -1,4 +1,8 @@
-﻿@model SLGIS.Web.Areas.Admin.Pages.Hydropower.NewOrEditModel
+﻿@using SLGIS.Core
+@model SLGIS.Web.Areas.Admin.Pages.Hydropower.NewOrEditModel
+@{ 
+    var canManage = User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.SupperAdmin) || User.IsInRole(Constant.Role.Member);
+}
 
 <div class="col-md-12 mb-4">
     <div class="row mt-2 row-item">
@@ -85,7 +89,7 @@
                     @Html.EditorFor(model => model.PlantLocation, new { htmlAttributes = new { @class = "form-control", pattern = @"[-]?[\d]+[.][\d]*" } })
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group @(canManage ? "" : "d-none")">
                 <label>Phương án đấu nối. Trên giao diện sẽ chọn nối với trạm biến áp</label>
 
                 <select name="ViewModel.SelectedConnections" class="form-control select2" data-placeholder="Connections" multiple="multiple" tabindex="-1" aria-hidden="true">
@@ -103,8 +107,8 @@
                 </select>
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Connections, "", new { @class = "text-danger" })
             </div>
-            <div class="form-group">
-                <label>Những người có quyền</label>
+            <div class="form-group @(canManage ? "" : "d-none")">
+                <label>Người quản lý</label>
                 <select name="ViewModel.SelectedHydropowerPlantOwners" class="form-control select2" data-placeholder="Người quản trị" multiple="multiple" tabindex="-1" aria-hidden="true">
                     @foreach (var item in Model.Members)
                     {

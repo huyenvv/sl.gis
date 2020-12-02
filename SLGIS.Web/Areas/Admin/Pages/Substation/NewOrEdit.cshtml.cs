@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SLGIS.Core;
 using SLGIS.Core.Repositories;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace SLGIS.Web.Areas.Admin.Pages.Substation
 {
+    [Authorize]
     public class NewOrEditModel : PageModel
     {
         private readonly ISubstationRepository _substationRepository;

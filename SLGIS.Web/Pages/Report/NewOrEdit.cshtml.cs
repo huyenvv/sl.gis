@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SLGIS.Core;
 using SLGIS.Core.Repositories;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace SLGIS.Web.Pages.Report
 {
+    [Authorize]
     public class NewOrEditModel : PageModelBase
     {
         private readonly IReportRepository _reportRepository;
@@ -29,13 +31,14 @@ namespace SLGIS.Web.Pages.Report
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
-            var currentHydropower = GetCurrentHydropower();
-            if (currentHydropower == null)
+            return RedirectToPage("./Index");
+
+            if (!HasHydropower)
             {
-                return RedirectToPage("/Map/Index");
+                return ReturnToMap();
             }
 
-            
+            var currentHydropower = GetCurrentHydropower();
             ViewData["HydropowerPlantId"] = currentHydropower.Id;
 
             if (id == null)

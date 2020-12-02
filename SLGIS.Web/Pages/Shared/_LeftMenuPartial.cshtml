@@ -6,19 +6,7 @@
         <span class="menu-item-label">Map</span>
     </div>
 </a>
-<a asp-page="/FileManager/Index" data-href="Index/FileManager/NewOrEdit/" class="br-menu-link">
-    <div class="br-menu-item">
-        <i class="menu-item-icon icon ion-ios-folder-outline tx-24"></i>
-        <span class="menu-item-label">Chia sẻ tài liệu</span>
-    </div>
-</a>
-<a asp-page="/Report/Index" data-href="Index/Report/NewOrEdit/" class="br-menu-link">
-    <div class="br-menu-item">
-        <i class="menu-item-icon ion-ios-pie-outline tx-20"></i>
-        <span class="menu-item-label">Báo cáo</span>
-    </div>
-</a>
-@if (User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.SupperAdmin))
+@if (User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.SupperAdmin) || User.IsInRole(Constant.Role.Member))
 {
     <a asp-page="/User/Index" data-href="Index/User/NewOrEdit/" class="br-menu-link">
         <div class="br-menu-item">
@@ -26,14 +14,25 @@
             <span class="menu-item-label">Thành viên</span>
         </div>
     </a>
+    <a asp-page="/FileManager/Index" data-href="Index/FileManager/NewOrEdit/" class="br-menu-link">
+        <div class="br-menu-item">
+            <i class="menu-item-icon icon ion-ios-folder-outline tx-24"></i>
+            <span class="menu-item-label">Chia sẻ tài liệu</span>
+        </div>
+    </a>
+    <a asp-area="Admin" asp-page="/Element/Index" data-href="Index/Admin/Element/NewOrEdit/" class="br-menu-link">
+        <div class="br-menu-item">
+            <i class="menu-item-icon icon ion-ios-grid-view-outline tx-22"></i>
+            <span class="menu-item-label">Thông số</span>
+        </div>
+    </a>
+    <a asp-area="Admin" asp-page="/Substation/Index" data-href="Index/Admin/Substation/NewOrEdit/" class="br-menu-link">
+        <div class="br-menu-item">
+            <i class="menu-item-icon icon ion-disc tx-22"></i>
+            <span class="menu-item-label">Trạm biến áp/ cột</span>
+        </div>
+    </a>
 }
-
-<a asp-area="Admin" asp-page="/Substation/Index" data-href="Index/Admin/Substation/NewOrEdit/" class="br-menu-link">
-    <div class="br-menu-item">
-        <i class="menu-item-icon icon ion-disc tx-22"></i>
-        <span class="menu-item-label">Trạm biến áp/ cột</span>
-    </div>
-</a>
 
 <a asp-area="Admin" asp-page="/Hydropower/Index" data-href="Index/Admin/Hydropower/NewOrEdit/" class="br-menu-link">
     <div class="br-menu-item">
@@ -41,10 +40,10 @@
         <span class="menu-item-label">Nhà máy thủy điện</span>
     </div>
 </a>
-<a asp-area="Admin" asp-page="/Element/Index" data-href="Index/Admin/Element/NewOrEdit/" class="br-menu-link">
+<a asp-page="/Report/Index" data-href="Index/Report/NewOrEdit/" class="br-menu-link">
     <div class="br-menu-item">
-        <i class="menu-item-icon icon ion-ios-grid-view-outline tx-22"></i>
-        <span class="menu-item-label">Thông số</span>
+        <i class="menu-item-icon ion-ios-pie-outline tx-20"></i>
+        <span class="menu-item-label">Báo cáo</span>
     </div>
 </a>
 <a asp-area="" asp-page="/Posting/Index" asp-route-hydropowerPlantId="@ViewData["HydropowerPlantId"]" data-href="Posting/Index/Posting/NewOrEdit/" class="br-menu-link">

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SLGIS.Core;
 using SLGIS.Core.Repositories;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace SLGIS.Web.Pages.Report
 {
+    [Authorize]
     public class IndexModel : PageModelBase
     {
         private readonly ILogger<IndexModel> _logger;
@@ -28,9 +30,9 @@ namespace SLGIS.Web.Pages.Report
 
         public IActionResult OnGet(DateTime? startDate, DateTime? endDate, string searchText = null, int? pageIndex = 1)
         {
-            if (GetCurrentHydropower() == null)
+            if (!HasHydropower)
             {
-                return RedirectToPage("/Map/Index");
+                return ReturnToMap();
             }
 
             var hydropowerPlantId = GetCurrentHydropower().Id;

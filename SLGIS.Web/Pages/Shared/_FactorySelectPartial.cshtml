@@ -1,14 +1,9 @@
-﻿@using SLGIS.Core
-@inject IHydropowerPlantRepository hydropowerPlantRepository
+﻿@using SLGIS.Implementation
+@inject HydropowerService hydropowerService 
 @{
-    var hydropowerPlantId = (Guid)ViewData["HydropowerPlantId"];
-    var hydropowerPlants = hydropowerPlantRepository.Find(m=> true).ToList();
-    if (User.IsInRole(Constant.Role.Member))
-    {
-        hydropowerPlants = hydropowerPlants.Where(m => m.Owners.Contains(User.GetId())).ToList();
-    }
+    var selected = hydropowerService.GetCurrent(User.GetId());
+    var hydropowerPlants = hydropowerService.CurrentList(User.GetId());
 
-    var selected = hydropowerPlants.First(m => m.Id == hydropowerPlantId);
     var url = $"{Context.Request.Path}";
 }
 
@@ -17,12 +12,12 @@
         <a class="dropdown-toggle text-uppercase" href="javascript:void(0)" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <strong>@selected.Name</strong>
         </a>
-        @if (hydropowerPlants.Count > 1)
+        @if (hydropowerPlants.Count() > 1)
         {
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 @foreach (var hydropowerPlant in hydropowerPlants.Where(m => m.Id != selected.Id))
                 {
-                    <a class="dropdown-item text-uppercase" href="@($"{url}?hydropowerPlantId={hydropowerPlant.Id}")"><strong>@hydropowerPlant.Name</strong></a>
+                    <a class="dropdown-item text-uppercase" href="@($"{url}?handler=HydropowerChange&id={hydropowerPlant.Id}")"><strong>@hydropowerPlant.Name</strong></a>
                 }
             </div>
         }
