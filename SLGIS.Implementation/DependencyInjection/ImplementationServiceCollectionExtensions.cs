@@ -21,7 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     .AddSingleton<IPostDataRepository, PostDataRepository>()
                     .AddSingleton<IFileService, FileService>()
                     .AddSingleton<ISubstationRepository, SubstationRepository>()
-                    .AddSingleton<IReportRepository, ReportRepository>();
+                    .AddSingleton<IReportRepository, ReportRepository>()
+                    .AddSingleton<HydropowerService>();
         }
 
         public static IServiceCollection AddMongoSigleton(this IServiceCollection services, IConfiguration configuration)
