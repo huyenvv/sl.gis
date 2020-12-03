@@ -11,7 +11,9 @@ namespace SLGIS.Core
     [BsonIgnoreExtraElements]
     public class HydropowerPlant : BaseEntity
     {
-        public HydropowerDams HydropowerDams { get; set; } = new HydropowerDams();
+        public List<HydropowerDams> HydropowerDams { get; set; } = new List<HydropowerDams>();
+
+        //public HydropowerDams HydropowerDams { get; set; } = new HydropowerDams();
 
         /// <summary>
         /// Chủ đầu tư

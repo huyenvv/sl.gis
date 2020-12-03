@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
 using System.Collections.Generic;
 namespace SLGIS.Core.Model
 {
@@ -28,5 +27,19 @@ namespace SLGIS.Core.Model
         /// Tên đường dây
         /// </summary>
         public string LineName { get; set; }
+
+        /// <summary>
+        /// Cấp điện áp
+        /// </summary>
+        public string ElectricLevel { get; set; }
+
+        /// <summary>
+        /// Địa chỉ
+        /// </summary>
+        public string Address { get; set; }
+
+        [BsonIgnore]
+
+        public static List<string> ElectricLevels = new List<string> { "500KV", "220KV", "110KV", "35KV" };
     }
 }
