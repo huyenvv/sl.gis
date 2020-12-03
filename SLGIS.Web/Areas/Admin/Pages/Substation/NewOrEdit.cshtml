@@ -4,7 +4,6 @@
     ViewBag.Title = Model.Substation.Id != Guid.Empty ? "Sửa lại" : "Tạo mới";
     ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>Substation</a>" +
                           "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
-
 }
 
 @using (Html.BeginForm())
@@ -36,6 +35,16 @@
                     <div class="input-group">
                         <span class="input-group-addon tx-size-sm lh-2">Lat,Lng=</span>
                         @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control", pattern = @"[-]?[\d]+[.][\d]*" } })
+                    </div>
+                    <div class="form-group">
+                        <label>Cấp điện áp</label>
+                        <select asp-for="Substation.ElectricLevel" class="form-control" asp-items="ViewBag.ElectricLevel"></select>
+                        @Html.ValidationMessageFor(model => model.Substation.ElectricLevel, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <label>Địa chỉ</label>
+                        @Html.EditorFor(model => model.Substation.Address, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Substation.Address, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
