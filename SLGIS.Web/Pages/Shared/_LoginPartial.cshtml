@@ -14,18 +14,18 @@
     </div>
 
     <a href="#" class="nav-link nav-link-profile" data-toggle="dropdown">
-        <span class="logged-name hidden-md-down">@User.Identity.Name!</span>
+        <span class="logged-name hidden-md-down">@User.Identity.Name</span>
         <img src="~/images/user.png" class="wd-32 rounded-circle" alt="">
     </a>
     <div class="dropdown-menu dropdown-menu-header wd-200">
         <ul class="list-unstyled user-profile-nav">
-            <li>
+            @*<li>
                 <a href="@Url.Page("/User/MyAccount")">
                     <i class="icon ion-ios-person"></i> Thông tin tài khoản
                 </a>
-            </li>
+            </li>*@
             <li>
-                <a href="#" onclick="$('#logoutForm').submit()"><i class="icon ion-power"></i> Đăng xuất</a>
+                <a href="#" onclick="$('#logoutForm').submit()"><i class="icon ion-power"></i> Thoát</a>
             </li>
         </ul>
     </div><!-- dropdown-menu -->

@@ -33,9 +33,9 @@ namespace SLGIS.Web.Pages.PostData
 
         public IActionResult OnGet()
         {
-            if (GetCurrentHydropower() == null)
+            if (!HasHydropower)
             {
-                return RedirectToPage("/Map/Index");
+                return ReturnToMap();
             }
 
             var hydropowerPlantId = GetCurrentHydropower().Id;

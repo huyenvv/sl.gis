@@ -30,9 +30,9 @@ namespace SLGIS.Web.Pages.PostData
 
         public IActionResult OnGet(DateTime? startDate, DateTime? endDate, int? pageIndex = 1)
         {
-            if (GetCurrentHydropower() == null)
+            if (!HasHydropower)
             {
-                return RedirectToPage("/Map/Index");
+                return ReturnToMap();
             }
 
             var hydropowerPlantId = GetCurrentHydropower().Id;
