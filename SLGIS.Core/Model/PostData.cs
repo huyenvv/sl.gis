@@ -5,28 +5,32 @@ using System.ComponentModel.DataAnnotations;
 namespace SLGIS.Core
 {
     /// <summary>
-    /// Dữ liệu các nhà máy gửi lên
+    /// Dữ liệu trung bình ngày
     /// </summary>
     public class PostData : BaseEntity
     {
-        [Required]
-        public DateTime Time { get; set; }
+        /// <summary>
+        /// Ngày
+        /// </summary>
+        public DateTime Date { get; set; }
 
-        [Required]
-        public IEnumerable<ElementValue> Values { get; set; }
+        /// <summary>
+        /// Sản lượng ngày (MWh)
+        /// </summary>
+        public double SanLuongNgay { get; set; }
 
-        [Required]
+        /// <summary>
+        /// Tổng lượng nước qua Tuabin (m3)
+        /// </summary>
+        public double TotalWater { get; set; }
+
+        /// <summary>
+        /// Số giờ phát điện (giờ)
+        /// </summary>
+        public double SoGioPhatDien { get; set; }
+
         public Guid HydropowerPlantId { get; set; }
 
-        public string Note { get; set; }
-    }
-
-    public class ElementValue
-    {
-        [Required]
-        public double Value { get; set; }
-
-        [Required]
-        public string Code { get; set; }
+        public List<PostDataDetails> PostDataDetails { get; set; }
     }
 }

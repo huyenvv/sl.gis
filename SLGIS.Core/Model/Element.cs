@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SLGIS.Core
 {
@@ -13,5 +14,7 @@ namespace SLGIS.Core
 
         public string Unit { get; set; }
         public string Code { get; set; }
+
+        public Guid? HydropowerPlantId { get; set; }
     }
 }
