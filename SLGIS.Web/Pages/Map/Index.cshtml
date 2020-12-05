@@ -32,12 +32,17 @@
             <div class="info-scroll">
                 <div>
                     <select class="form-control" id="search-marker">
-                        <option></option>
-                        <option value="sd">Tà cọ sdf sf dsadf sa fasd fasfd ad fsa fsad fsdf </option>
-                        <option value="AL">Alabama</option>
-                        <option value="xxx">Alabama</option>
+                        @foreach (var item in Model.HydropowerPlants)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
                     </select>
+                </div>
+                <div class="pl-3 pt-3 pb-3 border-bottom">
+                    <a href="/" title="Trang chủ"><i class="fa fa-home circle-outline"> </i> <span class="pr-3"></span></a>
+                    <a href="#" title="Quay lại" class="go-back"><i class="fa fa-backward circle-outline"> </i> <span class="pr-3"></span></a>
 
+                    <a href="#" onclick="$('#logoutForm').submit()" title="Thoát"><i class="fa fa-sign-out circle-outline"> </i> <span class="pr-3"></span></a>
                 </div>
                 <div class="info hydropower-plant d-none">
                     <img class="dams-img" src="images/logo-map.jpg" />
@@ -101,7 +106,6 @@
                         <a href="#" title="Thông tin chi tiết"><i class="fa fa-info-circle circle-outline"> </i> <span class="pr-3"></span></a>
                         <a href="#" title="Chỉnh sửa thông tin"><i class="fa fa-edit circle-outline"> </i> <span class="pr-3"></span></a>
                         <a href="#" title="Dữ liệu báo cáo"><i class="fa fa-reply circle-outline"> </i> <span class="pr-3"></span></a>
-                        <a href="#" onclick="$('#logoutForm').submit()" title="Thoát"><i class="fa fa-sign-out circle-outline"> </i> <span class="pr-3"></span></a>
                     </div>
 
                     <!-- information  -->

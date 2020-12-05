@@ -3,6 +3,7 @@ let markers = [];
 var plantMarkers = [];
 var substationMarkers = [];
 var damsMarkers = [];
+
 var hydropowers = [];
 var substation = [];
 
@@ -10,15 +11,17 @@ function initMap() {
     $.get("/api/hydropower/map", function (data) {
         hydropowers = data;
         $.get("/api/substation/map", function (data) {
-            substation = data;
+            substations = data;
             plantMarkers = makeMarkers(hydropowers, "hydropower-plant");
-
+            damsMarkers = makeMarkers(hydropowers, "hydropower-dams");
+            substationMarkers = makeMarkers(substations, "substation");
             map = new google.maps.Map(document.getElementById("content"), {
-                zoom: 8,
+                zoom: 10,
                 center: plantMarkers[0].getPosition(),
             });
 
-            showMarkers("hydropower-plant");
+            showMarkers();
+            
         });
     });
 }
@@ -27,6 +30,8 @@ function makeMarkers(items, type) {
     for (var i in items) {
         var item = type === "hydropower-plant" ? items[i].hydropowerPlant : type === "hydropower-dams" ?
             items[i].hydropowerPlant.hydropowerDams : items[i].substation;
+
+        //data.push({id: item.id, text: item.name});
 
         const marker = new google.maps.Marker({
             position: new google.maps.LatLng(parseFloat(item.location.lat),
@@ -37,11 +42,11 @@ function makeMarkers(items, type) {
         marker.addListener("click", () => {
             showInfo(items[i], type);
             map.panTo(marker.getPosition());
-            map.setZoom(10);
+            map.setZoom(14);
         });
         markers.push(marker);
-        return markers;
     }
+    return markers;
 }
 function showMarkers() {
     clearMarkers();
