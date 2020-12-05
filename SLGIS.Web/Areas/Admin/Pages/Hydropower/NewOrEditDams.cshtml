@@ -1,0 +1,69 @@
+﻿@page
+@model SLGIS.Web.Areas.Admin.Pages.Hydropower.NewOrEditDamsModel
+@{
+    ViewBag.Title = (Model.HydropowerDams.Id != Guid.Empty ? "Sửa lại" : "Tạo mới") + " đập thủy điện";
+    ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>Đập thủy điện</a>" +
+                          "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
+
+}
+
+<form enctype="multipart/form-data" method="post">
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.PlantId)
+
+
+    <div class="card mt-2 mb-2 shadow-base">
+        <div class="card-body">
+            <div class="row">
+                <partial name="_DamsPartial" />
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Lưu</button>
+    <a href="@Url.Page("NewOrEdit", new { id = Model.PlantId })" class="btn btn-outline-secondary">Quay lại</a>
+</form>
+
+@section Styles {
+    <link href="~/lib/summernote/summernote-bs4.css" rel="stylesheet" />
+    <style>
+        .select2-results__option[aria-selected="true"] {
+            display: none;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/select2/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#HydropowerDams_Description').summernote({
+                height: 300,
+            });
+
+            $(".select2").select2({ width: '100%' });
+
+            $(".gisimage input[type='file']").change(function () {
+                readURL(this, function (base64Image) {
+                    $('.gisimage img').attr('src', base64Image);
+                });
+            })
+        });
+
+        function readURL(input, callback) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    callback(e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

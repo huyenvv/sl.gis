@@ -1,6 +1,6 @@
 ﻿@using SLGIS.Core
 @model SLGIS.Web.Areas.Admin.Pages.Hydropower.NewOrEditModel
-@{ 
+@{
     var canManage = User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.SupperAdmin) || User.IsInRole(Constant.Role.Member);
 }
 
@@ -10,8 +10,9 @@
             <div class="form-group gisimage">
                 <label>Ảnh</label>
                 @Html.HiddenFor(model => model.HydropowerPlant.Image)
-                <img src="@(Model.HydropowerPlant?.Image ?? "/images/no-image-768x576.png")" class="img-fluid img-thumbnail" />
-
+                <div class="text-center">
+                    <img src="@(Model.HydropowerPlant?.Image ?? "/images/no-image-768x576.png")" class="img-thumbnail" style="height: 247px;" />
+                </div>
                 @Html.EditorFor(model => model.ViewModel.HydropowerPlantImage, new { htmlAttributes = new { @class = "form-control", accept = "image/*" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Image, "", new { @class = "text-danger" })
             </div>
@@ -44,14 +45,14 @@
                 <label>Email (của người đại diện)</label>
                 @Html.EditorFor(model => model.HydropowerPlant.Email, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Email, "", new { @class = "text-danger" })
-            </div>
+            </div>            
+        </div>
+        <div class="col-sm-6">
             <div class="form-group">
                 <label>Công suất lắp máy</label>
                 @Html.EditorFor(model => model.HydropowerPlant.Wattage, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Wattage, "", new { @class = "text-danger" })
             </div>
-        </div>
-        <div class="col-sm-6">
             <div class="form-group">
                 <label>Cấp công trình</label>
                 @Html.EditorFor(model => model.HydropowerPlant.Level, new { htmlAttributes = new { @class = "form-control" } })

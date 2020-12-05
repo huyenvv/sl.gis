@@ -9,6 +9,8 @@ namespace SLGIS.Core.Model.ValueObjects
     /// </summary>
     public class HydropowerDams
     {
+        public Guid Id { get; set; }
+
         /// <summary>
         /// Chủ đầu tư
         /// </summary>
