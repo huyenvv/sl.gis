@@ -28,7 +28,7 @@ namespace SLGIS.Web.Pages.PostData
         }
 
         [BindProperty]
-        public Core.PostData PostData { get; set; }
+        public Core.PostDataDetails PostData { get; set; }
         public List<Core.Element> Elements { get; set; }
 
         public IActionResult OnGet()
@@ -41,7 +41,7 @@ namespace SLGIS.Web.Pages.PostData
             var hydropowerPlantId = GetCurrentHydropower().Id;
             CreateViewData(hydropowerPlantId);
 
-            PostData = new Core.PostData
+            PostData = new Core.PostDataDetails
             {
                 Time = DateTime.Now,
             };

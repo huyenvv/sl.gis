@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SLGIS.Core;
 using SLGIS.Core.Repositories;
 using System;
@@ -26,9 +27,10 @@ namespace SLGIS.Web.Areas.Admin.Pages.Substation
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
+            ViewData["ElectricLevel"] = new SelectList(Core.Model.Substation.ElectricLevels);
             if (id == null)
             {
-                Substation = new Core.Model.Substation();
+                Substation = new Core.Model.Substation();                
                 return Page();
             }
 
@@ -38,6 +40,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Substation
             {
                 return NotFound();
             }
+
             Location = Substation.Location.ToString();
             return Page();
         }
@@ -46,6 +49,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Substation
         {
             if (!ModelState.IsValid)
             {
+                ViewData["ElectricLevel"] = new SelectList(Core.Model.Substation.ElectricLevels);
                 return Page();
             }
             if (Location != null && Location.Split(',').Length >= 2)

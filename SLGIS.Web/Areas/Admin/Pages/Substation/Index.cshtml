@@ -40,7 +40,10 @@
                                 Tên đường dây
                             </th>
                             <th>
-                                Tọa độ
+                                Mức điện áp
+                            </th>
+                            <th>
+                                Địa chỉ
                             </th>
                             <th></th>
                         </tr>
@@ -63,7 +66,10 @@
                                         @item.LineName
                                     </td>
                                     <td>
-                                        @item.Location.ToString()
+                                        @item.ElectricLevel
+                                    </td>
+                                    <td>
+                                        @item.Address
                                     </td>
                                     <td>
                                         <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
