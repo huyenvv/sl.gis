@@ -49,25 +49,25 @@ namespace SLGIS.Web.Pages.PostData
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                CreateViewData(PostData.HydropowerPlantId);
-                return Page();
-            }
+        //public async Task<IActionResult> OnPostAsync()
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        CreateViewData(PostData.HydropowerPlantId);
+        //        return Page();
+        //    }
 
-            if (PostData.HydropowerPlantId != GetCurrentHydropower().Id)
-            {
-                return BadRequest();
-            }
+        //    if (PostData.HydropowerPlantId != GetCurrentHydropower().Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            await _postDataRepository.AddAsync(PostData);
+        //    await _postDataRepository.AddAsync(PostData);
 
-            _logger.LogInformation($"Add postData {PostData.Id}");
+        //    _logger.LogInformation($"Add postData {PostData.Id}");
 
-            return RedirectToPage("./Index", new { PostData.HydropowerPlantId });
-        }
+        //    return RedirectToPage("./Index", new { PostData.HydropowerPlantId });
+        //}
 
         private void CreateViewData(Guid? hydropowerPlantId)
         {

@@ -1,7 +1,7 @@
 ﻿@page
 @model SLGIS.Web.Areas.Admin.Pages.Hydropower.NewOrEditDamsModel
 @{
-    ViewBag.Title = (Model.HydropowerDams.Id != Guid.Empty ? "Sửa lại" : "Tạo mới") + " đập thủy điện";
+    ViewBag.Title = (Model.HydropowerDams.Id != Guid.Empty ? "Chỉnh sửa" : "Tạo mới") + " đập thủy điện";
     ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>Đập thủy điện</a>" +
                           "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
 
@@ -17,13 +17,22 @@
     <div class="card mt-2 mb-2 shadow-base">
         <div class="card-body">
             <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary" type="submit">Lưu</button>
+                    <a href="@Url.Page("NewOrEdit", new { id = Model.PlantId })" class="btn btn-outline-secondary">Quay lại</a>
+                    <hr />
+                </div>
                 <partial name="_DamsPartial" />
+                <div class="col">
+                    <hr />
+                    <button class="btn btn-primary" type="submit">Lưu</button>
+                    <a href="@Url.Page("NewOrEdit", new { id = Model.PlantId })" class="btn btn-outline-secondary">Quay lại</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <button class="btn btn-primary" type="submit">Lưu</button>
-    <a href="@Url.Page("NewOrEdit", new { id = Model.PlantId })" class="btn btn-outline-secondary">Quay lại</a>
+
 </form>
 
 @section Styles {

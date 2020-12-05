@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SLGIS.Core;
 using SLGIS.Implementation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SLGIS.Web
 {
@@ -47,6 +49,18 @@ namespace SLGIS.Web
         public IActionResult ReturnToError()
         {
             return RedirectToPage("/Error");
+        }
+
+        public SelectList CreateHydropowerPlantSelection(object selected = null)
+        {
+            var list = ListCurrentHydropowers().ToDictionary(m => m.Id, m => m.Name);
+            var selectList = new SelectList(list, "Key", "Value");
+            if (selected != null)
+            {
+                selectList = new SelectList(list, "Key", "Value", selected);
+            }
+
+            return selectList;
         }
     }
 }

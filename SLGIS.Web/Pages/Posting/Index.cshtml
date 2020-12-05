@@ -41,12 +41,12 @@
                                     <td>
                                         @item.Created.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
                                     </td>
-                                    @foreach (var element in Model.Elements)
+                                    @*@foreach (var element in Model.Elements)
                                     {
                                         var elementValue = item.Values.FirstOrDefault(m => m.Code == element.Code);
 
                                         <th>@elementValue?.Value</th>
-                                    }
+                                    }*@
                                     <td>
                                         <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">
                                             Xóa

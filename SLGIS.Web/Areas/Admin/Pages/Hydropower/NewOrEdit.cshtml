@@ -19,10 +19,16 @@
                 <i class="fa fa-caret-down pull-right mt-1"></i>
             </a>
         </div>
-        <div class="card-body collapse" id="collapseExample">
+        <div class="card-body collapse show" id="collapseExample">
             <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary mr-1" type="submit">Lưu</button>
+                    <a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>
+                    <hr />
+                </div>               
                 <partial name="_PlantPartial" />
                 <div class="col">
+                    <hr />
                     <button class="btn btn-primary mr-1" type="submit">Lưu</button>
                     <a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>
                 </div>

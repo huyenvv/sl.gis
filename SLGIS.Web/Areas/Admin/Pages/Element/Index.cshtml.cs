@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SLGIS.Core;
+using SLGIS.Implementation;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -11,12 +13,12 @@ using System.Threading.Tasks;
 namespace SLGIS.Web.Areas.Admin.Pages.Element
 {
     [Authorize]
-    public class IndexModel : PageModel
+    public class IndexModel : PageModelBase
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IElementRepository _elementRepository;
 
-        public IndexModel(ILogger<IndexModel> logger, IElementRepository elementRepository)
+        public IndexModel(ILogger<IndexModel> logger, IElementRepository elementRepository, HydropowerService hydropowerService) : base(hydropowerService)
         {
             _logger = logger;
             _elementRepository = elementRepository;
@@ -24,24 +26,29 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
 
         public string FilterText { get; set; }
         public PagerViewModel ViewModel { get; set; }
+        public SelectList HydropowerSelectList { get; set; }
 
-        public void OnGet(string searchText = null, int? pageIndex = 1)
+        public void OnGet(string searchText = null, Guid? hydropowerId = null, int? pageIndex = 1)
         {
+            HydropowerSelectList = CreateHydropowerPlantSelection(hydropowerId);
             FilterText = searchText;
-            Expression<Func<Core.Element, bool>> predicate = m => true;
+            var list = _elementRepository.Find(m => true).AsQueryable();
             if (!string.IsNullOrEmpty(FilterText))
             {
-                predicate = m => m.Title.ToLower().Contains(FilterText.ToLower());
+                list = list.Where(m => m.Title.ToLower().Contains(FilterText.ToLower()));
             }
 
-            var computers = _elementRepository.Find(predicate).OrderByDescending(m => m.Created).AsEnumerable();
+            if (hydropowerId.HasValue)
+            {
+                list = list.Where(m => m.HydropowerPlantId == hydropowerId);
+            }
 
-            var pager = new Pager(computers.Count(), pageIndex);
-
+            var data = list.OrderByDescending(m => m.Created).AsEnumerable();
+            var pager = new Pager(data.Count(), pageIndex);
             ViewModel = new PagerViewModel
             {
                 BaseUrl = Url.Page("./Index"),
-                Items = computers.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
+                Items = data.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
                 Pager = pager
             };
         }

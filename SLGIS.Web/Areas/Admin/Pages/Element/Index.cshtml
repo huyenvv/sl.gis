@@ -12,12 +12,12 @@
 {
     <div class="row">
         <div class="col-md-3">
-            <div class="input-group">
-                <input type="text" class="form-control" name="SearchText" placeholder="Tìm kiếm" value="@Model.FilterText">
-                <span class="input-group-btn" id="btnSearch">
-                    <button class="btn bd bg-white tx-gray-600" type="button"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
+            <input type="text" class="form-control" name="SearchText" placeholder="Tìm kiếm" value="@Model.FilterText">
+        </div>
+        <div class="col-md-3">
+            <select name="hydropowerId" class="form-control" asp-items="Model.HydropowerSelectList" onchange="this.form.submit()">
+                <option value="">--All--</option>
+            </select>
         </div>
     </div>
 }
@@ -40,7 +40,7 @@
                                 Unit
                             </th>
                             <th>
-                                Ngày tạo
+                                Thủy điện
                             </th>
                             <th></th>
                         </tr>
@@ -63,7 +63,7 @@
                                         @item.Unit
                                     </td>
                                     <td>
-                                        @item.Created.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
+                                        @(item.HydropowerPlantId.HasValue? Model.ListCurrentHydropowers().FirstOrDefault(m=>m.Id == item.HydropowerPlantId).Name : "")
                                     </td>
                                     <td>
                                         <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
