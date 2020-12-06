@@ -1,27 +1,31 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SLGIS.Core;
+using SLGIS.Implementation;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SLGIS.Web.Areas.Admin.Pages.Element
 {
     [Authorize]
-    public class NewOrEditModel : PageModel
+    public class NewOrEditModel : PageModelBase
     {
         private readonly IElementRepository _elementRepository;
 
-        public NewOrEditModel(IElementRepository elementRepository)
+        public NewOrEditModel(IElementRepository elementRepository, HydropowerService hydropowerService) : base(hydropowerService)
         {
             _elementRepository = elementRepository;
         }
 
         [BindProperty]
         public Core.Element Element { get; set; }
+        public SelectList HydropowerSelectList { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
+            CreateHydropowerSelection();
             if (id == null)
             {
                 Element = new Core.Element();
@@ -34,6 +38,8 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
             {
                 return NotFound();
             }
+
+            CreateHydropowerSelection(Element.HydropowerPlantId);
             return Page();
         }
 
@@ -41,12 +47,17 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
         {
             if (!ModelState.IsValid)
             {
+                CreateHydropowerSelection(Element.HydropowerPlantId);
                 return Page();
             }
 
             await _elementRepository.UpsertAsync(Element);
-
             return RedirectToPage("./Index");
+        }
+
+        private void CreateHydropowerSelection(object selected = null)
+        {
+            HydropowerSelectList = CreateHydropowerPlantSelection(selected);
         }
     }
 }
