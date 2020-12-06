@@ -10,6 +10,7 @@ namespace SLGIS.Core
     public class PostDataDetails
     {
         [Required]
+        public int Hour { get; set; }
         public DateTime Time { get; set; }
 
         [Required]

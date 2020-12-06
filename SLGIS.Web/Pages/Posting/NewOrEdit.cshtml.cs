@@ -28,7 +28,10 @@ namespace SLGIS.Web.Pages.PostData
         }
 
         [BindProperty]
-        public Core.PostDataDetails PostData { get; set; }
+        public Core.PostData PostDataDetails { get; set; }
+
+        [BindProperty]
+        public Core.PostData PostData { get; set; }
         public List<Core.Element> Elements { get; set; }
 
         public IActionResult OnGet()
@@ -41,38 +44,38 @@ namespace SLGIS.Web.Pages.PostData
             var hydropowerPlantId = GetCurrentHydropower().Id;
             CreateViewData(hydropowerPlantId);
 
-            PostData = new Core.PostDataDetails
+            PostData = new Core.PostData
             {
-                Time = DateTime.Now,
+                Date = DateTime.Now.Date,
             };
 
             return Page();
         }
 
-        //public async Task<IActionResult> OnPostAsync()
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        CreateViewData(PostData.HydropowerPlantId);
-        //        return Page();
-        //    }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                CreateViewData(PostData.HydropowerPlantId);
+                return Page();
+            }
 
-        //    if (PostData.HydropowerPlantId != GetCurrentHydropower().Id)
-        //    {
-        //        return BadRequest();
-        //    }
+            if (PostData.HydropowerPlantId != GetCurrentHydropower().Id)
+            {
+                return BadRequest();
+            }
 
-        //    await _postDataRepository.AddAsync(PostData);
+            await _postDataRepository.AddAsync(PostData);
 
-        //    _logger.LogInformation($"Add postData {PostData.Id}");
+            _logger.LogInformation($"Add postData {PostData.Id}");
 
-        //    return RedirectToPage("./Index", new { PostData.HydropowerPlantId });
-        //}
+            return RedirectToPage("./Index", new { PostData.HydropowerPlantId });
+        }
 
         private void CreateViewData(Guid? hydropowerPlantId)
         {
             ViewData["HydropowerPlantId"] = hydropowerPlantId;
-            Elements = _elementRepository.Find(m => true).OrderBy(m => m.Id).ToList();
+            Elements = _elementRepository.Find(m => m.HydropowerPlantId == null || hydropowerPlantId == m.HydropowerPlantId).ToList();
         }
     }
 }
