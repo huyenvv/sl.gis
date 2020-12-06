@@ -53,5 +53,32 @@ namespace SLGIS.Web.API
 
             return data;
         }
+
+        /// <summary>
+        /// Get detail data for bar chart
+        /// </summary>
+        /// <param name="hydropowerPlantId"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        [HttpGet("{hydropowerPlantId}/detail")]
+        public ActionResult<IEnumerable<dynamic>> GetDataDetail(Guid hydropowerPlantId, int? year)
+        {
+            //if (!year.HasValue)
+            //{
+            //    year = DateTime.UtcNow.Year;
+            //}
+
+            //for (int i = 1; i <= 12; i++)
+            //{
+
+            //}
+
+            //var itemValues = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId && m.Date >= startDate && m.Date <= endDate);
+            //var data = itemValues 
+
+            //return data;
+            return null;
+        }
     }
 }

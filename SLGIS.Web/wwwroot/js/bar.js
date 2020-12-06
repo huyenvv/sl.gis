@@ -44,33 +44,23 @@ $(document).ready(function () {
     });
 })
 
-function getData(start, end, callback) {
+function getData(year, callback) {
     var factoryId = $("#hydropowerPlant").data('id');
-    var url = "/api/postData/" + factoryId;
-    if (start && end) {
-        url += "?start=" + start + "&end=" + end + ""
+    var url = "/api/postData/" + factoryId + "/detail";
+    if (year) {
+        url += "?year=" + year
     }
 
     var series = [];
 
-    $.getJSON(url, function (items) {
+    $.getJSON(url, function (response) {
         for (var i = 0; i < items.length; i++) {
             var item = items[i].item;
-            var data = items[i].data.map(m => {
-                var created = Date.parse(m.time);
-                return [created, m.value];
-            });
+            var data = items[i].data
 
             var seri = {
                 name: item.title,
-                data: data,
-                tooltip: {
-                    valueSuffix: " " + item.unit,
-                    xDateFormat: '%Y-%m-%d %H:%M:%S'
-                },
-                dataGrouping: {
-                    enabled: false
-                }
+                data: data
             };
             series.push(seri);
         }
