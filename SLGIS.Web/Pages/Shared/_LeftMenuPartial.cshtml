@@ -22,7 +22,7 @@
     </a>
     <a asp-area="Admin" asp-page="/Substation/Index" data-href="Index/Admin/Substation/NewOrEdit/" class="br-menu-link">
         <div class="br-menu-item">
-            <i class="menu-item-icon icon ion-disc tx-22"></i>
+            <i class="menu-item-icon ion-ios-ionic-outline tx-22"></i>
             <span class="menu-item-label">Trạm biến áp/ cột</span>
         </div>
     </a>
@@ -47,13 +47,19 @@
 </a>
 <a asp-page="/Report/Index" data-href="Index/Report/NewOrEdit/" class="br-menu-link">
     <div class="br-menu-item">
-        <i class="menu-item-icon ion-ios-pie-outline tx-20"></i>
+        <i class="menu-item-icon ion-ios-email-outline tx-20"></i>
         <span class="menu-item-label">Báo cáo</span>
     </div>
 </a>
 <a asp-area="" asp-page="/Posting/Index" asp-route-hydropowerPlantId="@ViewData["HydropowerPlantId"]" data-href="Posting/Index/Posting/NewOrEdit/" class="br-menu-link">
     <div class="br-menu-item">
-        <i class="menu-item-icon icon ion-ios-analytics-outline tx-22"></i>
+        <i class="menu-item-icon icon ion-ios-flask-outline tx-22"></i>
         <span class="menu-item-label">Dữ liệu vận hành</span>
+    </div>
+</a>
+<a asp-page="/Graph/Index" data-href="Index" class="br-menu-link">
+    <div class="br-menu-item">
+        <i class="menu-item-icon ion-stats-bars tx-20"></i>
+        <span class="menu-item-label">Biểu đồ dữ liệu</span>
     </div>
 </a>

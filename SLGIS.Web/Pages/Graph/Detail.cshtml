@@ -1,0 +1,49 @@
+﻿@page
+@model SLGIS.Web.Pages.Detail.IndexModel
+@{
+    ViewBag.Title = ViewBag.Breadcrumbs = "Biểu đồ dữ liệu vận hành";
+}
+
+@section Factory {
+    <partial name="_FactorySelectPartial" />
+}
+
+<div class="card shadow-base mb-2">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <partial name="_GraphTabPartial" model="2" />
+
+                <div class="form-inline justify-content-center my-4">
+                    <input type="text" class="form-control mr-sm-2 mb-1 datepick" id="from" placeholder="Từ ngày" value="">
+                    <input type="text" class="form-control mr-sm-2 mb-1 datepick" id="to" placeholder="đến ngày" value="">
+                    <button class="btn btn-primary mr-2" id="btnfilter">Lọc</button>
+                    <button onclick="toggleAllChartSeries(this)" class="btn btn-secondary" data-show="1">Ẩn thông số</button>
+                </div>
+                <div id="chart-container" style="height: 600px;min-width: 728px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link href="/css/datepicker.css" rel="stylesheet" />
+    <style>
+        .highcharts-scrollbar {
+            display: none;
+        }
+
+        #header {
+            min-width: 768px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="/lib/jquery-ui/jquery-ui.js"></script>
+    <script src="/js/highstock.js"></script>
+    <script src="/js/exporting.js"></script>
+    <script src="/js/graph.js"></script>
+}
