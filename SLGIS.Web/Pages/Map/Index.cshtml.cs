@@ -25,8 +25,10 @@ namespace SLGIS.Web.Pages.Map
 
         public List<HydropowerPlant> HydropowerPlants { get; set; } = new List<HydropowerPlant>();
 
+        public List<string> ElectricLevels = new List<string>();
         public void OnGet()
         {
+            ElectricLevels = Core.Model.Substation.ElectricLevels;
             HydropowerPlants = _computerRepository.Find(m => true).ToList();
         }
     }

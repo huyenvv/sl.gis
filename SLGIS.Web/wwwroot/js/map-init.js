@@ -13,15 +13,15 @@ function initMap() {
         $.get("/api/substation/map", function (data) {
             substations = data;
             plantMarkers = makeMarkers(hydropowers, "hydropower-plant");
-            damsMarkers = makeMarkers(hydropowers, "hydropower-dams");
+            //damsMarkers = makeMarkers(hydropowers, "hydropower-dams");
+
             substationMarkers = makeMarkers(substations, "substation");
             map = new google.maps.Map(document.getElementById("content"), {
                 zoom: 10,
-                center: plantMarkers[0].getPosition(),
+                center: substationMarkers[0].getPosition(),
             });
 
             showMarkers();
-            
         });
     });
 }
@@ -39,11 +39,13 @@ function makeMarkers(items, type) {
             map: null,
         });
 
-        marker.addListener("click", () => {
-            showInfo(items[i], type);
-            map.panTo(marker.getPosition());
-            map.setZoom(14);
-        });
+        google.maps.event.addListener(marker, 'click', (function (data, type) {
+            return function () {
+                showInfo(data, type);
+                map.panTo(marker.getPosition());
+                map.setZoom(14);
+            };
+        })(items[i], type));
         markers.push(marker);
     }
     return markers;
@@ -63,7 +65,19 @@ function showMarkers() {
             damsMarkers[i].setMap(map);
         }
     }
-    if (selection.includes("substation")) {
+
+    var levels = $('.electric-level:checked').map(function () {
+        return $(this).val();
+    }).get();
+    for (var i in substationMarkers) {
+        substationMarkers[i].setMap(null);
+    }
+    substationMarkers = [];
+    if (levels.length > 0) {
+        var subs = substations.filter(s => {
+            return levels.includes(s.substation.electricLevel);
+        });
+        substationMarkers = makeMarkers(subs, "substation");
         for (var i in substationMarkers) {
             substationMarkers[i].setMap(map);
         }
@@ -128,5 +142,15 @@ function showInfo(data, type) {
         $('#dams-exploit-fax').text(dams.exploitPhone);
         $('#dams-exploit-email').text(dams.exploitFax);
         $('#dams-exploit-email').text(dams.exploitEmail);
+    }
+
+    if (type === "substation") {
+        var sub = data.substation;
+
+        $('#substation-name').text(sub.name);
+        $('#substation-address').text('Địa chỉ: ' + sub.address);
+        $('#substation-number').text('Vị trí cột: ' + sub.columnNumber);
+        $('#substation-line').text('Tên đường dây: ' + sub.lineName);
+        $('#substation-level').text('Cấp điện áp: ' + sub.electricLevel);
     }
 }

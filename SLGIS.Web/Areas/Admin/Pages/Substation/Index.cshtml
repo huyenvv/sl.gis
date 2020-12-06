@@ -45,6 +45,9 @@
                             <th>
                                 Địa chỉ
                             </th>
+                            <th>
+                                Tọa độ
+                            </th>
                             <th></th>
                         </tr>
 
@@ -70,6 +73,9 @@
                                     </td>
                                     <td>
                                         @item.Address
+                                    </td>
+                                    <td>
+                                        @item.Location.ToString()
                                     </td>
                                     <td>
                                         <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
