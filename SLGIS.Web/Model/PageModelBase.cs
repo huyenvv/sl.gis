@@ -17,6 +17,14 @@ namespace SLGIS.Web
             _hydropowerService = hydropowerService;
         }
 
+        public bool CanManage
+        {
+            get
+            {
+                return Constant.Role.All.Any(User.IsInRole);
+            }
+        }
+
         public bool HasHydropower
         {
             get

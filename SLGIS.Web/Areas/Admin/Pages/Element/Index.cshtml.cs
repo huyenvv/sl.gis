@@ -38,6 +38,11 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
                 list = list.Where(m => m.Title.ToLower().Contains(FilterText.ToLower()));
             }
 
+            if (!CanManage)
+            {
+                hydropowerId = GetCurrentHydropower().Id;
+            }
+
             if (hydropowerId.HasValue)
             {
                 list = list.Where(m => m.HydropowerPlantId == hydropowerId);
@@ -58,6 +63,12 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
             if (id == Guid.Empty)
             {
                 return Page();
+            }
+
+            var item = await _elementRepository.GetAsync(m => m.Id == id);
+            if (item == null || !CanManage && GetCurrentHydropower().Id != item.HydropowerPlantId)
+            {
+                return NotFound();
             }
 
             await _elementRepository.DeleteAsync(id);

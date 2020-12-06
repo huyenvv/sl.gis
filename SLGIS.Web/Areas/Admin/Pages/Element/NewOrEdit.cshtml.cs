@@ -34,7 +34,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
 
             Element = await _elementRepository.GetAsync(m => m.Id == id);
 
-            if (Element == null)
+            if (Element == null || !CanManage && GetCurrentHydropower().Id != Element.HydropowerPlantId)
             {
                 return NotFound();
             }
@@ -49,6 +49,16 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
             {
                 CreateHydropowerSelection(Element.HydropowerPlantId);
                 return Page();
+            }
+
+            if (!CanManage)
+            {
+                if (Element.HydropowerPlantId != Guid.Empty)
+                {
+                    return BadRequest();
+                }
+
+                Element.HydropowerPlantId = GetCurrentHydropower().Id;
             }
 
             await _elementRepository.UpsertAsync(Element);

@@ -7,6 +7,13 @@
 
 }
 
+@section Factory {
+    @if (!Model.CanManage)
+    {
+        <partial name="_FactorySelectPartial" />
+    }
+}
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -32,13 +39,16 @@
                         @Html.EditorFor(model => model.Element.Unit, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Element.Unit, "", new { @class = "text-danger" })
                     </div>
-                    <div class="form-group">
-                        <label>Thủy điện</label>
-                        <select asp-for="Element.HydropowerPlantId" class="form-control" asp-items="Model.HydropowerSelectList">
-                            <option value="">--All--</option>
-                        </select>
-                        @Html.ValidationMessageFor(model => model.Element.HydropowerPlantId, "", new { @class = "text-danger" })
-                    </div>
+                    @if (Model.CanManage)
+                    {
+                        <div class="form-group">
+                            <label>Thủy điện</label>
+                            <select asp-for="Element.HydropowerPlantId" class="form-control" asp-items="Model.HydropowerSelectList">
+                                <option value="">--All--</option>
+                            </select>
+                            @Html.ValidationMessageFor(model => model.Element.HydropowerPlantId, "", new { @class = "text-danger" })
+                        </div>
+                    }
                 </div>
             </div>
         </div>

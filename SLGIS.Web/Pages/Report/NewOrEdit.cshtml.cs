@@ -31,7 +31,10 @@ namespace SLGIS.Web.Pages.Report
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
-            return RedirectToPage("./Index");
+            if (CanManage)
+            {
+                return RedirectToPage("./Index");
+            }
 
             if (!HasHydropower)
             {
