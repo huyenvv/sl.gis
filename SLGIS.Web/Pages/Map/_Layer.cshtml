@@ -1,0 +1,28 @@
+﻿@model List<string>
+
+<div class="pl-3 pt-3">
+    <i class="fa fa-level-down"> </i> <span class="pl-2">Các lớp bản đồ</span>
+</div>
+<div class="p-3 pt-0 ml-4 text-light" style="padding-left: 2rem !important;">
+
+    <div class="custom-checkbox pb-2">
+        <input type="checkbox" class="custom-control-input" name="layerSelect" id="chkDams" value="hydropower-dams">
+        <label class="custom-control-label" for="chkDams">Đập, hồ chứa</label>
+    </div>
+    <div class="custom-checkbox pb-2">
+        <input type="checkbox" class="custom-control-input" name="layerSelect" id="chkFactory" value="hydropower-plant">
+        <label class="custom-control-label" for="chkFactory">Nhà máy thủy điện</label>
+    </div>
+    <div class="custom-checkbox pb-2">
+        <input type="checkbox" checked class="custom-control-input" name="layerSelect" id="chkLine" value="substation">
+        <label class="custom-control-label" for="chkLine">Đường dây, trạm biến áp</label>
+    </div>
+    @foreach (var item in Model)
+    {
+        var id = Guid.NewGuid();
+        <div class="custom-checkbox pb-2 pl-4">
+            <input type="checkbox" checked class="custom-control-input electric-level" name="layerSelect" id="@id" value="@item">
+            <label class="custom-control-label" for="@id">@item</label>
+        </div>
+    }
+</div>
