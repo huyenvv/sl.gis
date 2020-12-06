@@ -1,15 +1,11 @@
 ﻿@page
-@model SLGIS.Web.Pages.Report.IndexModel
+@model SLGIS.Web.Pages.Notify.IndexModel
 @{
-    ViewBag.Title = ViewBag.Breadcrumbs = "Danh sách báo cáo";
-}
-
-@section Factory {
-    <partial name="_FactorySelectPartial" />
+    ViewBag.Title = ViewBag.Breadcrumbs = "Danh sách thông báo của sở";
 }
 
 @section Button {
-    @if (!Model.CanManage)
+    @if (Model.CanManage)
     {
         <a href="@Url.Page("NewOrEdit")" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
     }
@@ -41,10 +37,7 @@
                                 Tiêu đề
                             </th>
                             <th>
-                                Ghi chú
-                            </th>
-                            <th>
-                                Tài liệu báo cáo
+                                Tài liệu
                             </th>
                             <th>
                                 Thời gian
@@ -54,31 +47,29 @@
 
                         @{
                             var stt = 1;
-                            foreach (var item in Model.ViewModel.Items as IEnumerable<Core.Report>)
+                            foreach (var item in Model.ViewModel.Items as IEnumerable<Core.Notify>)
                             {
                                 <tr class="stat even">
                                     <td class="ac">
                                         @(stt++)
                                     </td>
                                     <td>
-                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })">@item.Title</a>
+                                        <a href="@Url.Page("Detail", new { id = item.Id })">
+                                            @item.Title
+                                        </a>
                                     </td>
                                     <td>
-                                        @item.Content
-                                    </td>
-                                    <td>
-                                        @foreach (var file in item.Files)
+                                        @if (item.Files.Count > 0)
                                         {
-                                            <a asp-page-handler="DownloadFile" asp-route-id="@item.Id" asp-route-fileName="@System.IO.Path.GetFileName(file)" target="_blank">
-                                                @System.IO.Path.GetFileName(file)
-                                            </a> <br />
+                                            @item.Files.Count
+                                            <i class="fa fa-paperclip"></i>
                                         }
                                     </td>
                                     <td>
                                         @item.Created.ToString("dd/MM/yyyy HH:mm:ss")
                                     </td>
                                     <td>
-                                        @if (!Model.CanManage && item.CanEdit())
+                                        @if (Model.CanManage && item.CanEdit())
                                         {
                                             <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
                                             <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">

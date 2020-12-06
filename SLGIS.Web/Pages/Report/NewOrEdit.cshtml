@@ -18,6 +18,8 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
+                    <h5 class="text-warning">Lưu ý: Chỉ có thể thu hồi được báo cáo trong vòng 2 giờ kể từ khi tạo.</h5>
+                    <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     @Html.HiddenFor(model => model.Report.Id)
                     <input type="hidden" name="Report.HydropowerPlantId" value="@ViewData["HydropowerPlantId"]" />

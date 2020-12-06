@@ -9,29 +9,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SLGIS.Web.Pages.Report
+namespace SLGIS.Web.Pages.Notify
 {
     [Authorize]
     public class NewOrEditModel : PageModelBase
     {
-        private readonly IReportRepository _reportRepository;
+        private readonly INotifyRepository _notifyRepository;
         private readonly IFileService _fileService;
 
-        public NewOrEditModel(IReportRepository reportRepository, HydropowerService hydropowerService, IFileService fileService) : base(hydropowerService)
+        public NewOrEditModel(INotifyRepository notifyRepository, HydropowerService hydropowerService, IFileService fileService) : base(hydropowerService)
         {
-            _reportRepository = reportRepository;
+            _notifyRepository = notifyRepository;
             _fileService = fileService;
         }
 
         [BindProperty]
-        public Core.Report Report { get; set; }
+        public Core.Notify Notify { get; set; }
 
         [BindProperty]
         public List<IFormFile> Files { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
-            if (CanManage)
+            if (!CanManage)
             {
                 return RedirectToPage("./Index");
             }
@@ -41,19 +41,16 @@ namespace SLGIS.Web.Pages.Report
                 return ReturnToMap();
             }
 
-            var currentHydropower = GetCurrentHydropower();
-            ViewData["HydropowerPlantId"] = currentHydropower.Id;
-
             if (id == null)
             {
-                Report = new Core.Report();
+                Notify = new Core.Notify();
                 return Page();
             }
 
-            Report = await _reportRepository.GetAsync(m => m.Id == id);
-            if (Report == null || Report.HydropowerPlantId != currentHydropower.Id || !Report.CanEdit())
+            Notify = await _notifyRepository.GetAsync(m => m.Id == id);
+            if (!Notify.CanEdit())
             {
-                return NotFound();
+                return RedirectToPage("./Index");
             }
             return Page();
         }
@@ -62,13 +59,7 @@ namespace SLGIS.Web.Pages.Report
         {
             if (!ModelState.IsValid)
             {
-                ViewData["HydropowerPlantId"] = Report.HydropowerPlantId;
                 return Page();
-            }
-
-            if (Report.HydropowerPlantId != GetCurrentHydropower().Id)
-            {
-                return BadRequest();
             }
 
             if (Files?.Count() > 0)
@@ -80,10 +71,10 @@ namespace SLGIS.Web.Pages.Report
                     listFiles.Add(filePath);
                 }
 
-                Report.Files = listFiles;
+                Notify.Files = listFiles;
             }
 
-            await _reportRepository.UpsertAsync(Report);
+            await _notifyRepository.UpsertAsync(Notify);
 
             return RedirectToPage("./Index");
         }

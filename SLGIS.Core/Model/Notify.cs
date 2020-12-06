@@ -5,22 +5,20 @@ using System.ComponentModel.DataAnnotations;
 namespace SLGIS.Core
 {
     /// <summary>
-    /// Báo cáo tài liệu của các thủy điện
+    /// Thông báo của sở cho các thủy điện
     /// </summary>
-    public class Report : BaseEntity
+    public class Notify : BaseEntity
     {
+        [Required]
         public string Title { get; set; }
         public string Content { get; set; }
 
         public List<string> Files { get; set; } = new List<string>();
 
-        [Required]
-        public Guid HydropowerPlantId { get; set; }
-
         public bool CanEdit()
         {
-            var secondsOf2Hours = 2 * 60 * 60;
-            return (DateTime.UtcNow.AddHours(7) - Created).TotalSeconds < secondsOf2Hours;
+            var secondsOfDay = 24 * 60 * 60;
+            return (DateTime.UtcNow.AddHours(7) - Created).TotalSeconds < secondsOfDay;
         }
     }
 }
