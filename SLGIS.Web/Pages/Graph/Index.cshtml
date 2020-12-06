@@ -1,0 +1,88 @@
+﻿@page
+@model SLGIS.Web.Pages.Graph.IndexModel
+@{
+    ViewBag.Title = ViewBag.Breadcrumbs = "Biểu đồ dữ liệu vận hành";
+}
+
+@section Factory {
+    <partial name="_FactorySelectPartial" />
+}
+
+<div class="card shadow-base mb-2">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <partial name="_GraphTabPartial" model="1" />
+
+                <div class="form-inline justify-content-center my-4">
+                    <input type="text" class="form-control mr-sm-2 mb-1 datepick" id="from" placeholder="Từ ngày" value="">
+                    <input type="text" class="form-control mr-sm-2 mb-1 datepick" id="to" placeholder="đến ngày" value="">
+                    <button class="btn btn-primary mr-2" id="btnfilter">Lọc</button>
+                    <button onclick="toggleAllChartSeries(this)" class="btn btn-secondary" data-show="1">Ẩn thông số</button>
+                </div>
+                <div id="bar-container" style="height: 600px;min-width: 728px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link href="/css/datepicker.css" rel="stylesheet" />
+    <style>
+        .highcharts-figure, .highcharts-data-table table {
+            min-width: 310px;
+            max-width: 800px;
+            margin: 1em auto;
+        }
+
+        #container {
+            height: 400px;
+        }
+
+        .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #EBEBEB;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+
+        .highcharts-data-table tr:hover {
+            background: #f1f7ff;
+        }
+
+        #header {
+            min-width: 768px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="/lib/jquery-ui/jquery-ui.js"></script>
+    <script src="/js/highstock.js"></script>
+    <script src="/js/exporting.js"></script>
+    <script src="/js/bar.js"></script>
+}

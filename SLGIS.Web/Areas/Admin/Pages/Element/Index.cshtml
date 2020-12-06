@@ -4,6 +4,13 @@
     ViewBag.Title = ViewBag.Breadcrumbs = "Danh sách thông số";
 }
 
+@section Factory {
+    @if (!Model.CanManage)
+    {
+        <partial name="_FactorySelectPartial" />
+    }
+}
+
 @section Button {
     <a href="@Url.Page("NewOrEdit")" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
 }
@@ -14,11 +21,14 @@
         <div class="col-md-3">
             <input type="text" class="form-control" name="SearchText" placeholder="Tìm kiếm" value="@Model.FilterText">
         </div>
-        <div class="col-md-3">
-            <select name="hydropowerId" class="form-control" asp-items="Model.HydropowerSelectList" onchange="this.form.submit()">
-                <option value="">--All--</option>
-            </select>
-        </div>
+        @if (Model.CanManage)
+        {
+            <div class="col-md-3">
+                <select name="hydropowerId" class="form-control" asp-items="Model.HydropowerSelectList" onchange="this.form.submit()">
+                    <option value="">--All--</option>
+                </select>
+            </div>
+        }
     </div>
 }
 
@@ -39,9 +49,12 @@
                             <th>
                                 Unit
                             </th>
-                            <th>
-                                Thủy điện
-                            </th>
+                            @if (Model.CanManage)
+                            {
+                                <th>
+                                    Thủy điện
+                                </th>
+                            }
                             <th></th>
                         </tr>
 
@@ -62,9 +75,12 @@
                                     <td>
                                         @item.Unit
                                     </td>
-                                    <td>
-                                        @(item.HydropowerPlantId.HasValue? Model.ListCurrentHydropowers().FirstOrDefault(m=>m.Id == item.HydropowerPlantId).Name : "")
-                                    </td>
+                                    @if (Model.CanManage)
+                                    {
+                                        <td>
+                                            @(item.HydropowerPlantId.HasValue? Model.ListCurrentHydropowers().FirstOrDefault(m=>m.Id == item.HydropowerPlantId).Name : "")
+                                        </td>
+                                    }
                                     <td>
                                         <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
                                         <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">

@@ -21,14 +21,16 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
         private readonly IHydropowerPlantRepository _hydropowerPlantRepository;
         private readonly ISubstationRepository _substationRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IElementRepository _elementRepository;
         private readonly IFileService _fileService;
 
         public NewOrEditModel(IHydropowerPlantRepository hydropowerPlantRepository, ISubstationRepository substationRepository,
-            IUserRepository userRepository, IFileService fileService)
+            IUserRepository userRepository, IElementRepository elementRepository, IFileService fileService)
         {
             _hydropowerPlantRepository = hydropowerPlantRepository;
             _substationRepository = substationRepository;
             _userRepository = userRepository;
+            _elementRepository = elementRepository;
             _fileService = fileService;
         }
 
@@ -83,6 +85,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
                 HydropowerPlant.Location.Lng = PlantLocation.Split(',')[1].Trim();
             }
             await UpsertImage();
+            var isCreate = false;
             if (HydropowerPlant.Id != Guid.Empty)
             {
                 var plant = await _hydropowerPlantRepository.GetAsync(HydropowerPlant.Id);
@@ -94,9 +97,33 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
                     HydropowerPlant.Owners = plant.Owners;
                 }
             }
-            await _hydropowerPlantRepository.UpsertAsync(HydropowerPlant);
+            else
+            {
+                isCreate = true;
+                HydropowerPlant.Owners.Add(User.GetId());
+            }
 
+            var result = await _hydropowerPlantRepository.UpsertAsync(HydropowerPlant);
+
+            await InsertSampleElements(isCreate, result.Id);
             return RedirectToPage("./Index");
+        }
+
+        private async Task InsertSampleElements(bool isCreate, Guid plantId)
+        {
+            if (!isCreate)
+            {
+                return;
+            }
+
+            var samples = _elementRepository.Find(m => !m.HydropowerPlantId.HasValue).ToList();
+            foreach (var item in samples)
+            {
+                item.Id = Guid.Empty;
+                item.HydropowerPlantId = plantId;
+            }
+
+            await _elementRepository.AddRangeAsync(samples);
         }
 
         public async Task<IActionResult> OnPostDeleteDamsAsync(Guid plantId, Guid id)

@@ -1,0 +1,33 @@
+﻿@page
+@model SLGIS.Web.Pages.Notify.DetailModel
+@{
+    ViewBag.Title = ViewBag.Breadcrumbs = "Chi tiết thông báo";
+}
+
+<a href="@Url.Page("Index")" class="btn btn-outline-secondary mb-2">Quay lại</a>
+<div class="card shadow-base mb-2">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <h4>@Model.Notify.Title</h4>
+                <hr />
+                <p>
+                    @Html.Raw(Model.Notify.Content)
+                </p>
+                <hr />
+                <p>Danh sách tài liệu đính kèm (Click để tải về)</p>
+                <ul>
+                    @foreach (var file in Model.Notify.Files)
+                    {
+                        <li>
+                            <a asp-page-handler="DownloadFile" asp-route-id="@Model.Notify.Id" asp-route-fileName="@System.IO.Path.GetFileName(file)" target="_blank">
+                                @System.IO.Path.GetFileName(file)
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>

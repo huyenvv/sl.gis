@@ -59,7 +59,7 @@ namespace SLGIS.Web.Pages.PostData
                 Pager = pager
             };
 
-            Elements = _elementRepository.Find(_ => true).OrderBy(m => m.Id).ToList();
+            Elements = _elementRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).OrderBy(m => m.Id).ToList();
             return Page();
         }
 

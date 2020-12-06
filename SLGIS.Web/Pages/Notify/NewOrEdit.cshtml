@@ -1,0 +1,61 @@
+﻿@page
+@model SLGIS.Web.Pages.Notify.NewOrEditModel
+@{
+    ViewBag.Title = (Model.Notify.Id != Guid.Empty ? "Sửa lại" : "Tạo mới") + " thông báo";
+    ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>Thông báo</a>" +
+                          "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
+
+}
+
+<form enctype="multipart/form-data" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="card shadow-base mb-2">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <h5 class="text-warning">Lưu ý: Chỉ có thể thu hồi được thông báo trong vòng 24 giờ kể từ khi tạo.</h5>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Notify.Id)
+                    <input type="hidden" name="Notify.HydropowerPlantId" value="@ViewData["HydropowerPlantId"]" />
+                    <div class="form-group">
+                        <label>Tiêu đề</label>
+                        @Html.EditorFor(model => model.Notify.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Notify.Title, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <label>Tài liệu</label>
+                        @Html.HiddenFor(model => model.Notify.Files)
+                        @Html.EditorFor(model => model.Files, new { htmlAttributes = new { @class = "form-control", multiple = "" } })
+                    </div>
+                    <div class="form-group">
+                        <label>Nội dung</label>
+                        @Html.TextAreaFor(model => model.Notify.Content, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Notify.Content, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Lưu</button>
+    <a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>
+</form>
+@section Styles {
+    <link href="~/lib/summernote/summernote-bs4.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#Notify_Content').summernote({
+                height: 300,
+            });
+        });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+}
