@@ -24,6 +24,7 @@
 {
     @Html.AntiForgeryToken()
     <input type="hidden" name="PostData.HydropowerPlantId" value="@ViewData["HydropowerPlantId"]" />
+    @Html.HiddenFor(model => model.PostData.Id)
     <div class="card shadow-base mb-2">
         <div class="card-header">
             <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -41,17 +42,17 @@
                 </div>
                 <div class="form-group col-md-3">
                     @Html.Label("Sản lượng ngày (MWh)")
-                    @Html.EditorFor(model => model.PostData.SanLuongNgay, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.PostData.SanLuongNgay, new { htmlAttributes = new { @class = "form-control", type = "number" } })
                     @Html.ValidationMessageFor(model => model.PostData.SanLuongNgay, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group col-md-3">
                     @Html.Label("Tổng lượng nước qua Tuabin (m3)")
-                    @Html.EditorFor(model => model.PostData.TotalWater, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.PostData.TotalWater, new { htmlAttributes = new { @class = "form-control", type = "number" } })
                     @Html.ValidationMessageFor(model => model.PostData.TotalWater, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group col-md-3">
                     @Html.Label("Số giờ phát điện (giờ)")
-                    @Html.EditorFor(model => model.PostData.SoGioPhatDien, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.PostData.SoGioPhatDien, new { htmlAttributes = new { @class = "form-control", type = "number" } })
                     @Html.ValidationMessageFor(model => model.PostData.SoGioPhatDien, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -77,36 +78,33 @@
                             }
                         </tr>
                     </thead>
-                    <tr class="data-row">
-                        <td><input class="table-text-box fuck" type="number" value="10"/></td>
-                        @foreach (var item in Model.Elements)
-                        {
-                            <td><input type="text" class="table-text-box" data_code="@item.Code" value="" /></td>
-                        }
-                    </tr>
+                    @foreach (var item in Model.PostData.PostDataDetails)
+                    {
+                        <tr>
+                            <td><input class="table-text-box" type="number" value="@item.Hour" /></td>
+                            @foreach (var element in Model.Elements)
+                            {
+                                var data = item.Values.Where(m => m.Code == element.Code).FirstOrDefault();
+                                var value = "";
+                                if (data != null)
+                                {
+                                    value = data.Value.ToString();
+                                }
+                                <td><input type="number" class="table-text-box" data-code="@element.Code" value="@value" /></td>
+                            }
+                        </tr>
+                    }
                 </table>
                 <div class="row">
                     <div class="col-md-12">
                         <a href="javascript:void(0)" onclick="addRow()"><i class="icon ion-ios-plus"> </i>Thêm dòng</a>
-
-                        @*@foreach (var item in Model.Elements)
-                            {
-                                <div class="form-group">
-                                    @Html.Label(item.Title) (@Html.Label(item.Unit))
-                                    @Html.Editor(item.Title, new { htmlAttributes = new { @class = "form-control inputElement", data_code = item.Code } })
-                                </div>
-                            }*@
-                        @*<div class="form-group">
-                                @Html.LabelFor(model => model.PostData.Note)
-                                @Html.EditorFor(model => model.PostData.Note, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.PostData.Note, "", new { @class = "text-danger" })
-                            </div>*@
                     </div>
+                    <div id="inputElement"></div>
                 </div>
             </div>
         </div>
     </div>
-    <button class="btn btn-primary" onclick="addRow();" type="submit">Lưu</button>
+    <button class="btn btn-primary" onclick="return beforeSubmit();" type="submit">Lưu</button>
     <a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>
 }
 
@@ -114,40 +112,39 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         function beforeSubmit() {
-            var values = [];
-            $(".inputElement").each(function () {
-                var $this = $(this);
-                if ($this.val() == "") {
-                    return;
+            var i = 0;
+            var result = "";
+            $('#post-data tr').each(function () {
+                var j = 0;
+                var first = true;
+                var html = "";
+                $("input", $(this)).each(function () {
+                    var value = $(this).val();
+                    if (!value) value = 0;
+                    if (first) {
+                        html += "<input type='hidden' name='PostData.PostDataDetails[" + i + "].Hour' value='" + value + "' />";
+                        first = false;
+                    }
+                    else {
+                        var code = $(this).data("code");
+                        html += "<input type='hidden' name='PostData.PostDataDetails[" + i + "].Values[" + j + "].Code' value='" + code + "' />";
+                        html += "<input type='hidden' name='PostData.PostDataDetails[" + i + "].Values[" + j + "].Value' value='" + value + "' />";
+                        j++;
+                    }
+                });
+                if (html) {
+                    result += html;
+                    i++;
                 }
-
-                values.push({ code: $this.data("code"), value: $this.val() });
             });
-
-            var html = buildHtml(values);
-            $("#elements").html(html);
+            $("#inputElement").html(result);
             return true;
         }
 
-        function buildHtml(values) {
-            var html = "";
-            for (var i = 0; i < values.length; i++) {
-                html += "<input type='hidden' name='PostData.Values[" + i + "].Code' value='" + values[i].code + "' />";
-                html += "<input type='hidden' name='PostData.Values[" + i + "].Value' value='" + values[i].value + "' />";
-            }
-            return html;
-        }
-
         function addRow() {
-            $('#post-data tr:last input').each(function() {
-                console.log($(this).val());
-            });
             var row = $('#post-data tr:last').html();
-            //$(row, 'input[type="number"]').each(function () { $(this).val('2') });
-            //alert($('.fuck', row).val());
-            //$('.fuck', row).val(22);
             $('#post-data tr:last').after('<tr>' + row + '</tr>');
-            $('#post-data tr:last input:first').val(100);
+            //$('#post-data tr:last input:first').val(100);
         }
 
     </script>

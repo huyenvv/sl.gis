@@ -31,6 +31,6 @@ namespace SLGIS.Core
 
         public Guid HydropowerPlantId { get; set; }
 
-        public List<PostDataDetails> PostDataDetails { get; set; }
+        public List<PostDataDetails> PostDataDetails { get; set; } = new List<PostDataDetails>();
     }
 }

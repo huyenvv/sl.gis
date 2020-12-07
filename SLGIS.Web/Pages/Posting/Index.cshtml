@@ -21,12 +21,17 @@
                         <tr>
                             <th>STT</th>
                             <th>
-                                Thời gian
+                                Ngày
                             </th>
-                            @foreach (var item in Model.Elements)
-                            {
-                                <th>@item.Title (@item.Unit)</th>
-                            }
+                            <th>
+                                Sản lượng ngày (MWh)
+                            </th>
+                            <th>
+                                Tổng lượng nước qua Tuabin (m3)
+                            </th>
+                            <th>
+                                Số giờ phát điện (giờ)
+                            </th>
                             <th></th>
                         </tr>
 
@@ -39,14 +44,17 @@
                                         @(stt++)
                                     </td>
                                     <td>
-                                        @item.Created.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
+                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })">@item.Date.ToString("dd/MM/yyyy")</a>
                                     </td>
-                                    @*@foreach (var element in Model.Elements)
-                                    {
-                                        var elementValue = item.Values.FirstOrDefault(m => m.Code == element.Code);
-
-                                        <th>@elementValue?.Value</th>
-                                    }*@
+                                    <td>
+                                        @item.SanLuongNgay
+                                    </td>
+                                    <td>
+                                        @item.TotalWater
+                                    </td>
+                                    <td>
+                                        @item.SoGioPhatDien
+                                    </td>
                                     <td>
                                         <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">
                                             Xóa

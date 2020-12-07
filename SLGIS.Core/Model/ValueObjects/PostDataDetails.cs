@@ -14,7 +14,7 @@ namespace SLGIS.Core
         public DateTime Time { get; set; }
 
         [Required]
-        public IList<ElementValue> Values { get; set; }
+        public IList<ElementValue> Values { get; set; } = new List<ElementValue>();
     }
 
     public class ElementValue

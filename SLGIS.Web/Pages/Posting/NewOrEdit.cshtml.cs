@@ -28,13 +28,10 @@ namespace SLGIS.Web.Pages.PostData
         }
 
         [BindProperty]
-        public Core.PostData PostDataDetails { get; set; }
-
-        [BindProperty]
         public Core.PostData PostData { get; set; }
         public List<Core.Element> Elements { get; set; }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (!HasHydropower)
             {
@@ -44,10 +41,16 @@ namespace SLGIS.Web.Pages.PostData
             var hydropowerPlantId = GetCurrentHydropower().Id;
             CreateViewData(hydropowerPlantId);
 
-            PostData = new Core.PostData
+            if (id != null)
+                PostData = await _postDataRepository.GetAsync(id.Value);
+            if (PostData == null || PostData.PostDataDetails?.Count < 1)
             {
-                Date = DateTime.Now.Date,
-            };
+                PostData = new Core.PostData
+                {
+                    Date = DateTime.Now.Date,
+                    PostDataDetails = new List<PostDataDetails> { new PostDataDetails() }
+                };
+            }
 
             return Page();
         }
@@ -64,8 +67,16 @@ namespace SLGIS.Web.Pages.PostData
             {
                 return BadRequest();
             }
+            var details = new List<PostDataDetails>();
+            foreach (var item in PostData.PostDataDetails)
+            {
+                var sum = item.Values.Sum(m => m.Value);
+                if (sum != 0) details.Add(item);
+            }
+            PostData.PostDataDetails = details;
 
-            await _postDataRepository.AddAsync(PostData);
+            PostData.Date = PostData.Date.AddHours(7);
+            await _postDataRepository.UpsertAsync(PostData);
 
             _logger.LogInformation($"Add postData {PostData.Id}");
 
