@@ -38,6 +38,16 @@ namespace SLGIS.Core.Model
         /// </summary>
         public string Address { get; set; }
 
+        /// <summary>
+        /// Xã
+        /// </summary>
+        public string Ward { get; set; }
+
+        /// <summary>
+        /// Huyện
+        /// </summary>
+        public string Dictrict { get; set; }
+
         [BsonIgnore]
 
         public static List<string> ElectricLevels = new List<string> { "500KV", "220KV", "110KV", "35KV" };

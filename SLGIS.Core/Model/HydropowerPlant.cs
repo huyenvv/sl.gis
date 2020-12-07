@@ -83,5 +83,6 @@ namespace SLGIS.Core
         public List<Connection> Connections { get; set; } = new List<Connection>();
 
         public string Image { get; set; }
+        public string Status { get; set; }
     }
 }

@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic.FileIO;
 using SLGIS.Core;
+using SLGIS.Core.Model.ValueObjects;
 using SLGIS.Implementation;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -32,6 +35,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
 
         public void OnGet(string searchText = null, int? pageIndex = 1)
         {
+            Import();
             FilterText = searchText;
             var plants = _hydropowerPlantRepository.Find(m => true).AsQueryable();
             if (!string.IsNullOrEmpty(FilterText))
@@ -78,6 +82,68 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
             _logger.LogInformation($"Deleted hydropowerPlant {id}");
 
             return RedirectToPage("./Index");
+        }
+
+        public void Import()
+        {
+            var path = @"D:\Du an CNTT\plant.csv";
+            using (TextFieldParser csvParser = new TextFieldParser(path))
+            {
+                csvParser.CommentTokens = new string[] { "#" };
+                csvParser.SetDelimiters(new string[] { "," });
+                csvParser.HasFieldsEnclosedInQuotes = true;
+
+                // Skip the row with the column names
+                csvParser.ReadLine();
+                var lst = new List<HydropowerPlant>();
+                var i = 0;
+                while (!csvParser.EndOfData)
+                {
+                    ++i;
+                    try
+                    {
+                        // Read current line fields, pointer moves to the next line.
+                        string[] fields = csvParser.ReadFields();
+                        var plant = new HydropowerPlant();
+                        plant.Name = fields[0];
+                        plant.Address = fields[1];
+                        plant.OwnerName = fields[2];
+                        plant.Wattage = fields[3];
+                        if (!string.IsNullOrWhiteSpace(fields[5]))
+                        {
+                            var valid = decimal.TryParse(fields[5], out decimal total);
+                            if (!valid) throw new Exception();
+                            plant.TotalInvestment = total;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(fields[6]))
+                        {
+                            var value = fields[6];
+                            if (value.Contains("/")) value = value.Split('/')[1];
+                            plant.EndBuild = int.Parse(value);
+                        }
+
+                        plant.Status = fields[7];
+                        if (!string.IsNullOrWhiteSpace(fields[8]) && !string.IsNullOrWhiteSpace(fields[9]))
+                        {
+                            plant.Location.Lat = fields[8].Trim();
+                            plant.Location.Lng = fields[9].Trim();
+                        }
+
+                        var dams = new HydropowerDams { Id = Guid.NewGuid(), Name = "Đập 1" };
+                        plant.HydropowerDams = new List<HydropowerDams> { dams };
+
+                        if (!string.IsNullOrWhiteSpace(fields[10]) && !string.IsNullOrWhiteSpace(fields[11]))
+                        {
+                            dams.Location.Lat = fields[10].Trim();
+                            dams.Location.Lng = fields[11].Trim();
+                        }
+
+                        lst.Add(plant);
+                    }
+                    catch { throw new Exception($"Dữ liệu không hợp lệ, tại dòng {i}"); }
+                }
+            }
         }
     }
 }
