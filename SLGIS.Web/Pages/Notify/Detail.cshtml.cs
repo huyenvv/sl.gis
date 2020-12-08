@@ -30,6 +30,12 @@ namespace SLGIS.Web.Pages.Notify
         public async Task<IActionResult> OnGet(Guid id)
         {
             Notify = await _notifyRepository.GetAsync(m => m.Id == id);
+            if (User.Identity.IsAuthenticated)
+            {
+                if (!Notify.ReadUserIds.Any(m => m == User.GetId().ToString()))
+                    await _notifyRepository.SetReadAsync(id, User.GetId().ToString());
+            }
+
             return Page();
         }
 

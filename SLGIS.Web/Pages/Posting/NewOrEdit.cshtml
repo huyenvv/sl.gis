@@ -110,42 +110,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        function beforeSubmit() {
-            var i = 0;
-            var result = "";
-            $('#post-data tr').each(function () {
-                var j = 0;
-                var first = true;
-                var html = "";
-                $("input", $(this)).each(function () {
-                    var value = $(this).val();
-                    if (!value) value = 0;
-                    if (first) {
-                        html += "<input type='hidden' name='PostData.PostDataDetails[" + i + "].Hour' value='" + value + "' />";
-                        first = false;
-                    }
-                    else {
-                        var code = $(this).data("code");
-                        html += "<input type='hidden' name='PostData.PostDataDetails[" + i + "].Values[" + j + "].Code' value='" + code + "' />";
-                        html += "<input type='hidden' name='PostData.PostDataDetails[" + i + "].Values[" + j + "].Value' value='" + value + "' />";
-                        j++;
-                    }
-                });
-                if (html) {
-                    result += html;
-                    i++;
-                }
-            });
-            $("#inputElement").html(result);
-            return true;
-        }
-
-        function addRow() {
-            var row = $('#post-data tr:last').html();
-            $('#post-data tr:last').after('<tr>' + row + '</tr>');
-            //$('#post-data tr:last input:first').val(100);
-        }
-
-    </script>
+    <script src="/js/postdata.js"></script>
 }

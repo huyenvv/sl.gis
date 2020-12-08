@@ -14,7 +14,7 @@ namespace SLGIS.Core
         public string Content { get; set; }
 
         public List<string> Files { get; set; } = new List<string>();
-
+        public List<string> ReadUserIds { get; set; } = new List<string>();
         public bool CanEdit()
         {
             var secondsOfDay = 24 * 60 * 60;

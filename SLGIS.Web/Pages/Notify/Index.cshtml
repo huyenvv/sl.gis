@@ -54,9 +54,20 @@
                                         @(stt++)
                                     </td>
                                     <td>
-                                        <a href="@Url.Page("Detail", new { id = item.Id })">
-                                            @item.Title
-                                        </a>
+                                        @if (User.Identity.IsAuthenticated && !item.ReadUserIds.Any(m => m == User.GetId().ToString()))
+                                        {
+                                            <strong>
+                                                <a href="@Url.Page("Detail", new { id = item.Id })">
+                                                    @item.Title
+                                                </a>
+                                            </strong>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Page("Detail", new { id = item.Id })">
+                                                @item.Title
+                                            </a>
+                                        }
                                     </td>
                                     <td>
                                         @if (item.Files.Count > 0)
