@@ -86,7 +86,7 @@ namespace SLGIS.Web.Pages.PostData
         private void CreateViewData(Guid? hydropowerPlantId)
         {
             ViewData["HydropowerPlantId"] = hydropowerPlantId;
-            Elements = _elementRepository.Find(m => m.HydropowerPlantId == null || hydropowerPlantId == m.HydropowerPlantId).ToList();
+            Elements = _elementRepository.Find(m => hydropowerPlantId == m.HydropowerPlantId).ToList();
         }
     }
 }

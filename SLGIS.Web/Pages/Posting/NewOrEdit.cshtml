@@ -68,39 +68,39 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <table id="post-data">
-                    <thead>
-                        <tr>
-                            <th>Giờ</th>
-                            @foreach (var item in Model.Elements)
-                            {
-                                <th title="@item.Title">@item.Title (@item.Unit)</th>
-                            }
-                        </tr>
-                    </thead>
-                    @foreach (var item in Model.PostData.PostDataDetails)
-                    {
-                        <tr>
-                            <td><input class="table-text-box" type="number" value="@item.Hour" /></td>
-                            @foreach (var element in Model.Elements)
-                            {
-                                var data = item.Values.Where(m => m.Code == element.Code).FirstOrDefault();
-                                var value = "";
-                                if (data != null)
+                <div class="col-12">
+                    <table id="post-data">
+                        <thead>
+                            <tr>
+                                <th>Giờ</th>
+                                @foreach (var item in Model.Elements)
                                 {
-                                    value = data.Value.ToString();
+                                    <th title="@item.Title">@item.Title (@item.Unit)</th>
                                 }
-                                <td><input type="number" class="table-text-box" data-code="@element.Code" value="@value" /></td>
-                            }
-                        </tr>
-                    }
-                </table>
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="javascript:void(0)" onclick="addRow()"><i class="icon ion-ios-plus"> </i>Thêm dòng</a>
-                    </div>
-                    <div id="inputElement"></div>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model.PostData.PostDataDetails)
+                        {
+                            <tr>
+                                <td><input class="table-text-box" type="number" value="@item.Hour" /></td>
+                                @foreach (var element in Model.Elements)
+                                {
+                                    var data = item.Values.Where(m => m.Code == element.Code).FirstOrDefault();
+                                    var value = "";
+                                    if (data != null)
+                                    {
+                                        value = data.Value.ToString();
+                                    }
+                                    <td><input type="number" class="table-text-box" data-code="@element.Code" value="@value" /></td>
+                                }
+                            </tr>
+                        }
+                    </table>
                 </div>
+                <div class="col-md-12">
+                    <a href="javascript:void(0)" onclick="addRow()"><i class="icon ion-ios-plus"> </i>Thêm dòng</a>
+                </div>
+                <div id="inputElement"></div>
             </div>
         </div>
     </div>

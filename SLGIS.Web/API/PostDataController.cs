@@ -39,7 +39,7 @@ namespace SLGIS.Web.API
                 endDate = DateTime.UtcNow.Date;
             }
 
-            var items = _elementRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).Select(m=> new { Id = m.Code, m.Title}).ToList();
+            var items = _elementRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).Select(m => new { Id = m.Code, m.Title, m.Unit }).ToList();
             var itemValues = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId && m.Date >= startDate && m.Date <= endDate).ToList();
             var data = items.Select(m =>
             {
@@ -64,21 +64,33 @@ namespace SLGIS.Web.API
         [HttpGet("{hydropowerPlantId}/detail")]
         public ActionResult<IEnumerable<dynamic>> GetDataDetail(Guid hydropowerPlantId, int? year)
         {
-            //if (!year.HasValue)
-            //{
-            //    year = DateTime.UtcNow.Year;
-            //}
+            var itemValues = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId);
+            var now = DateTime.UtcNow;
+            var toMonth = 12;
+            if (!year.HasValue)
+            {
+                year = now.Year;
+                toMonth = now.Month;
+            }
 
-            //for (int i = 1; i <= 12; i++)
-            //{
+            List<double> sanluongNgay, soGioPhatDien, totalWater;
+            sanluongNgay = new List<double>();
+            soGioPhatDien = new List<double>();
+            totalWater = new List<double>();
 
-            //}
+            for (var month = 1; month <= toMonth; month++)
+            {
+                var dt = new DateTime(year.Value, month, 1);
+                var firstOfMonth = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+                var endOfMonth = firstOfMonth.AddMonths(1).AddTicks(-1);
 
-            //var itemValues = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId && m.Date >= startDate && m.Date <= endDate);
-            //var data = itemValues 
+                var monthValue = itemValues.Where(m => m.Date >= firstOfMonth && m.Date <= endOfMonth).ToList();
+                sanluongNgay.Add(monthValue.Sum(m => m.SanLuongNgay));
+                soGioPhatDien.Add(monthValue.Sum(m => m.SoGioPhatDien));
+                totalWater.Add(monthValue.Sum(m => m.TotalWater));
+            }
 
-            //return data;
-            return null;
+            return new List<List<double>> { sanluongNgay, soGioPhatDien, totalWater };
         }
     }
 }

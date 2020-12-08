@@ -1,46 +1,13 @@
 ﻿var dateFormat = "yy-mm-dd";
 
 $(document).ready(function () {
-    Highcharts.setOptions({
-        lang: {
-            rangeSelectorZoom: '',
-            rangeSelectorFrom: 'Từ',
-            rangeSelectorTo: 'đến'
-        },
-        time: {
-            useUTC: false
-        },
-    });
-
-    $('.datepick').val(moment().format("YYYY-MM-DD"));
-
-    getData('', '', drawChart);
+    getData('', drawChart);
 
     autoRefreshAfterMiute(1);
 
-    var from = $("#from")
-        .datepicker()
-        .on("change", function () {
-            to.datepicker("option", "minDate", getDate(this));
-        }),
-        to = $("#to").datepicker()
-            .on("change", function () {
-                from.datepicker("option", "maxDate", getDate(this));
-            });
-
-    // Set the datepicker's date format
-    $.datepicker.setDefaults({
-        autoOpen: false,
-        dateFormat: dateFormat,
-        showOtherMonths: true,
-        dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-    });
-
     $("#btnfilter").click(function () {
-        var min = getDateStr($("#from").datepicker("getDate"));
-        var max = getDateStr($("#to").datepicker("getDate"));
-
-        refreshChart(min, max);
+        var year = $("#year").val();
+        refreshChart(year);
     });
 })
 
@@ -54,13 +21,9 @@ function getData(year, callback) {
     var series = [];
 
     $.getJSON(url, function (response) {
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i].item;
-            var data = items[i].data
-
+        for (var i = 0; i < response.length; i++) {
             var seri = {
-                name: item.title,
-                data: data
+                data: response[i]
             };
             series.push(seri);
         }
@@ -77,7 +40,7 @@ function reDrawChart(series) {
 }
 
 function drawChart(series) {
-    Highcharts.chart('bar-container', {
+    window.chart = Highcharts.chart('bar-container', {
         chart: {
             type: 'column'
         },
@@ -126,34 +89,33 @@ function drawChart(series) {
         },
         series: [{
             name: 'Sản lượng ngày (MWh)',
-            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+            data: series[0]
 
         }, {
             name: 'Tổng lượng nước qua Tuabin (m3)',
-            data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+            data: series[1]
 
         }, {
             name: 'Số giờ phát điện (giờ)',
-            data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+            data: series[2]
         }]
     });
 }
 
 function autoRefreshAfterMiute(minute) {
     setInterval(() => {
-        var min = getDateStr($("#from").datepicker("getDate"));
-        var max = getDateStr($("#to").datepicker("getDate"));
+        var year = $("#year").val();
 
-        refreshChart(min, max);
+        refreshChart(year);
 
     }, minute * 60 * 1000);
 }
 
-function refreshChart(min, max) {
+function refreshChart(year) {
     var chart = Highcharts.charts[0];
 
     chart.showLoading('Loading data from server...');
-    getData(min, max, function (res) {
+    getData(year, function (res) {
         reDrawChart(res);
         chart.hideLoading();
     });

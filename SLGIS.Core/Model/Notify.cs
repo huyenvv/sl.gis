@@ -18,7 +18,7 @@ namespace SLGIS.Core
         public bool CanEdit()
         {
             var secondsOfDay = 24 * 60 * 60;
-            return (DateTime.UtcNow.AddHours(7) - Created).TotalSeconds < secondsOfDay;
+            return (DateTime.UtcNow.AddHours(7) - Created.ToUniversalTime()).TotalSeconds < secondsOfDay;
         }
     }
 }
