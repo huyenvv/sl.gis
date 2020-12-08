@@ -43,7 +43,7 @@ namespace SLGIS.Web.API
             var itemValues = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId && m.Date >= startDate && m.Date <= endDate).ToList();
             var data = items.Select(m =>
             {
-                var values = itemValues.SelectMany(x => x.PostDataDetails.SelectMany(t => t.Values.Select(z => new { t.Time, z.Value, Id = z.Code })));
+                var values = itemValues.SelectMany(x => x.PostDataDetails.SelectMany(t => t.Values.Where(k => k.Code == m.Id).Select(z => new { t.Time, z.Value, Id = z.Code })));
                 return new
                 {
                     Item = m,
@@ -63,9 +63,10 @@ namespace SLGIS.Web.API
         /// <returns></returns>
         [HttpGet("{hydropowerPlantId}/detail")]
         public ActionResult<IEnumerable<dynamic>> GetDataDetail(Guid hydropowerPlantId, int? year)
+        
         {
             var itemValues = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId);
-            var now = DateTime.UtcNow;
+            var now = DateTime.UtcNow.AddHours(7);
             var toMonth = 12;
             if (!year.HasValue)
             {

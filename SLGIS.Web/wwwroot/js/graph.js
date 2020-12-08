@@ -150,7 +150,7 @@ function isLessThanEqualMonths(start, end, months) {
 
 function getDateStr(dateTime) {
     if (dateTime)
-        return moment(dateTime).format("yyyyMMDD");
+        return moment(dateTime).format("YYYYMMDD");
 
     return '';
 }

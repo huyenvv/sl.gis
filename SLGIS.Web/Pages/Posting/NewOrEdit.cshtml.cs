@@ -67,15 +67,18 @@ namespace SLGIS.Web.Pages.PostData
             {
                 return BadRequest();
             }
+            PostData.Date = PostData.Date.AddHours(7);
             var details = new List<PostDataDetails>();
             foreach (var item in PostData.PostDataDetails)
             {
                 var sum = item.Values.Sum(m => m.Value);
+                item.Time = PostData.Date.Date.AddHours(item.Hour);
+
                 if (sum != 0) details.Add(item);
             }
             PostData.PostDataDetails = details;
 
-            PostData.Date = PostData.Date.AddHours(7);
+            
             await _postDataRepository.UpsertAsync(PostData);
 
             _logger.LogInformation($"Add postData {PostData.Id}");

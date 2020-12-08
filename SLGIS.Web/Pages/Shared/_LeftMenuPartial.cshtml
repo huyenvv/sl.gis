@@ -1,4 +1,9 @@
-﻿@using SLGIS.Core
+﻿@inject SLGIS.Implementation.HydropowerService _hydropowerService
+@using SLGIS.Core
+
+@{
+    var hasPlant = _hydropowerService.GetCurrent(User.GetId()) != null;
+}
 
 <a asp-page="/Map/Index" data-href="Index/Map/NewOrEdit/" class="br-menu-link">
     <div class="br-menu-item">
@@ -27,39 +32,45 @@
         </div>
     </a>
 }
-<a asp-page="/Notify/Index" data-href="Index/Notify/NewOrEdit/Notify/Detail" class="br-menu-link">
-    <div class="br-menu-item">
-        <i class="menu-item-icon ion-ios-bell-outline tx-20"></i>
-        <span class="menu-item-label">Thông báo</span>
-    </div>
-</a>
+@if (hasPlant)
+{
+    <a asp-page="/Notify/Index" data-href="Index/Notify/NewOrEdit/Notify/Detail" class="br-menu-link">
+        <div class="br-menu-item">
+            <i class="menu-item-icon ion-ios-bell-outline tx-20"></i>
+            <span class="menu-item-label">Thông báo</span>
+        </div>
+    </a>
+}
 <a asp-area="Admin" asp-page="/Hydropower/Index" data-href="Index/Admin/Hydropower/NewOrEdit/" class="br-menu-link">
     <div class="br-menu-item">
         <i class="menu-item-icon icon ion-ios-home-outline tx-22"></i>
         <span class="menu-item-label">Nhà máy thủy điện</span>
     </div>
 </a>
-<a asp-area="Admin" asp-page="/Element/Index" data-href="Index/Admin/Element/NewOrEdit/" class="br-menu-link">
-    <div class="br-menu-item">
-        <i class="menu-item-icon icon ion-ios-grid-view-outline tx-22"></i>
-        <span class="menu-item-label">Thông số</span>
-    </div>
-</a>
-<a asp-page="/Report/Index" data-href="Index/Report/NewOrEdit/" class="br-menu-link">
-    <div class="br-menu-item">
-        <i class="menu-item-icon ion-ios-email-outline tx-20"></i>
-        <span class="menu-item-label">Báo cáo</span>
-    </div>
-</a>
-<a asp-area="" asp-page="/Posting/Index" asp-route-hydropowerPlantId="@ViewData["HydropowerPlantId"]" data-href="Posting/Index/Posting/NewOrEdit/" class="br-menu-link">
-    <div class="br-menu-item">
-        <i class="menu-item-icon icon ion-ios-flask-outline tx-22"></i>
-        <span class="menu-item-label">Dữ liệu vận hành</span>
-    </div>
-</a>
-<a asp-page="/Graph/Index" data-href="Index/Graph/Detail" class="br-menu-link">
-    <div class="br-menu-item">
-        <i class="menu-item-icon ion-stats-bars tx-20"></i>
-        <span class="menu-item-label">Biểu đồ dữ liệu</span>
-    </div>
-</a>
+@if (hasPlant)
+{
+    <a asp-area="Admin" asp-page="/Element/Index" data-href="Index/Admin/Element/NewOrEdit/" class="br-menu-link">
+        <div class="br-menu-item">
+            <i class="menu-item-icon icon ion-ios-grid-view-outline tx-22"></i>
+            <span class="menu-item-label">Thông số báo cáo</span>
+        </div>
+    </a>
+    <a asp-page="/Report/Index" data-href="Index/Report/NewOrEdit/" class="br-menu-link">
+        <div class="br-menu-item">
+            <i class="menu-item-icon ion-ios-email-outline tx-20"></i>
+            <span class="menu-item-label">Báo cáo</span>
+        </div>
+    </a>
+    <a asp-area="" asp-page="/Posting/Index" data-href="Posting/Index/Posting/NewOrEdit/" class="br-menu-link">
+        <div class="br-menu-item">
+            <i class="menu-item-icon icon ion-ios-flask-outline tx-22"></i>
+            <span class="menu-item-label">Dữ liệu vận hành</span>
+        </div>
+    </a>
+    <a asp-page="/Graph/Index" data-href="Index/Graph/Detail" class="br-menu-link">
+        <div class="br-menu-item">
+            <i class="menu-item-icon ion-stats-bars tx-20"></i>
+            <span class="menu-item-label">Biểu đồ dữ liệu</span>
+        </div>
+    </a>
+}

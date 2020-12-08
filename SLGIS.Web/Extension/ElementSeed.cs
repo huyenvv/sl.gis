@@ -20,10 +20,10 @@ namespace SLGIS.Web
             var elements = new List<Element>()
             {
                 new Element { Title = "Lưu lượng qua Tuabin", Code = "LuuLuongQuaTuaBin", Unit = "m3/s" },
-                new Element { Title = "Lưu lượng đến hồ", Code = "LuuLuongDenHo", Unit = "	m3/s" },
+                new Element { Title = "Lưu lượng đến hồ", Code = "LuuLuongDenHo", Unit = "m3/s" },
                 new Element { Title = "Lưu lượng xả sau đập", Code = "LuuLuongXaSauDap", Unit = "m3/s" },
-                new Element { Title = "	Mực nước hạ lưu", Code = "MucNuocHaLuu", Unit = "m" },
-                new Element { Title = "	Mực nước hồ", Code = "MucNuocHoChua", Unit = "m" },
+                new Element { Title = "Mực nước hạ lưu", Code = "MucNuocHaLuu", Unit = "m" },
+                new Element { Title = "Mực nước hồ", Code = "MucNuocHoChua", Unit = "m" },
             };
 
             await elementRepository.AddRangeAsync(elements);

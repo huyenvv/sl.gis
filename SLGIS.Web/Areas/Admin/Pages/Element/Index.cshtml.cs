@@ -48,7 +48,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
                 list = list.Where(m => m.HydropowerPlantId == hydropowerId);
             }
 
-            var data = list.OrderByDescending(m => m.Created).AsEnumerable();
+            var data = list.OrderBy(m => m.HydropowerPlantId).ThenByDescending(m => m.Created).AsEnumerable();
             var pager = new Pager(data.Count(), pageIndex);
             ViewModel = new PagerViewModel
             {

@@ -53,7 +53,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
 
             if (!CanManage)
             {
-                if (Element.HydropowerPlantId != Guid.Empty)
+                if (Element.HydropowerPlantId != null && Element.HydropowerPlantId != Guid.Empty)
                 {
                     return BadRequest();
                 }

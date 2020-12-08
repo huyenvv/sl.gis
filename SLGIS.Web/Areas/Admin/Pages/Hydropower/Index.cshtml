@@ -5,7 +5,11 @@
 }
 
 @section Button {
-    <a href="@Url.Page("NewOrEdit")" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
+
+    @if (Model.CanManage)
+    {
+        <a href="@Url.Page("NewOrEdit")" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
+    }
 }
 
 @using (Html.BeginForm(null, null, FormMethod.Get, new { role = "form", id = "frmSearch" }))
@@ -34,10 +38,10 @@
                                 Tên
                             </th>
                             <th>
-                               Chủ đầu tư
+                                Chủ đầu tư
                             </th>
                             <th>
-                               Người đại diện
+                                Người đại diện
                             </th>
                             <th>
                                 Địa chỉ
@@ -74,9 +78,12 @@
                                     </td>
                                     <td>
                                         <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
-                                        <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">
-                                            Xóa
-                                        </button>
+                                        @if (Model.CanManage)
+                                        {
+                                            <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">
+                                                Xóa
+                                            </button>
+                                        }
                                     </td>
                                 </tr>
                             }
