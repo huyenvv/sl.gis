@@ -20,7 +20,7 @@ namespace SLGIS.Core
         public bool CanEdit()
         {
             var secondsOf2Hours = 2 * 60 * 60;
-            return (DateTime.UtcNow.AddHours(7) - Created).TotalSeconds < secondsOf2Hours;
+            return (DateTime.UtcNow.AddHours(7) - Created.ToUniversalTime()).TotalSeconds < secondsOf2Hours;
         }
     }
 }
