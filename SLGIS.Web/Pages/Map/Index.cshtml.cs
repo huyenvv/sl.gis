@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace SLGIS.Web.Pages.Map
 {
-    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;

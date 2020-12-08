@@ -29,7 +29,7 @@ namespace SLGIS.Web.API
             return _substationRepository.Find(m => true).ToList().Select(m => new SubstationModel
             {
                 Substation = m,
-                CanManage = User.Identity.IsAuthenticated && (User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.Admin))
+                CanManage = User.Identity.IsAuthenticated && (User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.SupperAdmin))
             });
         }
     }
