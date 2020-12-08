@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
 {
     [Authorize]
-    public class NewOrEditModel : PageModel
+    public class NewOrEditModel : PageModelBase
     {
         private readonly IHydropowerPlantRepository _hydropowerPlantRepository;
         private readonly ISubstationRepository _substationRepository;
@@ -25,7 +25,8 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
         private readonly IFileService _fileService;
 
         public NewOrEditModel(IHydropowerPlantRepository hydropowerPlantRepository, ISubstationRepository substationRepository,
-            IUserRepository userRepository, IElementRepository elementRepository, IFileService fileService)
+            IUserRepository userRepository, IElementRepository elementRepository, IFileService fileService, HydropowerService hydropowerService)
+            : base(hydropowerService)
         {
             _hydropowerPlantRepository = hydropowerPlantRepository;
             _substationRepository = substationRepository;
@@ -53,6 +54,11 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
         {
             if (id == null)
             {
+                if(!CanManage)
+                {
+                    return RedirectToPage("./Index");
+                }
+                
                 HydropowerPlant = new Core.HydropowerPlant();
                 return Page();
             }

@@ -47,14 +47,30 @@
                                 Địa chỉ
                             </th>
                             <th>
+                                Tình trạng
+                            </th>
+                            <th>
                                 Ngày tạo
                             </th>
                             <th></th>
                         </tr>
 
                         @{
+                            if (!Model.ViewModel.Items.Any())
+                            {
+                                <tr class="stat even">
+                                    <td class="ac text-center" colspan="7">
+                                        @if (!Model.CanManage)
+                                        {
+                                            <span class="text-warning">Bạn chưa được cấp quyền quản lý thủy điện.</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+
                             var stt = 1;
-                            foreach (var item in Model.ViewModel.Items as IEnumerable<SLGIS.Core.HydropowerPlant>)
+                            foreach (var item in Model.ViewModel.Items as IEnumerable<SLGIS.Core.HydropowerPlant>
+                                )
                             {
                                 <tr class="stat even">
                                     <td class="ac">
@@ -72,6 +88,9 @@
                                     </td>
                                     <td>
                                         @item.Address
+                                    </td>
+                                    <td>
+                                        @item.Status
                                     </td>
                                     <td>
                                         @item.Created.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")

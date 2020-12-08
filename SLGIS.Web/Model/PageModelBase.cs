@@ -54,6 +54,11 @@ namespace SLGIS.Web
             return RedirectToPage("/Map/Index");
         }
 
+        public IActionResult ReturnToHydropower()
+        {
+            return RedirectToPage("/Hydropower/Index", new { area = "Admin" });
+        }
+
         public IActionResult ReturnToError()
         {
             return RedirectToPage("/Error");

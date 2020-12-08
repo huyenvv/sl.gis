@@ -1,7 +1,10 @@
 ﻿var dateFormat = "yy-mm-dd";
 
 $(document).ready(function () {
-    getData('', drawChart);
+    getData('', function (series) {
+        drawChart(series);
+        reDrawChart(series);
+    });
 
     autoRefreshAfterMiute(1);
 

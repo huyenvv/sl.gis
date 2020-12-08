@@ -87,11 +87,11 @@ namespace SLGIS.Web.API
 
                 var monthValue = itemValues.Where(m => m.Date >= firstOfMonth && m.Date <= endOfMonth).ToList();
                 sanluongNgay.Add(monthValue.Sum(m => m.SanLuongNgay));
-                soGioPhatDien.Add(monthValue.Sum(m => m.SoGioPhatDien));
                 totalWater.Add(monthValue.Sum(m => m.TotalWater));
+                soGioPhatDien.Add(monthValue.Sum(m => m.SoGioPhatDien));
             }
 
-            return new List<List<double>> { sanluongNgay, soGioPhatDien, totalWater };
+            return new List<List<double>> { sanluongNgay, totalWater, soGioPhatDien };
         }
     }
 }

@@ -102,7 +102,7 @@ var Item = function (_React$Component2) {
                         { className: "ml-2 text-primary", onClick: function onClick() {
                                 return _this4.props.toggleShare();
                             } },
-                        item.isPrivate ? "Unshare" : "Share"
+                        item.isPrivate ? "Chia sẻ" : "Hủy chia sẻ"
                     ),
                     React.createElement(
                         "a",

@@ -30,6 +30,11 @@ namespace SLGIS.Web.Pages.Notify
 
         public IActionResult OnGet(DateTime? startDate, DateTime? endDate, string searchText = null, int? pageIndex = 1)
         {
+            if (!HasHydropower)
+            {
+                return ReturnToHydropower();
+            }
+
             FilterText = searchText;
             var list = _notifyRepository.Find(m => true).AsQueryable();
             if (!string.IsNullOrEmpty(FilterText))

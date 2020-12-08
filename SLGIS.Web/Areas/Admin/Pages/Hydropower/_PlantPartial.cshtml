@@ -45,7 +45,12 @@
                 <label>Email (của người đại diện)</label>
                 @Html.EditorFor(model => model.HydropowerPlant.Email, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.HydropowerPlant.Email, "", new { @class = "text-danger" })
-            </div>            
+            </div>
+            <div class="form-group">
+                <label>Tình trạng</label>
+                @Html.EditorFor(model => model.HydropowerPlant.Status, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HydropowerPlant.Status, "", new { @class = "text-danger" })
+            </div>
         </div>
         <div class="col-sm-6">
             <div class="form-group">

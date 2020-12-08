@@ -82,6 +82,14 @@ namespace SLGIS.Web.Pages.Report
 
                 Report.Files = listFiles;
             }
+            else
+            {
+                if (Report.Id != Guid.Empty)
+                {
+                    var report = await _reportRepository.GetAsync(Report.Id);
+                    Report.Files = report.Files;
+                }
+            }
 
             await _reportRepository.UpsertAsync(Report);
 
