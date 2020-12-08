@@ -48,7 +48,7 @@ namespace SLGIS.Web.Pages.PostData
                 PostData = new Core.PostData
                 {
                     Date = DateTime.Now.Date,
-                    PostDataDetails = new List<PostDataDetails> { new PostDataDetails() }
+                    PostDataDetails = new List<PostDataDetails> { new PostDataDetails { Hour = 0 } }
                 };
             }
 
