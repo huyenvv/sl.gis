@@ -44,7 +44,7 @@ namespace SLGIS.Web.Pages.User
             FilterText = searchText;
             if (!string.IsNullOrEmpty(FilterText))
             {
-                Users = Users.Where(m => m.UserName.ToLower().Contains(FilterText.ToLower()) || m.Name.ToLower().Contains(FilterText.ToLower())).OrderByDescending(m => m.Updated).ToList();
+                Users = Users.Where(m => m.UserName.ToLower().Contains(FilterText.ToLower())).OrderByDescending(m => m.Updated).ToList();
             }
 
             var pager = new Pager(Users.Count(), pageIndex);
