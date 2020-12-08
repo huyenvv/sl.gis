@@ -1,11 +1,10 @@
-using SLGIS.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using SLGIS.Core;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SLGIS.Web.Pages.User
 {
@@ -13,25 +12,30 @@ namespace SLGIS.Web.Pages.User
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly UserManager<Core.User> _userManager;
+        private readonly IUserRepository _userRepository;
+        private readonly RoleManager<Core.Role> _roleManager;
 
-        public IndexModel(ILogger<IndexModel> logger, UserManager<Core.User> userManager)
+        public IndexModel(ILogger<IndexModel> logger, IUserRepository userRepository, RoleManager<Core.Role> roleManager)
         {
             _logger = logger;
-            _userManager = userManager;
+            _userRepository = userRepository;
+            _roleManager = roleManager;
         }
 
         public string FilterText { get; set; }
         public PagerViewModel ViewModel { get; set; }
 
-        public async Task OnGet(string searchText = null, int? pageIndex = 1)
+        public void OnGet(string searchText = null, int? pageIndex = 1)
         {
+            var roles = _roleManager.Roles.ToList();
+            var memeberRoleId = roles.FirstOrDefault(m => m.Name == Constant.Role.Member).Id.ToString();
+            var adminRoleId = roles.FirstOrDefault(m => m.Name == Constant.Role.Admin).Id.ToString();
 
-            var Users = (await _userManager.GetUsersInRoleAsync(Constant.Role.Member));
+            var Users = _userRepository.Find(m => m.Roles.Count == 0 || m.Roles.Count == 1 && m.Roles.Contains(memeberRoleId)).ToList();
 
             if (User.IsInRole(Constant.Role.SupperAdmin))
             {
-                var admins = (await _userManager.GetUsersInRoleAsync(Constant.Role.Admin)).ToList();
+                var admins = _userRepository.Find(m => m.Roles.Any(n => n == adminRoleId)).ToList();
 
                 admins.AddRange(Users);
                 Users = admins;
@@ -51,20 +55,6 @@ namespace SLGIS.Web.Pages.User
                 Items = Users.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
                 Pager = pager
             };
-        }
-
-        public async Task<IActionResult> OnPostDeleteAsync(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                return Page();
-            }
-
-            await _userManager.DeleteAsync(user);
-            _logger.LogInformation($"Deleted user {id}");
-
-            return RedirectToPage("/User/Index");
         }
     }
 }

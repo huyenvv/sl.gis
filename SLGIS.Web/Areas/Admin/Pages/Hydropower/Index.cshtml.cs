@@ -35,7 +35,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
 
         public void OnGet(string searchText = null, int? pageIndex = 1)
         {
-            Import();
+            //Import();
             FilterText = searchText;
             var plants = _hydropowerPlantRepository.Find(m => true).AsQueryable();
             if (!string.IsNullOrEmpty(FilterText))

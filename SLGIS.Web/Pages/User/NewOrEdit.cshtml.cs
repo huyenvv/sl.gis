@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using System.Linq;
 
 namespace SLGIS.Web.Pages.User
 {
@@ -15,29 +18,29 @@ namespace SLGIS.Web.Pages.User
         private readonly ILogger<NewOrEditModel> _logger;
         private readonly IUserRepository _userRepository;
         private readonly UserManager<Core.User> _userManager;
+        private readonly RoleManager<Core.Role> _roleManager;
 
-        public NewOrEditModel(ILogger<NewOrEditModel> logger, IUserRepository userRepository, UserManager<Core.User> userManager)
+        public NewOrEditModel(ILogger<NewOrEditModel> logger, IUserRepository userRepository, UserManager<Core.User> userManager, RoleManager<Core.Role> roleManager)
         {
             _logger = logger;
             _userRepository = userRepository;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         [BindProperty]
-        public UserModel UserModel { get; set; } = new UserModel();
+        public RoleRightModel UserModel { get; set; } = new RoleRightModel();
 
-        public async Task<IActionResult> OnGet(string id)
+        public IActionResult OnGet(string id)
         {
-            if (!string.IsNullOrEmpty(id))
-            {
-                var user = await _userRepository.GetById(id);
-                UserModel = user.ToUserModel();
+            var roles = _roleManager.Roles.ToList();
+            var memeberRoleId = roles.FirstOrDefault(m => m.Name == Constant.Role.Member).Id.ToString();
+            var adminRoleId = roles.FirstOrDefault(m => m.Name == Constant.Role.Admin).Id.ToString();
 
-                if (User.IsInRole(Constant.Role.SupperAdmin))
-                {
-                    UserModel.IsAdmin = await _userManager.IsInRoleAsync(user, Constant.Role.Admin);
-                }
-            }
+            var user = _userRepository.Find(m => m.Id == new ObjectId(id)).FirstOrDefault();
+            UserModel = user.ToRoleRightModel();
+            UserModel.IsAdmin = user.Roles.Contains(adminRoleId);
+            UserModel.IsMember = user.Roles.Contains(memeberRoleId);
             return Page();
         }
 
@@ -55,8 +58,7 @@ namespace SLGIS.Web.Pages.User
             }
             else
             {
-                await CreateAsync();
-                _logger.LogInformation($"Created user {UserModel.Username}");
+                return NotFound();
             }
 
             return RedirectToPage("/User/Index");
@@ -64,57 +66,38 @@ namespace SLGIS.Web.Pages.User
 
         private async Task UpdateAsync()
         {
-            var user = await _userRepository.GetById(UserModel.Id);
+            var roles = _roleManager.Roles.ToList();
+            var memeberRoleId = roles.FirstOrDefault(m => m.Name == Constant.Role.Member).Id.ToString();
+            var adminRoleId = roles.FirstOrDefault(m => m.Name == Constant.Role.Admin).Id.ToString();
 
-            user.Name = UserModel.Name;
-            user.IsLocked = UserModel.IsLocked;
-            user.Updated = DateTime.Now;
+            if (!User.IsInRole(Constant.Role.SupperAdmin) && !User.IsInRole(Constant.Role.Admin))
+                return;
 
-            await _userManager.UpdateAsync(user);
-
-            if (UserModel.IsChangePassword)
+            var user = _userRepository.Find(m => m.Id == new ObjectId(UserModel.Id)).FirstOrDefault();
+            if (UserModel.IsMember)
             {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                await _userManager.ResetPasswordAsync(user, token, UserModel.Password);
+                if (!user.Roles.Contains(memeberRoleId))
+                    await _userManager.AddToRoleAsync(user, Constant.Role.Member);
+            }
+            else
+            {
+                if (user.Roles.Contains(memeberRoleId))
+                    await _userManager.RemoveFromRoleAsync(user, Constant.Role.Member);
             }
 
             if (!User.IsInRole(Constant.Role.SupperAdmin))
                 return;
 
-            var currentIsAdmin = await _userManager.IsInRoleAsync(user, Constant.Role.Admin);
-            if (currentIsAdmin && !UserModel.IsAdmin)
+            if (UserModel.IsAdmin)
             {
-                await _userManager.AddToRoleAsync(user, Constant.Role.Member);
-                await _userManager.RemoveFromRoleAsync(user, Constant.Role.Admin);
-                return;
+                if (!user.Roles.Contains(adminRoleId))
+                    await _userManager.AddToRoleAsync(user, Constant.Role.Admin);
             }
-
-            if (!currentIsAdmin && UserModel.IsAdmin)
+            else
             {
-                await _userManager.AddToRoleAsync(user, Constant.Role.Admin);
-                await _userManager.RemoveFromRoleAsync(user, Constant.Role.Member);
+                if (user.Roles.Contains(adminRoleId))
+                    await _userManager.RemoveFromRoleAsync(user, Constant.Role.Admin);
             }
-        }
-
-        private async Task CreateAsync()
-        {
-            var user = new Core.User
-            {
-                Name = UserModel.Name,
-                IsLocked = UserModel.IsLocked,
-                Updated = DateTime.Now,
-                UserName = UserModel.Username,
-                Email = UserModel.Username
-            };
-
-            await _userManager.CreateAsync(user, UserModel.Password);
-
-            var role = Constant.Role.Member;
-            if (User.IsInRole(Constant.Role.SupperAdmin) && UserModel.IsAdmin)
-            {
-                role = Constant.Role.Admin;
-            }
-            await _userManager.AddToRoleAsync(user, role);
         }
     }
 }

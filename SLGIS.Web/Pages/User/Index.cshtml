@@ -5,10 +5,6 @@
     ViewBag.Class = "fa fa-user";
 }
 
-@section Button {
-    <a href="@Url.Page("NewOrEdit")" class="btn btn-primary btn-sm pull-right">Thêm mới</a>
-}
-
 @using (Html.BeginForm(null, null, FormMethod.Get, new { role = "form", id = "frmSearch" }))
 {
     <div class="row">
@@ -35,12 +31,6 @@
                                 Tài khoản
                             </th>
                             <th>
-                                Họ tên
-                            </th>
-                            <th>
-                                Trạng thái
-                            </th>
-                            <th>
                                 Ngày cập nhật
                             </th>
                             <th></th>
@@ -58,32 +48,10 @@
                                         <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="tx-14 tx-medium d-block">@item.UserName</a>
                                     </td>
                                     <td>
-                                        @item.Name
-                                    </td>
-                                    <td>
-                                        @if (!item.IsLocked)
-                                        {
-                                            <span class="tx-11 d-block">
-                                                <span class="square-8 bg-success mg-r-5 rounded-circle"></span>
-                                                Đang hoạt động
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="tx-11 d-block">
-                                                <span class="square-8 bg-danger mg-r-5 rounded-circle"></span>
-                                                Đang bị khóa
-                                            </span>
-                                        }
-                                    </td>
-                                    <td>
                                         @item.Updated.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
                                     </td>
                                     <td>
-                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
-                                        <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">
-                                            Xóa
-                                        </button>
+                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Phân quyền</a>                                        
                                     </td>
                                 </tr>
                             }

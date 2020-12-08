@@ -11,6 +11,19 @@ namespace SLGIS.Web
 {
     public static class UserExtension
     {
+        public static RoleRightModel ToRoleRightModel(this User user)
+        {
+            if (user == null) return null;
+
+            return new RoleRightModel
+            {
+                Id = user.Id.ToString(),
+                Username = user.UserName,
+                IsAdmin = user.Roles.Contains(Constant.Role.Admin),
+                IsMember = user.Roles.Contains(Constant.Role.Member),
+            };
+        }
+
         public static UserModel ToUserModel(this User user)
         {
             if (user == null) return null;
