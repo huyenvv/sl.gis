@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using SLGIS.Core;
 using SLGIS.Core.Repositories;
 using SLGIS.Implementation;
+using SLGIS.Web.Model;
 using System;
 using System.IO;
 using System.Linq;
@@ -25,31 +26,34 @@ namespace SLGIS.Web.Pages.Notify
             _fileService = fileService;
         }
 
-        public string FilterText { get; set; }
+        [BindProperty]
+        public SearchModel SearchModel { get; set; } = new SearchModel();
         public PagerViewModel ViewModel { get; set; }
 
-        public IActionResult OnGet(DateTime? startDate, DateTime? endDate, string searchText = null, int? pageIndex = 1)
+        public IActionResult OnGet(SearchModel searchModel, int? pageIndex = 1)
         {
             if (!HasHydropower)
             {
                 return ReturnToHydropower();
             }
 
-            FilterText = searchText;
+            if (searchModel != null)
+                SearchModel = searchModel;
+
             var list = _notifyRepository.Find(m => true).AsQueryable();
-            if (!string.IsNullOrEmpty(FilterText))
+            if (!string.IsNullOrEmpty(SearchModel.FilterText))
             {
-                list = list.Where(m => m.Title.Contains(FilterText.ToLower()));
+                list = list.Where(m => m.Title.Contains(SearchModel.FilterText.ToLower()));
             }
 
-            if (startDate.HasValue)
+            if (SearchModel.StartDate.HasValue)
             {
-                list = list.Where(m => m.Created >= startDate);
+                list = list.Where(m => m.Created >= SearchModel.StartDate);
             }
 
-            if (endDate.HasValue)
+            if (SearchModel.EndDate.HasValue)
             {
-                list = list.Where(m => m.Created <= endDate);
+                list = list.Where(m => m.Created <= SearchModel.EndDate);
             }
 
             var result = list.OrderByDescending(m => m.Created).AsEnumerable();
