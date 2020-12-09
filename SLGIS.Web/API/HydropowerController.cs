@@ -28,7 +28,7 @@ namespace SLGIS.Web.API
             return _hydropowerPlantRepository.Find(m => true).ToList().Select(m => new HydroPowerModel
             {
                 HydropowerPlant = m,
-                CanManage = User.Identity.IsAuthenticated && (User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.Admin) || m.Owners.Any(x => x == User.GetId()))
+                CanManage = User.Identity.IsAuthenticated && (User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.SupperAdmin) || m.Owners.Any(x => x == User.GetId()))
             });
         }
     }

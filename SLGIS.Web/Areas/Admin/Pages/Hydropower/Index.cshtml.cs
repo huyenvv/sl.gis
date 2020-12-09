@@ -35,7 +35,6 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
 
         public void OnGet(string searchText = null, int? pageIndex = 1)
         {
-            //Import();
             FilterText = searchText;
             var plants = _hydropowerPlantRepository.Find(m => true).AsQueryable();
             if (!string.IsNullOrEmpty(FilterText))
@@ -143,6 +142,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
                     }
                     catch { throw new Exception($"Dữ liệu không hợp lệ, tại dòng {i}"); }
                 }
+                _hydropowerPlantRepository.AddRangeAsync(lst);
             }
         }
     }

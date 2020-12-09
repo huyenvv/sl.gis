@@ -132,11 +132,15 @@ function showInfo(data, type) {
 
     if (type === "hydropower-dams") {
         editUrl = '/admin/hydropower/neworedit?id=' + data.hydropowerPlant.id;
-        var dams = data.hydropowerPlant.hydropowerDams;
+        var dams = data.hydropowerPlant.hydropowerDams.length > 0 ? data.hydropowerPlant.hydropowerDams[0] : null;
 
         $('#dams-name').text(dams.name);
         $('#dams-address').text('Địa điểm xây dựng: ' + dams.address);
-        $('#dams-missions').text('Nhiệm vụ chính: ' + dams.missions.join());
+        var mission = "";
+        if (dams.missions) {
+            mission = dams.missions.join();
+        }
+        $('#dams-missions').text('Nhiệm vụ chính: ' + mission);
         $('#dams-start-build').text('Khởi công/ Hoàn thành: ' + dams.startBuild + ' - ' + dams.endBuild);
         $('#dams-nguon-von').text('Nguồn vốn: ' + dams.nguonVon);
 
