@@ -23,6 +23,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
         private readonly IUserRepository _userRepository;
         private readonly IElementRepository _elementRepository;
         private readonly IFileService _fileService;
+        private readonly HydropowerService _hydropowerService;
 
         public NewOrEditModel(IHydropowerPlantRepository hydropowerPlantRepository, ISubstationRepository substationRepository,
             IUserRepository userRepository, IElementRepository elementRepository, IFileService fileService, HydropowerService hydropowerService)
@@ -33,6 +34,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
             _userRepository = userRepository;
             _elementRepository = elementRepository;
             _fileService = fileService;
+            _hydropowerService = hydropowerService;
         }
 
         [BindProperty]
@@ -54,11 +56,11 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
         {
             if (id == null)
             {
-                if(!CanManage)
+                if (!CanManage)
                 {
                     return RedirectToPage("./Index");
                 }
-                
+
                 HydropowerPlant = new Core.HydropowerPlant();
                 return Page();
             }
@@ -97,7 +99,12 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
                 var plant = await _hydropowerPlantRepository.GetAsync(HydropowerPlant.Id);
                 HydropowerPlant.HydropowerDams = plant.HydropowerDams;
 
-                if (!Constant.Role.All.Any(User.IsInRole))
+                if (CanManage)
+                {
+                    var removeUserIds = plant.Owners?.Where(m => HydropowerPlant.Owners?.Any(n => n == m) == false).ToArray();
+                    _hydropowerService.RemoveCache(removeUserIds);
+                }
+                else
                 {
                     HydropowerPlant.Connections = plant.Connections;
                     HydropowerPlant.Owners = plant.Owners;

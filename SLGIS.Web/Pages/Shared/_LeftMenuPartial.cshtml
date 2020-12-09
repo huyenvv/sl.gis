@@ -3,6 +3,7 @@
 
 @{
     var hasPlant = _hydropowerService.GetCurrent(User.GetId()) != null;
+    var isAdmin = Constant.Role.All.Any(User.IsInRole);
 }
 
 <a asp-page="/Map/Index" data-href="Index/Map/NewOrEdit/" class="br-menu-link">
@@ -11,7 +12,7 @@
         <span class="menu-item-label">Map</span>
     </div>
 </a>
-@if (Constant.Role.All.Any(User.IsInRole))
+@if (isAdmin)
 {
     <a asp-page="/User/Index" data-href="Index/User/NewOrEdit/" class="br-menu-link">
         <div class="br-menu-item">
@@ -47,7 +48,7 @@
         <span class="menu-item-label">Nhà máy thủy điện</span>
     </div>
 </a>
-@if (hasPlant)
+@if (isAdmin)
 {
     <a asp-area="Admin" asp-page="/Element/Index" data-href="Index/Admin/Element/NewOrEdit/" class="br-menu-link">
         <div class="br-menu-item">
@@ -55,6 +56,9 @@
             <span class="menu-item-label">Thông số báo cáo</span>
         </div>
     </a>
+}
+@if (hasPlant)
+{
     <a asp-page="/Report/Index" data-href="Index/Report/NewOrEdit/" class="br-menu-link">
         <div class="br-menu-item">
             <i class="menu-item-icon ion-ios-email-outline tx-20"></i>

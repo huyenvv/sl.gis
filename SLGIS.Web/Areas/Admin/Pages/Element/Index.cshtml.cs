@@ -28,8 +28,13 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
         public PagerViewModel ViewModel { get; set; }
         public SelectList HydropowerSelectList { get; set; }
 
-        public void OnGet(string searchText = null, Guid? hydropowerId = null, int? pageIndex = 1)
+        public IActionResult OnGet(string searchText = null, Guid? hydropowerId = null, int? pageIndex = 1)
         {
+            if (!CanManage)
+            {
+                return ReturnToHydropower();
+            }
+
             HydropowerSelectList = CreateHydropowerPlantSelection(hydropowerId);
             FilterText = searchText;
             var list = _elementRepository.Find(m => true).AsQueryable();
@@ -56,10 +61,17 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
                 Items = data.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
                 Pager = pager
             };
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(Guid id)
         {
+            if (!CanManage)
+            {
+                return ReturnToHydropower();
+            }
+
             if (id == Guid.Empty)
             {
                 return Page();

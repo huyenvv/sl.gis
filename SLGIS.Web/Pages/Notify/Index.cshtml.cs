@@ -53,15 +53,15 @@ namespace SLGIS.Web.Pages.Notify
 
             if (SearchModel.EndDate.HasValue)
             {
+                SearchModel.EndDate = SearchModel.EndDate.Value.Date.AddDays(1).AddSeconds(-1);
                 list = list.Where(m => m.Created <= SearchModel.EndDate);
             }
 
-            var result = list.OrderByDescending(m => m.Created).AsEnumerable();
             var pager = new Pager(list.Count(), pageIndex);
             ViewModel = new PagerViewModel
             {
                 BaseUrl = Url.Page("./Index"),
-                Items = list.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
+                Items = list.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).OrderByDescending(m => m.Created).ToList(),
                 Pager = pager
             };
 

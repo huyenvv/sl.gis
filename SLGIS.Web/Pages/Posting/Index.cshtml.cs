@@ -25,36 +25,42 @@ namespace SLGIS.Web.Pages.PostData
             _elementRepository = elementRepository;
         }
 
+        [BindProperty]
+        public SearchModel SearchModel { get; set; } = new SearchModel();
         public PagerViewModel ViewModel { get; set; }
         public List<Core.Element> Elements { get; set; }
 
-        public IActionResult OnGet(DateTime? startDate, DateTime? endDate, int? pageIndex = 1)
+        public IActionResult OnGet(SearchModel searchModel, int? pageIndex = 1)
         {
             if (!HasHydropower)
             {
-                return ReturnToMap();
+                return ReturnToHydropower();
             }
+
+            if (searchModel != null)
+                SearchModel = searchModel;
 
             var hydropowerPlantId = GetCurrentHydropower().Id;
             ViewData["HydropowerPlantId"] = hydropowerPlantId;
 
             var list = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).AsQueryable();
-            if (startDate.HasValue)
+            if (SearchModel.StartDate.HasValue)
             {
-                list = list.Where(m => m.Created >= startDate);
+                list = list.Where(m => m.Date >= SearchModel.StartDate);
             }
 
-            if (endDate.HasValue)
+            if (SearchModel.EndDate.HasValue)
             {
-                list = list.Where(m => m.Created <= endDate);
+                SearchModel.EndDate = SearchModel.EndDate.Value.Date.AddDays(1).AddSeconds(-1);
+                list = list.Where(m => m.Date <= SearchModel.EndDate);
             }
 
-            var postDatas = list.OrderByDescending(m => m.Created).AsEnumerable();
+            var postDatas = list.OrderByDescending(m => m.Date).AsEnumerable();
             var pager = new Pager(postDatas.Count(), pageIndex);
 
             ViewModel = new PagerViewModel
             {
-                BaseUrl = Url.Page("./Index", new { hydropowerPlantId, startDate, endDate }),
+                BaseUrl = Url.Page("./Index", new { hydropowerPlantId, SearchModel.StartDate, SearchModel.EndDate }),
                 Items = postDatas.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
                 Pager = pager
             };

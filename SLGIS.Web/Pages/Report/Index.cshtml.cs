@@ -55,6 +55,7 @@ namespace SLGIS.Web.Pages.Report
 
             if (SearchModel.EndDate.HasValue)
             {
+                SearchModel.EndDate = SearchModel.EndDate.Value.Date.AddDays(1).AddSeconds(-1);
                 list = list.Where(m => m.Created <= SearchModel.EndDate);
             }
 

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using SLGIS.Core;
 using SLGIS.Implementation;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SLGIS.Web.Areas.Admin.Pages.Element
@@ -25,6 +24,11 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
+            if (!CanManage)
+            {
+                return ReturnToHydropower();
+            }
+
             CreateHydropowerSelection();
             if (id == null)
             {

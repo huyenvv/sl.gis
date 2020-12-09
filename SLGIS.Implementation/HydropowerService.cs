@@ -60,6 +60,14 @@ namespace SLGIS.Implementation
             return true;
         }
 
+        public void RemoveCache(params ObjectId[] userIds)
+        {
+            foreach (var id in userIds)
+            {
+                _currentHydropowerId.TryRemove(id, out var _);
+            }
+        }
+
         public IEnumerable<(Guid Id, string Name)> CurrentList(ObjectId currentUserId)
         {
             var listHydropowers = _hydropowerPlantRepository.Find(m => true);

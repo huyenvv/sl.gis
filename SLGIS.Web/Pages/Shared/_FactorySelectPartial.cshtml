@@ -1,25 +1,33 @@
 ﻿@using SLGIS.Implementation
-@inject HydropowerService hydropowerService 
+@inject HydropowerService hydropowerService
 @{
     var selected = hydropowerService.GetCurrent(User.GetId());
-    var hydropowerPlants = hydropowerService.CurrentList(User.GetId());
+    var hydropowerPlants = hydropowerService.CurrentList(User.GetId()).OrderBy(m => m.Name);
 
     var url = $"{Context.Request.Path}";
 }
 
+<style>
+    #hydropowerPlant select {
+        border: none;
+        border-bottom: 1px dotted;
+        font-weight: bold;
+        border-radius: 0;
+        text-align: center;
+    }
+</style>
 <div id="hydropowerPlant" class="text-center" data-id="@selected.Id">
-    <div class="dropdown">
-        <a class="dropdown-toggle text-uppercase" href="javascript:void(0)" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <strong>@selected.Name</strong>
-        </a>
-        @if (hydropowerPlants.Count() > 1)
+    <select class="form-control" data-placeholder="Chọn thủy điện" onchange="location.href = $(this).val()">
+        @foreach (var hydropowerPlant in hydropowerPlants)
         {
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                @foreach (var hydropowerPlant in hydropowerPlants.Where(m => m.Id != selected.Id))
-                {
-                    <a class="dropdown-item text-uppercase" href="@($"{url}?handler=HydropowerChange&id={hydropowerPlant.Id}")"><strong>@hydropowerPlant.Name</strong></a>
-                }
-            </div>
+            if (selected.Id == hydropowerPlant.Id)
+            {
+                <option value="@($"{url}?handler=HydropowerChange&id={hydropowerPlant.Id}")" selected="selected">@hydropowerPlant.Name</option>
+            }
+            else
+            {
+                <option value="@($"{url}?handler=HydropowerChange&id={hydropowerPlant.Id}")">@hydropowerPlant.Name</option>
+            }
         }
-    </div>
+    </select>
 </div>

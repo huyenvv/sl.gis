@@ -15,6 +15,36 @@
     }
 }
 
+@using (Html.BeginForm(null, null, FormMethod.Get, new { role = "form", Class = "mt-4", id = "frmSearch" }))
+{
+    <div class="row">
+        <div class="col">
+            <div class="d-md-flex">
+                <div class="fromDate">
+                    <label>Từ ngày</label>
+                    <input asp-for="SearchModel.StartDate" type="date" class="form-control" placeholder="Từ ngày" />
+                </div>
+                <div class="ml-md-2">
+                    <label>Đến ngày</label>
+                    <input asp-for="SearchModel.EndDate" type="date" class="form-control" placeholder="đến ngày" />
+                </div>
+                <div class="ml-md-2">
+                    <label>&nbsp;</label>
+                    <span class="input-group-btn" id="btnSearch">
+                        <button class="btn bd bg-primary tx-white pointer" type="button"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+                <div class="ml-md-2">
+                    <label>&nbsp;</label>
+                    <span class="input-group-btn">
+                        <a class="btn btn-primary" target="_blank" href="">Tải xuống CSV</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 <div class="row mt-2">
     <div class="col-12">
         <form method="post">
