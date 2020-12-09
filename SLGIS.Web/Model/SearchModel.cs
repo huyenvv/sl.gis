@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SLGIS.Web.Model
+namespace SLGIS.Web
 {
     public class SearchModel
     {

@@ -25,34 +25,37 @@ namespace SLGIS.Web.Pages.Report
             _fileService = fileService;
         }
 
-        public string FilterText { get; set; }
+        [BindProperty]
+        public SearchModel SearchModel { get; set; } = new SearchModel();
         public PagerViewModel ViewModel { get; set; }
 
-        public IActionResult OnGet(DateTime? startDate, DateTime? endDate, string searchText = null, int? pageIndex = 1)
+        public IActionResult OnGet(SearchModel searchModel, int? pageIndex = 1)
         {
             if (!HasHydropower)
             {
                 return ReturnToMap();
             }
 
+            if (searchModel != null)
+                SearchModel = searchModel;
+
             var hydropowerPlantId = GetCurrentHydropower().Id;
             ViewData["HydropowerPlantId"] = hydropowerPlantId;
 
-            FilterText = searchText;
             var list = _reportRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).AsQueryable();
-            if (!string.IsNullOrEmpty(FilterText))
+            if (!string.IsNullOrEmpty(SearchModel.FilterText))
             {
-                list = list.Where(m => m.Title.Contains(FilterText.ToLower()));
+                list = list.Where(m => m.Title.Contains(SearchModel.FilterText.ToLower()));
             }
 
-            if (startDate.HasValue)
+            if (SearchModel.StartDate.HasValue)
             {
-                list = list.Where(m => m.Created >= startDate);
+                list = list.Where(m => m.Created >= SearchModel.StartDate);
             }
 
-            if (endDate.HasValue)
+            if (SearchModel.EndDate.HasValue)
             {
-                list = list.Where(m => m.Created <= endDate);
+                list = list.Where(m => m.Created <= SearchModel.EndDate);
             }
 
             var result = list.OrderByDescending(m => m.Created).AsEnumerable();
