@@ -30,7 +30,7 @@ namespace SLGIS.Web.Pages.PostData
         public PagerViewModel ViewModel { get; set; }
         public List<Core.Element> Elements { get; set; }
 
-        public IActionResult OnGet(SearchModel searchModel, int? pageIndex = 1)
+        public IActionResult OnGetAsync(SearchModel searchModel, int? pageIndex = 1)
         {
             if (!HasHydropower)
             {

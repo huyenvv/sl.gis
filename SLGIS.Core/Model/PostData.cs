@@ -32,5 +32,11 @@ namespace SLGIS.Core
         public Guid HydropowerPlantId { get; set; }
 
         public List<PostDataDetails> PostDataDetails { get; set; } = new List<PostDataDetails>();
+
+        public bool CanEdit()
+        {
+            var secondsOfDay = 2 * 60 * 60;
+            return (DateTime.UtcNow.AddHours(7) - Created.ToUniversalTime()).TotalSeconds < secondsOfDay;
+        }
     }
 }

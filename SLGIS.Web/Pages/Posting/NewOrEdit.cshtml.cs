@@ -33,16 +33,28 @@ namespace SLGIS.Web.Pages.PostData
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
+            if (CanManage)
+            {
+                return RedirectToPage("/Posting/Detail", new { id });
+            }
+
             if (!HasHydropower)
             {
-                return ReturnToMap();
+                return ReturnToHydropower();
             }
 
             var hydropowerPlantId = GetCurrentHydropower().Id;
             CreateViewData(hydropowerPlantId);
 
             if (id != null)
+            {
                 PostData = await _postDataRepository.GetAsync(id.Value);
+                if (!PostData.CanEdit())
+                {
+                    return RedirectToPage("/Posting/Detail", new { id });
+                }
+            }
+
             if (PostData == null)
             {
                 PostData = new Core.PostData
@@ -61,6 +73,16 @@ namespace SLGIS.Web.Pages.PostData
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (CanManage)
+            {
+                return RedirectToPage("/Posting/Detail", new { id = PostData.HydropowerPlantId });
+            }
+
+            if (!HasHydropower)
+            {
+                return ReturnToHydropower();
+            }
+
             if (!ModelState.IsValid)
             {
                 CreateViewData(PostData.HydropowerPlantId);
@@ -82,11 +104,27 @@ namespace SLGIS.Web.Pages.PostData
             }
             PostData.PostDataDetails = details;
 
-            var postData = _postDataRepository.Find(m => m.Date == PostData.Date).FirstOrDefault();
-            if (postData != null)
+            if (PostData.Id != Guid.Empty)
             {
-                PostData.Id = postData.Id;
+                var postData = await _postDataRepository.GetAsync(PostData.Id);
+                if (postData.Date != PostData.Date)
+                {
+                    ModelState.AddModelError("", "Không thể thay đổi dữ liệu ngày!");
+                    CreateViewData(PostData.HydropowerPlantId);
+                    return Page();
+                }
             }
+            else
+            {
+                var postData = _postDataRepository.Find(m => m.Date == PostData.Date).FirstOrDefault();
+                if (postData != null)
+                {
+                    ModelState.AddModelError("", $"Dữ liệu ngày đã tồn tại. Vui lòng chọn ngày khác.");
+                    CreateViewData(PostData.HydropowerPlantId);
+                    return Page();
+                }
+            }
+
             await _postDataRepository.UpsertAsync(PostData);
 
             _logger.LogInformation($"Add postData {PostData.Id}");

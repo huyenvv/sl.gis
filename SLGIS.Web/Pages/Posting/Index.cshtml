@@ -94,7 +94,7 @@
                                         @item.SoGioPhatDien
                                     </td>
                                     <td>
-                                        @if (!Model.CanManage)
+                                        @if (!Model.CanManage && item.CanEdit())
                                         {
                                             <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">
                                                 Xóa

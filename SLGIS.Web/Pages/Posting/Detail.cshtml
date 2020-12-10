@@ -1,0 +1,95 @@
+﻿@page
+@model SLGIS.Web.Pages.PostData.DetailModel
+
+@{
+    ViewBag.Title = "Dữ liệu vận hành";
+    ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>PostData</a>" +
+                          "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
+
+}
+
+@section Factory {
+    <partial name="_FactorySelectPartial" />
+}
+
+<style>
+    .table-text-box {
+        display: inline;
+        width: 100%;
+        box-sizing: border-box !important;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+    }
+</style>
+
+<div class="card shadow-base mb-2">
+    <div class="card-header">
+        <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <strong>Dữ liệu ngày</strong>
+            <i class="fa fa-caret-down pull-right mt-1"></i>
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="form-group col-md-3">
+                @Html.Label("Ngày")
+                <input class="form-control text-box single-line" data-val="true" readonly data-val-required="The Date field is required." id="PostData_Date" name="PostData.Date" type="date" value="@Model.PostData.Date.ToString("yyyy-MM-dd")">
+            </div>
+            <div class="form-group col-md-3">
+                @Html.Label("Sản lượng ngày (MWh)")
+                @Html.EditorFor(model => model.PostData.SanLuongNgay, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control", type = "number" } })
+            </div>
+            <div class="form-group col-md-3">
+                @Html.Label("Tổng lượng nước qua Tuabin (m3)")
+                @Html.EditorFor(model => model.PostData.TotalWater, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control", type = "number" } })
+            </div>
+            <div class="form-group col-md-3">
+                @Html.Label("Số giờ phát điện (giờ)")
+                @Html.EditorFor(model => model.PostData.SoGioPhatDien, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control", type = "number" } })
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-base mb-2">
+    <div class="card-header">
+        <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <strong>Dữ liệu chi tiết</strong>
+            <i class="fa fa-caret-down pull-right mt-1"></i>
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <table id="post-data">
+                    <thead>
+                        <tr>
+                            <th>Giờ</th>
+                            @foreach (var item in Model.Elements)
+                            {
+                                <th title="@item.Title">@item.Title (@item.Unit)</th>
+                            }
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model.PostData.PostDataDetails)
+                    {
+                        <tr>
+                            <td><input class="table-text-box" type="number" disabled value="@item.Hour" /></td>
+                            @foreach (var element in Model.Elements)
+                            {
+                                var data = item.Values.Where(m => m.Code == element.Code).FirstOrDefault();
+                                var value = "";
+                                if (data != null)
+                                {
+                                    value = data.Value.ToString();
+                                }
+                                <td><input type="number" class="table-text-box" disabled value="@value" /></td>
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>

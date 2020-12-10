@@ -2,7 +2,8 @@
 @model SLGIS.Web.Pages.PostData.NewOrEditModel
 
 @{
-    //ViewBag.Title = Model.PostData.Id != Guid.Empty ? "Sửa lại" : "Thêm mới dữ liệu vận hành";
+    var isModeEdit = Model.PostData.Id != Guid.Empty;
+    ViewBag.Title = (isModeEdit ? "Cập nhật" : "Thêm mới") + " dữ liệu vận hành";
     ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>PostData</a>" +
                           "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
 
@@ -28,16 +29,18 @@
     <div class="card shadow-base mb-2">
         <div class="card-header">
             <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                <strong>Dữ liệu ngày</strong>
+                <strong>Dữ liệu ngày <br />
+                    <span class="text-warning">(Lưu ý: Chỉ có thể thu hồi được việc gửi dữ liệu trong vòng 2 giờ kể từ khi tạo.)</span>
+                </strong>
                 <i class="fa fa-caret-down pull-right mt-1"></i>
             </a>
         </div>
         <div class="card-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="row">
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group col-md-3">
                     @Html.Label("Ngày")
-                    <input class="form-control text-box single-line" data-val="true" data-val-required="The Date field is required." id="PostData_Date" name="PostData.Date" type="date" value="@Model.PostData.Date.ToString("yyyy-MM-dd")">
+                    <input class="form-control text-box single-line" @(isModeEdit ? "readonly" : "") data-val="true" data-val-required="The Date field is required." id="PostData_Date" name="PostData.Date" type="date" value="@Model.PostData.Date.ToString("yyyy-MM-dd")">
                     @Html.ValidationMessageFor(model => model.PostData.Date, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group col-md-3">
