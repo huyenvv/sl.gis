@@ -18,6 +18,7 @@ namespace SLGIS.Web.API
     {
         private readonly IElementRepository _elementRepository;
         private readonly IPostDataRepository _postDataRepository;
+        private readonly int _pageSize = 100;
         public PostDataController(IElementRepository elementRepository, IPostDataRepository postDataRepository)
         {
             _elementRepository = elementRepository;
@@ -63,7 +64,7 @@ namespace SLGIS.Web.API
         /// <returns></returns>
         [HttpGet("{hydropowerPlantId}/detail")]
         public ActionResult<IEnumerable<dynamic>> GetDataDetail(Guid hydropowerPlantId, int? year)
-        
+
         {
             var itemValues = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId);
             var now = DateTime.UtcNow.AddHours(7);
@@ -92,6 +93,34 @@ namespace SLGIS.Web.API
             }
 
             return new List<List<double>> { sanluongNgay, totalWater, soGioPhatDien };
+        }
+
+        [HttpGet("{hydropowerPlantId}/csv")]
+        public ActionResult<dynamic> GetDataForCSV(Guid hydropowerPlantId, string start, string end, int page = 1)
+        {
+            if (string.IsNullOrEmpty(start)
+                || !DateTime.TryParseExact(start, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate))
+            {
+                startDate = DateTime.UtcNow.Date;
+            }
+
+            if (string.IsNullOrEmpty(end)
+                || !DateTime.TryParseExact($"{end} 23:59:59", "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime endDate))
+            {
+                endDate = DateTime.UtcNow.Date;
+            }
+
+            var skip = page * _pageSize;
+            var items = _elementRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).Select(m => new { Id = m.Code, m.Title, m.Unit }).ToList();
+            var values = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId && m.Date >= startDate && m.Date <= endDate)
+                            .Skip(skip).Take(_pageSize)
+                            .Select(x => x.PostDataDetails)
+                            .ToList();
+
+            return new { 
+                Items = items,
+                Data = values.ToList()
+            };
         }
     }
 }

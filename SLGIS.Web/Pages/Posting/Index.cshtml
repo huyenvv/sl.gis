@@ -15,6 +15,11 @@
     }
 }
 
+<style>
+    #frmSearch input[type="date"] {
+        height: 39.6px;
+    }
+</style>
 @using (Html.BeginForm(null, null, FormMethod.Get, new { role = "form", Class = "mt-4", id = "frmSearch" }))
 {
     <div class="row">
@@ -37,7 +42,7 @@
                 <div class="ml-md-2">
                     <label>&nbsp;</label>
                     <span class="input-group-btn">
-                        <a class="btn btn-primary" target="_blank" href="">Tải xuống CSV</a>
+                        <a class="btn btn-primary" href="javascript:void(0)" onclick="exportCSV()">Tải xuống CSV</a>
                     </span>
                 </div>
             </div>
@@ -107,3 +112,7 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script src="/js/exportCsv.js"></script>
+}
