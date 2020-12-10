@@ -1,4 +1,5 @@
 ﻿let map;
+var poly = [];
 let markers = [];
 var plantMarkers = [];
 var substationMarkers = [];
@@ -32,7 +33,10 @@ function makeMarkers(items, type) {
     for (var i in items) {
         var item = type === "hydropower-plant" ? items[i].hydropowerPlant : type === "hydropower-dams" ?
             (items[i].hydropowerPlant.hydropowerDams.length > 0 ? items[i].hydropowerPlant.hydropowerDams[0] : null) : items[i].substation;
-
+        var label = '';
+        if (type === 'substation') {
+            label = item.columnNumber + "";
+        }
         //data.push({id: item.id, text: item.name});
         if (item != null) {
             const marker = new google.maps.Marker({
@@ -45,8 +49,8 @@ function makeMarkers(items, type) {
             google.maps.event.addListener(marker, 'click', (function (data, type) {
                 return function () {
                     showInfo(data, type);
-                    map.panTo(marker.getPosition());
-                    map.setZoom(14);
+                    //map.panTo(marker.getPosition());
+                    //map.setZoom(14);
                 };
             })(items[i], type));
             markers.push(marker);
@@ -85,6 +89,30 @@ function showMarkers() {
         for (var i in substationMarkers) {
             substationMarkers[i].setMap(map);
         }
+        var lineNames = [...new Set(substations.map(item => item.substation.lineName))];
+        poly = [];
+        for (var i = 0; i < lineNames.length; i++) {
+            var lineName = lineNames[i];
+            var sortedSubs = substations.filter(s => {
+                return lineName === s.substation.lineName;
+            }).sort((a, b) => (a.substation.columnNumber > b.substation.columnNumber) ? 1 : ((b.substation.columnNumber > a.substation.columnNumber) ? -1 : 0));
+            var points = [];
+            for (var j = 0; j < sortedSubs.length; j++) {
+                points.push({ lat: parseFloat(sortedSubs[j].substation.location.lat), lng: parseFloat(sortedSubs[j].substation.location.lng) });
+            }
+
+            var flightPath = new google.maps.Polyline({
+                path: points,
+                strokeColor: "violet",
+                strokeOpacity: 1.0,
+                strokeWeight: 2,
+            });
+            poly.push(flightPath);
+            break;
+        }
+        for (var i = 0; i < poly.length; i++) {
+            poly[i].setMap(map);
+        }
     }
 }
 
@@ -98,6 +126,9 @@ function clearMarkers() {
     }
     for (var i in substationMarkers) {
         substationMarkers[i].setMap(null);
+    }
+    for (var i = 0; i < poly.length; i++) {
+        poly[i].setMap(null);
     }
 }
 
@@ -198,9 +229,9 @@ function getMarkerIcon(type) {
     if (type === "substation") {
         return {
             url: "/images/sub-16.png",
-            size: new google.maps.Size(32, 32),
+            size: new google.maps.Size(16, 16),
             origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(16, 16),
+            anchor: new google.maps.Point(8, 8),
         };
     }
 }

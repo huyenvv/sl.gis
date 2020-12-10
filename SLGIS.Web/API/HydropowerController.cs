@@ -31,5 +31,25 @@ namespace SLGIS.Web.API
                 CanManage = User.Identity.IsAuthenticated && (User.IsInRole(Constant.Role.Admin) || User.IsInRole(Constant.Role.SupperAdmin) || m.Owners.Any(x => x == User.GetId()))
             });
         }
+
+        [Route("change-data")]
+        [HttpGet]
+        public void ChangeData()
+        {
+            var plants = _hydropowerPlantRepository.Find(m => true).ToList();
+            foreach (var item in plants)
+            {
+                if (item.HydropowerDams[0].Location != null && item.HydropowerDams[0].Location.Lat != "0")
+                {
+                    var lat = double.Parse(item.HydropowerDams[0].Location.Lat);
+                    var lng = double.Parse(item.HydropowerDams[0].Location.Lng);
+                    lat -= 0.00008167;
+                    item.HydropowerDams[0].Location.Lat = lat + "";
+                    lng -= 3.7499242;
+                    item.HydropowerDams[0].Location.Lng = lng + "";
+                    _hydropowerPlantRepository.UpdateAsync(item);
+                }
+            }
+        }
     }
 }

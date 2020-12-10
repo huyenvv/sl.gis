@@ -78,7 +78,11 @@ namespace SLGIS.Web.Pages.PostData
             }
             PostData.PostDataDetails = details;
 
-            
+            var postData = _postDataRepository.Find(m => m.Date == PostData.Date).FirstOrDefault();
+            if (postData != null)
+            {
+                PostData.Id = postData.Id;
+            }
             await _postDataRepository.UpsertAsync(PostData);
 
             _logger.LogInformation($"Add postData {PostData.Id}");
