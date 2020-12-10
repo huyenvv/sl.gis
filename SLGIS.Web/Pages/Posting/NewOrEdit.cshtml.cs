@@ -43,13 +43,17 @@ namespace SLGIS.Web.Pages.PostData
 
             if (id != null)
                 PostData = await _postDataRepository.GetAsync(id.Value);
-            if (PostData == null || PostData.PostDataDetails?.Count < 1)
+            if (PostData == null)
             {
                 PostData = new Core.PostData
                 {
                     Date = DateTime.Now.Date,
                     PostDataDetails = new List<PostDataDetails> { new PostDataDetails { Hour = 0 } }
                 };
+            }
+            else if (PostData.PostDataDetails?.Count < 1)
+            {
+                PostData.PostDataDetails = new List<PostDataDetails> { new PostDataDetails { Hour = 0 } };
             }
 
             return Page();
