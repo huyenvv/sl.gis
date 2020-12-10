@@ -73,14 +73,17 @@ function generateDataForCSV(response, startIndex) {
     var headers = response.items;
 
     var rows = [];
-    $.each(response.data, function (index, item) {
-        row = [(startIndex + index + 1)];
-        for (var i = 0; i < headers.length; i++) {
-            var value = item.values.find(m => m.id === headers[i].id);
-            row.push(value.value);
-            row.push(moment(value.time).format("YYYY-MM-DD HH:mm:ss"));
-        }        
-        rows.push(row);
+    $.each(response.data, function (index, values) {
+        for (var i = 0; i < values; i++) {
+            var item = values[i];
+            row = [(startIndex + index + i + 1)];
+            for (var i = 0; i < headers.length; i++) {
+                var value = item.values.find(m => m.id === headers[i].id);
+                row.push(value.value);
+                row.push(moment(value.time).format("YYYY-MM-DD HH:mm:ss"));
+            }
+            rows.push(row);
+        }       
     });
 
     return rows;
@@ -131,7 +134,7 @@ function exportToCsv(filename, rows) {
 
 function getDateStr(dateTime) {
     if (dateTime)
-        return moment(dateTime).format("yyyyMMDD");
+        return moment(dateTime).format("YYYYMMDD");
 
     return '';
 }

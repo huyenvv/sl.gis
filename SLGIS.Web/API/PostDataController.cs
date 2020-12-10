@@ -64,9 +64,7 @@ namespace SLGIS.Web.API
         /// <returns></returns>
         [HttpGet("{hydropowerPlantId}/detail")]
         public ActionResult<IEnumerable<dynamic>> GetDataDetail(Guid hydropowerPlantId, int? year)
-
         {
-            var itemValues = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId);
             var now = DateTime.UtcNow.AddHours(7);
             var toMonth = 12;
             if (!year.HasValue)
@@ -80,13 +78,14 @@ namespace SLGIS.Web.API
             soGioPhatDien = new List<double>();
             totalWater = new List<double>();
 
+            var itemValues = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId);
             for (var month = 1; month <= toMonth; month++)
             {
                 var dt = new DateTime(year.Value, month, 1);
                 var firstOfMonth = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
                 var endOfMonth = firstOfMonth.AddMonths(1).AddTicks(-1);
 
-                var monthValue = itemValues.Where(m => m.Date >= firstOfMonth && m.Date <= endOfMonth).ToList();
+                var monthValue = itemValues.Where(m => m.Date >= firstOfMonth && m.Date <= endOfMonth);
                 sanluongNgay.Add(monthValue.Sum(m => m.SanLuongNgay));
                 totalWater.Add(monthValue.Sum(m => m.TotalWater));
                 soGioPhatDien.Add(monthValue.Sum(m => m.SoGioPhatDien));
@@ -110,14 +109,15 @@ namespace SLGIS.Web.API
                 endDate = DateTime.UtcNow.Date;
             }
 
-            var skip = page * _pageSize;
+            var skip = (page <= 1 ? 0 : page - 1) * _pageSize;
             var items = _elementRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).Select(m => new { Id = m.Code, m.Title, m.Unit }).ToList();
             var values = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId && m.Date >= startDate && m.Date <= endDate)
                             .Skip(skip).Take(_pageSize)
                             .Select(x => x.PostDataDetails)
                             .ToList();
 
-            return new { 
+            return new
+            {
                 Items = items,
                 Data = values.ToList()
             };
