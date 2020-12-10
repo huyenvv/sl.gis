@@ -5,7 +5,10 @@
 }
 
 @section Factory {
-    <partial name="_FactorySelectPartial" />
+    @if (!Model.CanManage)
+    {
+        <partial name="_FactorySelectPartial" />
+    }
 }
 
 @section Button {
@@ -16,7 +19,48 @@
 }
 
 
-<partial name="_SearchPartial" model="Model.SearchModel" />
+
+<style>
+    #frmSearch input[type="date"] {
+        height: 39.6px;
+    }
+</style>
+@using (Html.BeginForm(null, null, FormMethod.Get, new { role = "form", Class = "mt-4", id = "frmSearch" }))
+{
+    <div class="row">
+        <div class="col">
+            <div class="d-md-flex">
+                <div class="searchText">
+                    <label>Từ khóa tìm kiếm</label>
+                    <input asp-for="SearchModel.FilterText" class="form-control" placeholder="Tìm kiếm" />
+                </div>
+                <div class="fromDate ml-md-2">
+                    <label>Từ ngày</label>
+                    <input asp-for="SearchModel.StartDate" type="date" class="form-control" placeholder="Từ ngày" />
+                </div>
+                <div class="ml-md-2">
+                    <label>Đến ngày</label>
+                    <input asp-for="SearchModel.EndDate" type="date" class="form-control" placeholder="đến ngày" />
+                </div>
+                <div class="ml-md-2">
+                    <label>&nbsp;</label>
+                    @if (Model.CanManage)
+                    {
+                        <select name="hydropowerId" class="form-control" asp-items="Model.HydropowerSelectList">
+                            <option value="">--All--</option>
+                        </select>
+                    }
+                </div>
+                <div class="ml-md-2">
+                    <label>&nbsp;</label>
+                    <span class="input-group-btn" id="btnSearch">
+                        <button class="btn bd bg-primary tx-white pointer" type="button"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 <div class="row mt-2">
     <div class="col-12">
@@ -35,6 +79,12 @@
                             <th>
                                 Tài liệu báo cáo
                             </th>
+                            @if (Model.CanManage)
+                            {
+                                <th>
+                                    Đơn vị
+                                </th>
+                            }
                             <th>
                                 Thời gian
                             </th>
@@ -50,7 +100,14 @@
                                         @(stt++)
                                     </td>
                                     <td>
-                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })">@item.Title</a>
+                                        @if (Model.CanManage)
+                                        {
+                                            @item.Title
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Page("NewOrEdit", new { id = item.Id })">@item.Title</a>
+                                        }
                                     </td>
                                     <td>
                                         @item.Content
@@ -63,6 +120,12 @@
                                             </a> <br />
                                         }
                                     </td>
+                                    @if (Model.CanManage)
+                                    {
+                                        <td>
+                                            @Model.ListCurrentHydropowers().FirstOrDefault(m => m.Id == item.HydropowerPlantId).Name
+                                        </td>
+                                    }
                                     <td>
                                         @item.Created.ToString("dd/MM/yyyy HH:mm:ss")
                                     </td>

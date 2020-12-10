@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SLGIS.Core;
 using SLGIS.Core.Repositories;
@@ -29,20 +30,31 @@ namespace SLGIS.Web.Pages.Report
         public SearchModel SearchModel { get; set; } = new SearchModel();
         public PagerViewModel ViewModel { get; set; }
 
-        public IActionResult OnGet(SearchModel searchModel, int? pageIndex = 1)
+        public SelectList HydropowerSelectList { get; set; }
+
+        public IActionResult OnGet(SearchModel searchModel, Guid? hydropowerId = null, int? pageIndex = 1)
         {
             if (!HasHydropower)
             {
-                return ReturnToMap();
+                return ReturnToHydropower();
             }
 
             if (searchModel != null)
-                SearchModel = searchModel;
+                SearchModel = searchModel;            
 
-            var hydropowerPlantId = GetCurrentHydropower().Id;
-            ViewData["HydropowerPlantId"] = hydropowerPlantId;
+            if (!CanManage)
+            {
+                hydropowerId = GetCurrentHydropower().Id;
+            }
 
-            var list = _reportRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).AsQueryable();
+            HydropowerSelectList = CreateHydropowerPlantSelection(hydropowerId);
+
+            var list = _reportRepository.Find(m => true).AsQueryable();
+            if (hydropowerId.HasValue)
+            {
+                list = list.Where(m => m.HydropowerPlantId == hydropowerId);
+            }
+
             if (!string.IsNullOrEmpty(SearchModel.FilterText))
             {
                 list = list.Where(m => m.Title.Contains(SearchModel.FilterText.ToLower()));
