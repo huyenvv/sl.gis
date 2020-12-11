@@ -1,7 +1,7 @@
 ﻿@page
 @model SLGIS.Web.Pages.Graph.IndexModel
 @{
-    ViewBag.Title = ViewBag.Breadcrumbs = "Biểu đồ dữ liệu vận hành";
+//ViewBag.Title = ViewBag.Breadcrumbs = "Biểu đồ dữ liệu vận hành";
 }
 
 @section Factory {
@@ -23,7 +23,7 @@
                     </select>
                     <button class="btn btn-primary mr-2" id="btnfilter">Lọc</button>
                 </div>
-                <div id="bar-container" style="height: 600px;min-width: 728px;">
+                <div id="bar-container" style="height: 400px;min-width: 728px;">
                 </div>
             </div>
         </div>
@@ -40,7 +40,7 @@
             margin: 1em auto;
         }
 
-        #container {
+        #bar-container {
             height: 400px;
         }
 

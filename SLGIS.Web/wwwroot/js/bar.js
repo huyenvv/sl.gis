@@ -1,8 +1,8 @@
 ﻿var dateFormat = "yy-mm-dd";
 
 $(document).ready(function () {
+    drawChart([[],[],[]]);
     getData('', function (series) {
-        drawChart(series);
         reDrawChart(series);
     });
 

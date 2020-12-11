@@ -99,10 +99,10 @@ var Item = function (_React$Component2) {
                     { className: "ml-4" },
                     React.createElement(
                         "a",
-                        { className: "ml-2 text-primary", onClick: function onClick() {
+                        { className: "ml-2 text-primary", title: "Click \u0111\xEA\u0309 thay \u0111\xF4\u0309i tra\u0323ng tha\u0301i", onClick: function onClick() {
                                 return _this4.props.toggleShare();
                             } },
-                        item.isPrivate ? "Chia sẻ" : "Hủy chia sẻ"
+                        item.isPrivate ? "Đang riêng tư" : "Đã chia sẻ"
                     ),
                     React.createElement(
                         "a",

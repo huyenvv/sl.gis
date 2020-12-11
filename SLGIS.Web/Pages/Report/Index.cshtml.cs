@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SLGIS.Core;
+using SLGIS.Core.Extension;
 using SLGIS.Core.Repositories;
 using SLGIS.Implementation;
 using System;
@@ -62,12 +63,13 @@ namespace SLGIS.Web.Pages.Report
 
             if (SearchModel.StartDate.HasValue)
             {
+                SearchModel.StartDate = SearchModel.StartDate.Value.Date.ToVNDate();
                 list = list.Where(m => m.Created >= SearchModel.StartDate);
             }
 
             if (SearchModel.EndDate.HasValue)
             {
-                SearchModel.EndDate = SearchModel.EndDate.Value.Date.AddDays(1).AddSeconds(-1);
+                SearchModel.EndDate = SearchModel.EndDate.Value.Date.ToVNDate().AddDays(1).AddSeconds(-1);
                 list = list.Where(m => m.Created <= SearchModel.EndDate);
             }
 

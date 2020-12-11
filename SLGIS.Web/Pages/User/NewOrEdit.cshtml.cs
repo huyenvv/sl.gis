@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Linq;
+using SLGIS.Core.Extension;
 
 namespace SLGIS.Web.Pages.User
 {
@@ -74,6 +75,9 @@ namespace SLGIS.Web.Pages.User
                 return;
 
             var user = _userRepository.Find(m => m.Id == new ObjectId(UserModel.Id)).FirstOrDefault();
+            user.Updated = DateTime.Now.ToVNDate();
+            await _userRepository.UpdateAsync(user);
+
             if (UserModel.IsMember)
             {
                 if (!user.Roles.Contains(memeberRoleId))

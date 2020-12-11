@@ -48,10 +48,10 @@
                                         <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="tx-14 tx-medium d-block">@item.UserName</a>
                                     </td>
                                     <td>
-                                        @item.Updated.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")
+                                        @item.Updated.ToUniversalTime().ToString("dd/MM/yyyy HH:mm:ss")
                                     </td>
                                     <td>
-                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Phân quyền</a>                                        
+                                        <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Phân quyền</a>
                                     </td>
                                 </tr>
                             }

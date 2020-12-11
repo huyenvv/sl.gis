@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using SLGIS.Core;
+using SLGIS.Core.Extension;
 
 namespace SLGIS.Web.Areas.Identity.Pages.Account
 {
@@ -70,7 +71,7 @@ namespace SLGIS.Web.Areas.Identity.Pages.Account
             if (remoteError != null)
             {
                 ErrorMessage = $"Error from external provider: {remoteError}";
-                return RedirectToPage("./Login", new {ReturnUrl = returnUrl });
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
@@ -80,7 +81,7 @@ namespace SLGIS.Web.Areas.Identity.Pages.Account
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
@@ -97,7 +98,7 @@ namespace SLGIS.Web.Areas.Identity.Pages.Account
             if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
             {
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                var user = new User { UserName = email, Email = email };
+                var user = new User { UserName = email, Email = email, Updated = DateTime.Now.ToVNDate() };
                 var creatingResult = await _userManager.CreateAsync(user);
                 if (creatingResult.Succeeded)
                 {

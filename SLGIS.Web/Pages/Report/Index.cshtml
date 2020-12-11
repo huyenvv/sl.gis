@@ -100,7 +100,7 @@
                                         @(stt++)
                                     </td>
                                     <td>
-                                        @if (Model.CanManage)
+                                        @if (Model.CanManage || !item.CanEdit())
                                         {
                                             @item.Title
                                         }

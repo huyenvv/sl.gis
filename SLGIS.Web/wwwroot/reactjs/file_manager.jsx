@@ -53,7 +53,7 @@ class Item extends React.Component {
                 <i className={item.isPrivate ? "fa fa-file text-danger  mr-1" : "fa fa-file mr-1"}></i>
                 <a href={"/api/fileManager/" + item.id + "/Download"} target="_blank">{item.title}</a>
                 <span className="ml-4">
-                    <a className="ml-2 text-primary" onClick={() => this.props.toggleShare()}>{item.isPrivate ? "Chia sẻ" : "Hủy chia sẻ"}</a>
+                    <a className="ml-2 text-primary" title="Click để thay đổi trạng thái" onClick={() => this.props.toggleShare()}>{item.isPrivate ? "Đang riêng tư" : "Đã chia sẻ"}</a>
                     <a className="ml-2 text-danger" onClick={() => this.delete()}>Xóa</a>
                 </span>
             </span>

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SLGIS.Core;
+using SLGIS.Core.Extension;
 using SLGIS.Implementation;
 using System;
 using System.Collections.Generic;
@@ -46,12 +47,13 @@ namespace SLGIS.Web.Pages.PostData
             var list = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).AsQueryable();
             if (SearchModel.StartDate.HasValue)
             {
+                SearchModel.StartDate = SearchModel.StartDate.Value.Date.ToVNDate();
                 list = list.Where(m => m.Date >= SearchModel.StartDate);
             }
 
             if (SearchModel.EndDate.HasValue)
             {
-                SearchModel.EndDate = SearchModel.EndDate.Value.Date.AddDays(1).AddSeconds(-1);
+                SearchModel.EndDate = SearchModel.EndDate.Value.Date.ToVNDate().AddDays(1).AddSeconds(-1);
                 list = list.Where(m => m.Date <= SearchModel.EndDate);
             }
 

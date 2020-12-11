@@ -41,9 +41,15 @@
                 </div>
                 <div class="ml-md-2">
                     <label>&nbsp;</label>
-                    <span class="input-group-btn">
-                        <a class="btn btn-primary" href="javascript:void(0)" onclick="exportCSV()">Tải xuống CSV</a>
-                    </span>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle btn btn-primary" href="javascript:void(0)" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Tải xuống CSV
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="exportCSV()">Trung bình ngày</a>
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="exportCSV()">Chi tiết</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
