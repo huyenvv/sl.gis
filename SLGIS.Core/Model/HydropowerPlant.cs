@@ -84,5 +84,22 @@ namespace SLGIS.Core
 
         public string Image { get; set; }
         public string Status { get; set; }
+
+        public string District { get; set; }
+
+        public static List<string> Districts = new List<string>
+        {
+            "Quỳnh Nhai"
+            ,"Mường La"
+            ,"Thuận Châu"
+            ,"Phù Yên"
+            ,"Bắc Yên"
+            ,"Mai Sơn"
+            ,"Sông Mã"
+            ,"Yên Châu"
+            ,"Mộc Châu"
+            ,"Sốp Cộp"
+            ,"Vân Hồ"
+        };
     }
 }

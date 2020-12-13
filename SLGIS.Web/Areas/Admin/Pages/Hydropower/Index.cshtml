@@ -12,15 +12,38 @@
     }
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Get, new { role = "form", id = "frmSearch" }))
+@using (Html.BeginForm(null, null, FormMethod.Get, new { role = "form", Class = "mt-4", id = "frmSearch" }))
 {
     <div class="row">
-        <div class="col-md-3">
-            <div class="input-group">
-                <input type="text" class="form-control" name="searchText" placeholder="Tìm kiếm" value="@Model.FilterText">
-                <span class="input-group-btn" id="btnSearch">
-                    <button class="btn bd bg-white tx-gray-600" type="button"><i class="fa fa-search"></i></button>
-                </span>
+        <div class="col">
+            <div class="d-md-flex">
+                <div>
+                    <label>Từ khóa tìm kiếm</label>
+                    <input type="text" class="form-control" name="searchText" placeholder="Tìm kiếm" value="@Model.FilterText">
+                </div>
+                <div class="ml-md-2">
+                    <label>Huyện</label>
+                    <select name="district" class="form-control">
+                        <option value="">-Tất cả các huyện-</option>
+                        @foreach (var item in SLGIS.Core.HydropowerPlant.Districts)
+                        {
+                            if (Model.District == item)
+                            {
+                                <option value="@item" selected>@item</option>
+                            }
+                            else
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="ml-md-2">
+                    <label>&nbsp;</label>
+                    <span class="input-group-btn" id="btnSearch">
+                        <button class="btn bd bg-primary tx-white pointer" type="button"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
             </div>
         </div>
     </div>

@@ -31,15 +31,22 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
         }
 
         public string FilterText { get; set; }
+        public string District { get; set; }
         public PagerViewModel ViewModel { get; set; }
 
-        public void OnGet(string searchText = null, int? pageIndex = 1)
+        public void OnGet(string searchText = null, string district = null, int? pageIndex = 1)
         {
             FilterText = searchText;
+            District = district;
             var plants = _hydropowerPlantRepository.Find(m => true).AsQueryable();
             if (!string.IsNullOrEmpty(FilterText))
             {
                 plants = plants.Where(m => m.Name.ToLower().Contains(FilterText.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(district))
+            {
+                plants = plants.Where(m => m.District.Equals(district));
             }
 
             if (!CanManage)
@@ -47,7 +54,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
                 plants = plants.Where(m => m.Owners.Contains(User.GetId()));
             }
 
-            var data = plants.OrderByDescending(m => m.Created).ToList();
+            var data = plants.OrderBy(m=>m.District).ThenByDescending(m => m.Created).ToList();
 
             var pager = new Pager(data.Count(), pageIndex);
 
@@ -85,7 +92,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
 
         public void Import()
         {
-            var path = @"D:\Du an CNTT\plant.csv";
+            var path = @"wwwroot\plant.csv";
             using (TextFieldParser csvParser = new TextFieldParser(path))
             {
                 csvParser.CommentTokens = new string[] { "#" };
@@ -143,6 +150,16 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
                     catch { throw new Exception($"Dữ liệu không hợp lệ, tại dòng {i}"); }
                 }
                 _hydropowerPlantRepository.AddRangeAsync(lst);
+            }
+        }
+
+        public async Task UpdateDistricts()
+        {
+            var plants = _hydropowerPlantRepository.Find(m => true);
+            foreach (var item in plants)
+            {
+                item.District = HydropowerPlant.Districts.FirstOrDefault(m => item.Address.Contains(m, StringComparison.OrdinalIgnoreCase));
+                await _hydropowerPlantRepository.UpdateAsync(item);
             }
         }
     }

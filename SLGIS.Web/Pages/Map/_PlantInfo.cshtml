@@ -1,4 +1,10 @@
-﻿<div class="info hydropower-plant d-none">
+﻿@inject SLGIS.Implementation.HydropowerService _hydropowerService
+@using SLGIS.Core
+
+@{
+    var hasPlant = User.Identity.IsAuthenticated && _hydropowerService.GetCurrent(User.GetId()) != null;
+}
+<div class="info hydropower-plant d-none">
     <img class="dams-img" src="images/logo-map.jpg" />
     <div class="pl-3 pt-3 pb-0 border-bottom">
         <h5 class="pb-2" style="color: white;" id="plant-name">Tà cọ</h5>
@@ -16,15 +22,18 @@
     <div class="pl-3 pt-1 pb-1">
         <i class="fa fa-address-book-o pl-3"> </i> <span class="pl-2" id="plant-owner-address">plant-owner-address</span>
     </div>
-    <div class="pl-3 pt-1 pb-1">
-        <i class="fa fa-user pl-3"> </i> <span class="pl-2" id="plant-owner-person-name">plant-owner-person-name</span>
-    </div>
-    <div class="pl-3 pt-1 pb-1">
-        <i class="fa fa-phone pl-3"> </i> <span class="pl-2" id="plant-owner-phone">plant-owner-phone</span>
-    </div>
-    <div class="pl-3 pt-1 pb-1">
-        <i class="fa fa-envelope pl-3"> </i> <span class="pl-2" id="plant-owner-email">plant-owner-email</span>
-    </div>
+    @if (hasPlant)
+    {
+        <div class="pl-3 pt-1 pb-1">
+            <i class="fa fa-user pl-3"> </i> <span class="pl-2" id="plant-owner-person-name">plant-owner-person-name</span>
+        </div>
+        <div class="pl-3 pt-1 pb-1">
+            <i class="fa fa-phone pl-3"> </i> <span class="pl-2" id="plant-owner-phone">plant-owner-phone</span>
+        </div>
+        <div class="pl-3 pt-1 pb-1">
+            <i class="fa fa-envelope pl-3"> </i> <span class="pl-2" id="plant-owner-email">plant-owner-email</span>
+        </div>
+    }
 
     <div class="border-bottom-alone"></div>
 
