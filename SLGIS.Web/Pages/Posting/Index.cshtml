@@ -76,6 +76,9 @@
                             <th>
                                 Số giờ phát điện (giờ)
                             </th>
+                            <th>
+                                Ghi chú
+                            </th>
                             <th></th>
                         </tr>
 
@@ -98,6 +101,9 @@
                                     </td>
                                     <td>
                                         @item.SoGioPhatDien
+                                    </td>
+                                    <td>
+                                        @item.Note
                                     </td>
                                     <td>
                                         @if (!Model.CanManage && item.CanEdit())

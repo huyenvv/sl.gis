@@ -69,8 +69,8 @@ namespace SLGIS.Web.Pages.Report
 
             if (SearchModel.EndDate.HasValue)
             {
-                SearchModel.EndDate = SearchModel.EndDate.Value.Date.ToVNDate().AddDays(1).AddSeconds(-1);
-                list = list.Where(m => m.Created <= SearchModel.EndDate);
+                var endDate = SearchModel.EndDate.Value.Date.ToVNDate().AddDays(1).AddSeconds(-1);
+                list = list.Where(m => m.Created <= endDate);
             }
 
             var result = list.OrderByDescending(m => m.Created).AsEnumerable();

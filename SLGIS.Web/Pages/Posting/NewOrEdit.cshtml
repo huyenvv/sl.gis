@@ -58,6 +58,10 @@
                     @Html.EditorFor(model => model.PostData.SoGioPhatDien, new { htmlAttributes = new { @class = "form-control", type = "number" } })
                     @Html.ValidationMessageFor(model => model.PostData.SoGioPhatDien, "", new { @class = "text-danger" })
                 </div>
+                <div class="form-group col-md-12">
+                    @Html.Label("Ghi chú")
+                    @Html.TextAreaFor(model => model.PostData.Note, new { @class = "form-control" })
+                </div>
             </div>
         </div>
     </div>

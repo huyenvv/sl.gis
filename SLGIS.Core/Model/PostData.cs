@@ -29,6 +29,8 @@ namespace SLGIS.Core
         /// </summary>
         public double SoGioPhatDien { get; set; }
 
+        public string Note { get; set; }
+
         public Guid HydropowerPlantId { get; set; }
 
         public List<PostDataDetails> PostDataDetails { get; set; } = new List<PostDataDetails>();

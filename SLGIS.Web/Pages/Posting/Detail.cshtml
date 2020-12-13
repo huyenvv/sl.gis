@@ -47,6 +47,10 @@
                 @Html.Label("Số giờ phát điện (giờ)")
                 @Html.EditorFor(model => model.PostData.SoGioPhatDien, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control", type = "number" } })
             </div>
+            <div class="form-group col-md-12">
+                @Html.Label("Ghi chú")
+                @Html.TextAreaFor(model => model.PostData.Note, new { @readonly = "readonly", @class = "form-control" })
+            </div>
         </div>
     </div>
 </div>

@@ -5,6 +5,8 @@ namespace SLGIS.Core.Repositories
 {
     public interface INotifyRepository : IBaseRepository<Notify>
     {
-        Task SetReadAsync(Guid id, string userId);
+        Task SetReadAsync(Guid id, Guid plantId, string userId);
+
+        int CountUnread(Guid plantId, string userId);
     }
 }

@@ -17,6 +17,13 @@ namespace SLGIS.Web
             return date.ToLocalTime().ToString("dd/MM/yyyy");
         }
 
+        public static string ToVNDateTimeString(this DateTime date)
+        {
+            if (date == null) return "";
+
+            return date.ToString("dd/MM/yyyy HH:mm:ss");
+        }
+
         public static string GetCode(this DateTime date)
         {
             if (date == null) return "";

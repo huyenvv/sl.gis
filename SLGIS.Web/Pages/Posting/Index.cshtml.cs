@@ -53,8 +53,8 @@ namespace SLGIS.Web.Pages.PostData
 
             if (SearchModel.EndDate.HasValue)
             {
-                SearchModel.EndDate = SearchModel.EndDate.Value.Date.ToVNDate().AddDays(1).AddSeconds(-1);
-                list = list.Where(m => m.Date <= SearchModel.EndDate);
+                var endDate = SearchModel.EndDate.Value.Date.ToVNDate().AddDays(1).AddSeconds(-1);
+                list = list.Where(m => m.Created <= endDate);
             }
 
             var postDatas = list.OrderByDescending(m => m.Date).AsEnumerable();

@@ -14,20 +14,61 @@
                 <p>
                     @Html.Raw(Model.Notify.Content)
                 </p>
-                <hr />
-                <p>Danh sách tài liệu đính kèm (Click để tải về)</p>
-                <ul>
-                    @foreach (var file in Model.Notify.Files)
-                    {
-                        <li>
-                            <a asp-page-handler="DownloadFile" asp-route-id="@Model.Notify.Id" asp-route-fileName="@System.IO.Path.GetFileName(file)" target="_blank">
-                                @System.IO.Path.GetFileName(file)
-                            </a>
-                        </li>
-                    }
-                </ul>
+                @if (Model.Notify.Files.Count > 0)
+                {
+                    <hr />
+                    <p>Danh sách tài liệu đính kèm (Click để tải về)</p>
+                    <ul>
+                        @foreach (var file in Model.Notify.Files)
+                        {
+                            <li>
+                                <a asp-page-handler="DownloadFile" asp-route-id="@Model.Notify.Id" asp-route-fileName="@System.IO.Path.GetFileName(file)" target="_blank">
+                                    @System.IO.Path.GetFileName(file)
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
             </div>
         </div>
     </div>
 </div>
+@if (Model.CanManage)
+{
+    <h5 class="mt-4">Danh sách đã đọc</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Thủy điện</th>
+                <th>Tài khoản</th>
+                <th>Thời gian đọc</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Notify.ReadPlants)
+            {
+                if (Model.Plants.TryGetValue(item.Key, out var plantName))
+                {
+                    <tr>
+                        <td rowspan="@(item.Value.Count + 1)">@plantName</td>
+                    </tr>
+                    @foreach (var user in item.Value)
+                    {
+                        if (Model.Users.TryGetValue(user.UserId, out var userName))
+                        {
+                            <tr>
+                                <td>
+                                    @userName
+                                </td>
+                                <td>
+                                    @user.ReadDate.ToVNDateTimeString()
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            }
+        </tbody>
+    </table>
+}
 <a href="@Url.Page("Index")" class="btn btn-outline-secondary">Quay lại</a>

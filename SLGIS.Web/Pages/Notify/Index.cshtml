@@ -11,6 +11,13 @@
     }
 }
 
+@section Factory {
+    @if (!Model.CanManage)
+    {
+        <partial name="_FactorySelectPartial" />
+    }
+}
+
 <partial name="_SearchPartial" model="Model.SearchModel" />
 
 <div class="row mt-2">
@@ -28,9 +35,27 @@
                                 Tài liệu
                             </th>
                             <th>
-                                Thời gian
+                                Thời gian thông báo
                             </th>
-                            <th></th>
+                            @if (Model.CanManage)
+                            {
+                                <th>Đối tượng gửi</th>
+                            }
+                            <th>
+
+                                @if (Model.CanManage)
+                                {
+                                    <span>Đã đọc</span>
+                                }
+                                else
+                                {
+                                    <span>Thời gian đọc</span>
+                                }
+                            </th>
+                            @if (Model.CanManage)
+                            {
+                                <th></th>
+                            }
                         </tr>
 
                         @{
@@ -42,7 +67,7 @@
                                         @(stt++)
                                     </td>
                                     <td>
-                                        @if (User.Identity.IsAuthenticated && !item.ReadUserIds.Any(m => m == User.GetId().ToString()))
+                                        @if (!Model.CanManage && !item.IsRead(Model.GetCurrentHydropower().Id, User.GetId()))
                                         {
                                             <strong>
                                                 <a href="@Url.Page("Detail", new { id = item.Id })">
@@ -65,17 +90,53 @@
                                         }
                                     </td>
                                     <td>
-                                        @item.Created.ToString("dd/MM/yyyy HH:mm:ss")
+                                        @item.Created.ToUniversalTime().ToVNDateTimeString()
                                     </td>
+                                    @if (Model.CanManage)
+                                    {
+                                        <td>
+                                            @if (item.IsAll)
+                                            {
+                                                <span>Tất cả</span>
+                                            }
+                                            else
+                                            {
+                                                if (item.ToPlantIds.Count > 2)
+                                                {
+                                                    <span>@item.ToPlantIds.Count thủy điện</span>
+                                                }
+                                                else
+                                                {
+                                                    foreach (var plant in Model.ListCurrentHydropowers().Where(m => item.ToPlantIds.Contains(m.Id)))
+                                                    {
+                                                        <span>@plant.Name</span> <br />
+                                                    }
+                                                }
+                                            }
+
+                                        </td>
+                                    }
                                     <td>
-                                        @if (Model.CanManage && item.CanEdit())
+                                        @if (Model.CanManage)
                                         {
+                                            <span>@item.ReadPlants.Count</span>
+                                        }
+                                        else
+                                        {
+                                            @item.GetReadTime(Model.GetCurrentHydropower().Id, User.GetId())?.ToVNDateTimeString()
+                                        }
+                                    </td>
+
+                                    @if (Model.CanManage && item.CanEdit())
+                                    {
+                                        <td>
                                             <a href="@Url.Page("NewOrEdit", new { id = item.Id })" class="btn btn-sm btn-primary">Sửa</a>
                                             <button type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger btnConfirm">
                                                 Xóa
                                             </button>
-                                        }
-                                    </td>
+                                        </td>
+                                    }
+
                                 </tr>
                             }
                         }

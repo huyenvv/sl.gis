@@ -2,6 +2,8 @@
 using SLGIS.Core;
 using SLGIS.Core.Repositories;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SLGIS.Implementation.Repositories
@@ -12,10 +14,28 @@ namespace SLGIS.Implementation.Repositories
         {
         }
 
-        public Task SetReadAsync(Guid id, string userId)
+        public int CountUnread(Guid plantId, string userId)
         {
-            var filter_id = Builders<Notify>.Filter.Eq("_id", id);
-            return _collection.UpdateOneAsync(filter_id, Builders<Notify>.Update.Push(m => m.ReadUserIds, userId));
+            return Find(m => (m.IsAll || m.ToPlantIds.Contains(plantId))
+                            && !m.ReadPlants.Any(n => n.Key == plantId && n.Value.Any(z => z.UserId == userId.ToString()))).Count();
+        }
+
+        public async Task SetReadAsync(Guid id, Guid plantId, string userId)
+        {
+            var notify = await GetAsync(id);
+            if (notify.ReadPlants.Any(m => m.Key == plantId))
+            {
+                foreach (var item in notify.ReadPlants.Where(m => m.Key == plantId))
+                {
+                    item.Value.Add(new ReadNotifyInfo { UserId = userId });
+                }
+            }
+            else
+            {
+                notify.ReadPlants.Add(new KeyValuePair<Guid, List<ReadNotifyInfo>>(plantId, new List<ReadNotifyInfo> { new ReadNotifyInfo { UserId = userId } }));
+            }
+
+            await UpdateAsync(notify);
         }
     }
 }

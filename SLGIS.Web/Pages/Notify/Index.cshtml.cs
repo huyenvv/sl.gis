@@ -42,6 +42,10 @@ namespace SLGIS.Web.Pages.Notify
                 SearchModel = searchModel;
 
             var list = _notifyRepository.Find(m => true).AsQueryable();
+            if (!CanManage)
+            {
+                list = list.Where(m => m.IsAll || m.ToPlantIds.Any(n => n == GetCurrentHydropower().Id));
+            }
             if (!string.IsNullOrEmpty(SearchModel.FilterText))
             {
                 list = list.Where(m => m.Title.Contains(SearchModel.FilterText.ToLower()));
@@ -55,8 +59,8 @@ namespace SLGIS.Web.Pages.Notify
 
             if (SearchModel.EndDate.HasValue)
             {
-                SearchModel.EndDate = SearchModel.EndDate.Value.Date.ToVNDate().AddDays(1).AddSeconds(-1);
-                list = list.Where(m => m.Created <= SearchModel.EndDate);
+                var endDate = SearchModel.EndDate.Value.Date.ToVNDate().AddDays(1).AddSeconds(-1);
+                list = list.Where(m => m.Created <= endDate);
             }
 
             var pager = new Pager(list.Count(), pageIndex);

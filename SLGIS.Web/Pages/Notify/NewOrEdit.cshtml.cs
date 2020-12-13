@@ -25,6 +25,7 @@ namespace SLGIS.Web.Pages.Notify
 
         [BindProperty]
         public Core.Notify Notify { get; set; }
+        public IEnumerable<(Guid Id, string Name)> Plants { get; set; }
 
         [BindProperty]
         public List<IFormFile> Files { get; set; }
@@ -36,10 +37,7 @@ namespace SLGIS.Web.Pages.Notify
                 return RedirectToPage("./Index");
             }
 
-            if (!HasHydropower)
-            {
-                return ReturnToMap();
-            }
+            Plants = ListCurrentHydropowers();
 
             if (id == null)
             {
@@ -73,7 +71,19 @@ namespace SLGIS.Web.Pages.Notify
 
                 Notify.Files = listFiles;
             }
+            else
+            {
+                if (Notify.Id != Guid.Empty)
+                {
+                    var report = await _notifyRepository.GetAsync(Notify.Id);
+                    Notify.Files = report.Files;
+                }
+            }
 
+            if (Notify.ToPlantIds.Count == 0)
+            {
+                Notify.IsAll = true;
+            }
             await _notifyRepository.UpsertAsync(Notify);
 
             return RedirectToPage("./Index");

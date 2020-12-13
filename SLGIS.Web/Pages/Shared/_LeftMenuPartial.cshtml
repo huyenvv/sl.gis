@@ -1,9 +1,16 @@
 ﻿@inject SLGIS.Implementation.HydropowerService _hydropowerService
+@inject SLGIS.Core.Repositories.INotifyRepository _notifyRepository
 @using SLGIS.Core
 
 @{
-    var hasPlant = _hydropowerService.GetCurrent(User.GetId()) != null;
+    var plant = _hydropowerService.GetCurrent(User.GetId());
+    var hasPlant = plant != null;
     var isAdmin = Constant.Role.All.Any(User.IsInRole);
+    var notifyCount = 0;
+    if (!isAdmin && hasPlant)
+    {
+        notifyCount = _notifyRepository.CountUnread(plant.Id, User.GetId().ToString());
+    }
 }
 
 <a asp-page="/Map/Index" data-href="Index/Map/NewOrEdit/" class="br-menu-link">
@@ -39,6 +46,10 @@
         <div class="br-menu-item">
             <i class="menu-item-icon ion-ios-bell-outline tx-20"></i>
             <span class="menu-item-label">Thông báo</span>
+            @if (!isAdmin)
+            {
+                <strong class="pull-right" style="font-size:13px">@notifyCount</strong>
+            }
         </div>
     </a>
 }
