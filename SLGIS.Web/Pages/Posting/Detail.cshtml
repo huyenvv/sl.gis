@@ -6,10 +6,18 @@
     ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>PostData</a>" +
                           "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
 
+    if (Model.CanManage)
+    {
+        var plant = Model.ListCurrentHydropowers().FirstOrDefault(m => m.Id == Model.PostData.HydropowerPlantId);
+        ViewBag.Title = ViewBag.Title + " thủy điện: " + plant.Name;
+    }
 }
 
 @section Factory {
-    <partial name="_FactorySelectPartial" />
+    @if (!Model.CanManage)
+    {
+        <partial name="_FactorySelectPartial" />
+    }
 }
 
 <style>

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using SLGIS.Core;
+using SLGIS.Core.Extension;
 using SLGIS.Implementation;
 using System;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ namespace SLGIS.Web.Pages.PostData
             {
                 return BadRequest();
             }
-            PostData.Date = PostData.Date.AddHours(7);
+            PostData.Date = PostData.Date.ToVNDate();
             var details = new List<PostDataDetails>();
             foreach (var item in PostData.PostDataDetails)
             {
@@ -116,7 +117,7 @@ namespace SLGIS.Web.Pages.PostData
             }
             else
             {
-                var postData = _postDataRepository.Find(m => m.Date == PostData.Date).FirstOrDefault();
+                var postData = _postDataRepository.Find(m => m.Date == PostData.Date && m.HydropowerPlantId == PostData.HydropowerPlantId).FirstOrDefault();
                 if (postData != null)
                 {
                     ModelState.AddModelError("", $"Dữ liệu ngày đã tồn tại. Vui lòng chọn ngày khác.");
@@ -129,7 +130,7 @@ namespace SLGIS.Web.Pages.PostData
 
             _logger.LogInformation($"Add postData {PostData.Id}");
 
-            return RedirectToPage("./Index", new { PostData.HydropowerPlantId });
+            return RedirectToPage("./Index");
         }
 
         private void CreateViewData(Guid? hydropowerPlantId)

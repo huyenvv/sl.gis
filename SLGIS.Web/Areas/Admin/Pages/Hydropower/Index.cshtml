@@ -21,23 +21,26 @@
                     <label>Từ khóa tìm kiếm</label>
                     <input type="text" class="form-control" name="searchText" placeholder="Tìm kiếm" value="@Model.FilterText">
                 </div>
-                <div class="ml-md-2">
-                    <label>Huyện</label>
-                    <select name="district" class="form-control">
-                        <option value="">-Tất cả các huyện-</option>
-                        @foreach (var item in SLGIS.Core.HydropowerPlant.Districts)
-                        {
-                            if (Model.District == item)
+                @if (Model.CanManage)
+                {
+                    <div class="ml-md-2">
+                        <label>Huyện</label>
+                        <select name="district" class="form-control">
+                            <option value="">-Tất cả các huyện-</option>
+                            @foreach (var item in SLGIS.Core.HydropowerPlant.Districts)
                             {
-                                <option value="@item" selected>@item</option>
+                                if (Model.District == item)
+                                {
+                                    <option value="@item" selected>@item</option>
+                                }
+                                else
+                                {
+                                    <option value="@item">@item</option>
+                                }
                             }
-                            else
-                            {
-                                <option value="@item">@item</option>
-                            }
-                        }
-                    </select>
-                </div>
+                        </select>
+                    </div>
+                }
                 <div class="ml-md-2">
                     <label>&nbsp;</label>
                     <span class="input-group-btn" id="btnSearch">

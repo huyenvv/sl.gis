@@ -37,19 +37,39 @@ namespace SLGIS.Web.Pages.PostData
                 return ReturnToMap();
             }
 
-            var hydropowerPlantId = GetCurrentHydropower().Id;
-            PostData = await _postDataRepository.GetAsync(m => m.Id == id && m.HydropowerPlantId == hydropowerPlantId);
+
+            PostData = await _postDataRepository.GetAsync(m => m.Id == id);// && m.HydropowerPlantId == hydropowerPlantId);
             if (PostData == null)
             {
                 return NotFound();
             }
+
+            if (CanManage)
+            {
+                Elements = _elementRepository.Find(m => PostData.HydropowerPlantId == m.HydropowerPlantId).ToList();
+                if (Elements.Count == 0)
+                {
+                    Elements = _elementRepository.Find(m => !m.HydropowerPlantId.HasValue).ToList();
+                }
+            }
+            else
+            {
+                var hydropowerPlantId = GetCurrentHydropower().Id;
+                if (PostData.HydropowerPlantId != hydropowerPlantId)
+                {
+                    return NotFound();
+                }
+
+                Elements = _elementRepository.Find(m => hydropowerPlantId == m.HydropowerPlantId).ToList();
+            }
+
 
             if (PostData.PostDataDetails?.Count < 1)
             {
                 PostData.PostDataDetails = new List<PostDataDetails> { new PostDataDetails() };
             }
 
-            Elements = _elementRepository.Find(m => hydropowerPlantId == m.HydropowerPlantId).ToList();
+
             return Page();
         }
     }

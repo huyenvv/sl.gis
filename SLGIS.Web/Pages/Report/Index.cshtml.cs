@@ -63,8 +63,8 @@ namespace SLGIS.Web.Pages.Report
 
             if (SearchModel.StartDate.HasValue)
             {
-                SearchModel.StartDate = SearchModel.StartDate.Value.Date.ToVNDate();
-                list = list.Where(m => m.Created >= SearchModel.StartDate);
+                var startDate = SearchModel.StartDate.Value.Date.ToVNDate();
+                list = list.Where(m => m.Created >= startDate);
             }
 
             if (SearchModel.EndDate.HasValue)

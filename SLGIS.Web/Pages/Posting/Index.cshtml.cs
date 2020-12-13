@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SLGIS.Core;
 using SLGIS.Core.Extension;
@@ -30,8 +31,10 @@ namespace SLGIS.Web.Pages.PostData
         public SearchModel SearchModel { get; set; } = new SearchModel();
         public PagerViewModel ViewModel { get; set; }
         public List<Core.Element> Elements { get; set; }
+        public Core.PostData Total { get; set; } = new Core.PostData();
+        public SelectList HydropowerSelectList { get; set; }
 
-        public IActionResult OnGetAsync(SearchModel searchModel, int? pageIndex = 1)
+        public IActionResult OnGetAsync(SearchModel searchModel, Guid? hydropowerId = null, int? pageIndex = 1)
         {
             if (!HasHydropower)
             {
@@ -41,33 +44,46 @@ namespace SLGIS.Web.Pages.PostData
             if (searchModel != null)
                 SearchModel = searchModel;
 
-            var hydropowerPlantId = GetCurrentHydropower().Id;
-            ViewData["HydropowerPlantId"] = hydropowerPlantId;
+            if (!CanManage)
+            {
+                hydropowerId = GetCurrentHydropower().Id;
+            }
 
-            var list = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).AsQueryable();
+            HydropowerSelectList = CreateHydropowerPlantSelection(hydropowerId);
+
+            var list = _postDataRepository.Find(m => true).AsQueryable();
+            if (hydropowerId.HasValue)
+            {
+                list = list.Where(m => m.HydropowerPlantId == hydropowerId);
+            }
+
             if (SearchModel.StartDate.HasValue)
             {
-                SearchModel.StartDate = SearchModel.StartDate.Value.Date.ToVNDate();
-                list = list.Where(m => m.Date >= SearchModel.StartDate);
+                var startDate = SearchModel.StartDate.Value.Date.ToVNDate();
+                list = list.Where(m => m.Date >= startDate);
             }
 
             if (SearchModel.EndDate.HasValue)
             {
                 var endDate = SearchModel.EndDate.Value.Date.ToVNDate().AddDays(1).AddSeconds(-1);
-                list = list.Where(m => m.Created <= endDate);
+                list = list.Where(m => m.Date <= endDate);
             }
 
-            var postDatas = list.OrderByDescending(m => m.Date).AsEnumerable();
+            var postDatas = list.OrderByDescending(m => m.HydropowerPlantId).ThenByDescending(m => m.Date).AsEnumerable();
+            Total.TotalWater = postDatas.Sum(m => m.TotalWater);
+            Total.SanLuongNgay = postDatas.Sum(m => m.SanLuongNgay);
+            Total.SoGioPhatDien = postDatas.Sum(m => m.SoGioPhatDien);
+
             var pager = new Pager(postDatas.Count(), pageIndex);
 
             ViewModel = new PagerViewModel
             {
-                BaseUrl = Url.Page("./Index", new { hydropowerPlantId, SearchModel.StartDate, SearchModel.EndDate }),
+                BaseUrl = Url.Page("./Index", new { hydropowerId, SearchModel.StartDate, SearchModel.EndDate }),
                 Items = postDatas.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
                 Pager = pager
             };
 
-            Elements = _elementRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).OrderBy(m => m.Id).ToList();
+            Elements = _elementRepository.Find(m => m.HydropowerPlantId == hydropowerId).OrderBy(m => m.Id).ToList();
             return Page();
         }
 

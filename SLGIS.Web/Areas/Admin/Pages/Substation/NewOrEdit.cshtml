@@ -1,7 +1,7 @@
 ﻿@page
 @model SLGIS.Web.Areas.Admin.Pages.Substation.NewOrEditModel
 @{
-    ViewBag.Title = Model.Substation.Id != Guid.Empty ? "Sửa lại" : "Tạo mới";
+    ViewBag.Title = (Model.Substation.Id != Guid.Empty ? "Chỉnh sửa" : "Tạo mới") + " trạm biến áp/ cột";
     ViewBag.Breadcrumbs = "<a href='" + Url.Page("Index") + "' class='breadcrumb-item'>Substation</a>" +
                           "<span class='breadcrumb-item active'>" + ViewBag.Title + "</span>";
 }
@@ -31,10 +31,12 @@
                         @Html.EditorFor(model => model.Substation.LineName, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Substation.LineName, "", new { @class = "text-danger" })
                     </div>
-                    <label>Tọa độ công trình (vd: 21.0222089,105.8085448)</label>
-                    <div class="input-group">
-                        <span class="input-group-addon tx-size-sm lh-2">Lat,Lng=</span>
-                        @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control", pattern = @"[-]?[\d]+[.][\d]*" } })
+                    <div class="form-group">
+                        <label>Tọa độ công trình (vd: 21.0222089,105.8085448)</label>
+                        <div class="input-group">
+                            <span class="input-group-addon tx-size-sm lh-2">Lat,Lng=</span>
+                            @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control", pattern = @"[-]?[\d]+[.][\d]*" } })
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Cấp điện áp</label>

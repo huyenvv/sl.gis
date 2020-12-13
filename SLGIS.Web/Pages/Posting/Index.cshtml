@@ -5,7 +5,10 @@
 }
 
 @section Factory {
-    <partial name="_FactorySelectPartial" />
+    @if (!Model.CanManage)
+    {
+        <partial name="_FactorySelectPartial" />
+    }
 }
 
 @section Button {
@@ -33,6 +36,16 @@
                     <label>Đến ngày</label>
                     <input asp-for="SearchModel.EndDate" type="date" class="form-control" placeholder="đến ngày" />
                 </div>
+                @if (Model.CanManage)
+                {
+                    <div class="ml-md-2">
+                        <label>&nbsp;</label>
+
+                        <select name="hydropowerId" class="form-control" asp-items="Model.HydropowerSelectList">
+                            <option value="">--All--</option>
+                        </select>
+                    </div>
+                }
                 <div class="ml-md-2">
                     <label>&nbsp;</label>
                     <span class="input-group-btn" id="btnSearch">
@@ -46,8 +59,8 @@
                             Tải xuống CSV
                         </a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="javascript:void(0)" onclick="exportCSV()">Trung bình ngày</a>
-                            <a class="dropdown-item" href="javascript:void(0)" onclick="exportCSV()">Chi tiết</a>
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="exportCsvAverage()">Trung bình ngày</a>
+                            <a class="dropdown-item" href="javascript:void(0)" onclick="exportCsvDetail()">Chi tiết</a>
                         </div>
                     </div>
                 </div>
@@ -79,6 +92,12 @@
                             <th>
                                 Ghi chú
                             </th>
+                            @if (Model.CanManage)
+                            {
+                                <th>
+                                    Thủy điện
+                                </th>
+                            }
                             <th></th>
                         </tr>
 
@@ -105,6 +124,13 @@
                                     <td>
                                         @item.Note
                                     </td>
+                                    @if (Model.CanManage)
+                                    {
+                                        var plant = Model.ListCurrentHydropowers().FirstOrDefault(m => m.Id == item.HydropowerPlantId);
+                                        <td>
+                                            @plant.Name
+                                        </td>
+                                    }
                                     <td>
                                         @if (!Model.CanManage && item.CanEdit())
                                         {
@@ -117,6 +143,15 @@
                                 </tr>
                             }
                         }
+                        <tfoot>
+                            <tr>
+                                <td colspan="2">Tổng</td>
+                                <td>@Model.Total.SanLuongNgay</td>
+                                <td>@Model.Total.TotalWater</td>
+                                <td>@Model.Total.SoGioPhatDien</td>
+                                <td colspan="@(Model.CanManage ? 3: 2)"></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -126,5 +161,6 @@
 </div>
 
 @section Scripts {
-    <script src="/js/exportCsv.js"></script>
+    <script src="~/js/exportCsvAverage.js"></script>
+    <script src="~/js/exportCsvDetail.js"></script>
 }
