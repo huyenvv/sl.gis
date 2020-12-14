@@ -66,7 +66,7 @@ namespace SLGIS.Web
 
         public SelectList CreateHydropowerPlantSelection(object selected = null)
         {
-            var list = ListCurrentHydropowers().ToDictionary(m => m.Id, m => m.Name);
+            var list = ListCurrentHydropowers().OrderBy(m => m.Name).ToDictionary(m => m.Id, m => m.Name);
             var selectList = new SelectList(list, "Key", "Value");
             if (selected != null)
             {
