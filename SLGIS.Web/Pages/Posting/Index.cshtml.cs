@@ -43,6 +43,7 @@ namespace SLGIS.Web.Pages.PostData
 
             if (searchModel != null)
                 SearchModel = searchModel;
+            searchModel.StartDate = new DateTime(searchModel.StartDate.Value.Year, searchModel.StartDate.Value.Month, 1);
 
             if (!CanManage)
             {

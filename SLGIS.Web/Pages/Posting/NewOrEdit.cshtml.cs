@@ -60,7 +60,7 @@ namespace SLGIS.Web.Pages.PostData
             {
                 PostData = new Core.PostData
                 {
-                    Date = DateTime.Now.Date,
+                    Date = DateTime.Now.Date.AddDays(-1),
                     PostDataDetails = new List<PostDataDetails> { new PostDataDetails { Hour = 0 } }
                 };
             }
@@ -94,17 +94,8 @@ namespace SLGIS.Web.Pages.PostData
             {
                 return BadRequest();
             }
+
             PostData.Date = PostData.Date.ToVNDate();
-            var details = new List<PostDataDetails>();
-            foreach (var item in PostData.PostDataDetails)
-            {
-                var sum = item.Values.Sum(m => m.Value);
-                item.Time = PostData.Date.Date.AddHours(item.Hour);
-
-                if (sum != 0) details.Add(item);
-            }
-            PostData.PostDataDetails = details;
-
             if (PostData.Id != Guid.Empty)
             {
                 var postData = await _postDataRepository.GetAsync(PostData.Id);
@@ -124,8 +115,24 @@ namespace SLGIS.Web.Pages.PostData
                     CreateViewData(PostData.HydropowerPlantId);
                     return Page();
                 }
+
+                if (PostData.Date >= DateTime.Now.Date.ToVNDate())
+                {
+                    ModelState.AddModelError("", $"Vui lòng chọn ngày trong quá khứ");
+                    CreateViewData(PostData.HydropowerPlantId);
+                    return Page();
+                }
             }
 
+            var details = new List<PostDataDetails>();
+            foreach (var item in PostData.PostDataDetails)
+            {
+                var sum = item.Values.Sum(m => m.Value);
+                item.Time = PostData.Date.AddHours(item.Hour);
+
+                if (sum != 0) details.Add(item);
+            }
+            PostData.PostDataDetails = details;
             await _postDataRepository.UpsertAsync(PostData);
 
             _logger.LogInformation($"Add postData {PostData.Id}");
