@@ -43,7 +43,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Substation
 
             ViewModel = new PagerViewModel
             {
-                BaseUrl = Url.Page("./Index"),
+                BaseUrl = Url.Page("./Index", new { searchText }),
                 Items = list.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
                 Pager = pager
             };

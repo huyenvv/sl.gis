@@ -54,13 +54,13 @@ namespace SLGIS.Web.Areas.Admin.Pages.Hydropower
                 plants = plants.Where(m => m.Owners.Contains(User.GetId()));
             }
 
-            var data = plants.OrderBy(m=>m.District).ThenByDescending(m => m.Created).ToList();
+            var data = plants.OrderBy(m => m.District).ThenByDescending(m => m.Created).ToList();
 
             var pager = new Pager(data.Count(), pageIndex);
 
             ViewModel = new PagerViewModel
             {
-                BaseUrl = Url.Page("./Index"),
+                BaseUrl = Url.Page("./Index", new { searchText, district }),
                 Items = data.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
                 Pager = pager
             };

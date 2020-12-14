@@ -2,6 +2,7 @@
 <!-- pager -->
 @if (Model.Pager.EndPage > 1)
 {
+    var baseUrl = Model.BaseUrl + (Model.BaseUrl.Contains("?") ? "&" : "?");
     <div class="ht-80 d-flex align-items-center justify-content-center">
         <ul class="pagination pagination-basic mg-b-0">
             @if (Model.Pager.CurrentPage > 1)
@@ -21,7 +22,7 @@
             @for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
             {
                 <li class="@(page == Model.Pager.CurrentPage ? "active" : "") page-item">
-                    <a class="page-link" href="@(Model.BaseUrl)?pageIndex=@(page)">@(page)</a>
+                    <a class="page-link" href="@(baseUrl)pageIndex=@(page)">@(page)</a>
                 </li>
             }
 

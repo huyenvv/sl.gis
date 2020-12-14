@@ -66,7 +66,7 @@ namespace SLGIS.Web.Pages.Notify
             var pager = new Pager(list.Count(), pageIndex);
             ViewModel = new PagerViewModel
             {
-                BaseUrl = Url.Page("./Index"),
+                BaseUrl = Url.Page("./Index", searchModel.ToPagingModel()),
                 Items = list.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).OrderByDescending(m => m.Created).ToList(),
                 Pager = pager
             };

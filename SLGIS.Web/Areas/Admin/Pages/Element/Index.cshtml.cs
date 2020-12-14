@@ -57,7 +57,7 @@ namespace SLGIS.Web.Areas.Admin.Pages.Element
             var pager = new Pager(data.Count(), pageIndex);
             ViewModel = new PagerViewModel
             {
-                BaseUrl = Url.Page("./Index"),
+                BaseUrl = Url.Page("./Index", new { searchText , hydropowerId}),
                 Items = data.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize).ToList(),
                 Pager = pager
             };
