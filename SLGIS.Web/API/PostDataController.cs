@@ -43,16 +43,13 @@ namespace SLGIS.Web.API
                 endDate = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
             }
 
-            startDate = startDate.ToVNDate();
-            endDate = endDate.ToVNDate();
-
             var items = _elementRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId).Select(m => new { Id = m.Code, m.Title, m.Unit }).ToList();
             var itemValues = _postDataRepository.Find(m => m.HydropowerPlantId == hydropowerPlantId
                                         && m.Date >= startDate.ToVNDate() && m.Date <= endDate.ToVNDate()).ToList();
             var data = items.Select(m =>
             {
                 var values = itemValues.SelectMany(x => x.PostDataDetails
-                            .SelectMany(t => t.Values.Where(k => k.Code == m.Id).Select(z => new { t.Time, z.Value, Id = z.Code })));
+                            .SelectMany(t => t.Values.Where(k => k.Code == m.Id).Select(z => new { t.Time, z.Value, Id = z.Code }))).OrderBy(m => m.Time);
                 return new
                 {
                     Item = m,

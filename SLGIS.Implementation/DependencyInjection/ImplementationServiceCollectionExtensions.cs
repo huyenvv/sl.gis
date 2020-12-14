@@ -23,6 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     .AddSingleton<ISubstationRepository, SubstationRepository>()
                     .AddSingleton<IReportRepository, ReportRepository>()
                     .AddSingleton<INotifyRepository, NotifyRepository>()
+                    .AddSingleton<ISettingRepository, SettingRepository>()
                     .AddSingleton<HydropowerService>();
         }
 

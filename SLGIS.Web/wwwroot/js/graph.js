@@ -1,4 +1,6 @@
 ﻿var dateFormat = "yy-mm-dd";
+var THRESHOLDS = getThresholds($("#chart-container").data("separator") + "");
+var YAXISES = getYaxises(THRESHOLDS.length);
 
 $(document).ready(function () {
     Highcharts.setOptions({
@@ -61,6 +63,9 @@ function getData(start, end, callback) {
                 return [created, m.value];
             });
 
+            var maxValue = Math.max(...data.map(m => m[1]));
+            var yAxisPosition = getYaxisPosition(maxValue);
+
             var seri = {
                 name: item.title,
                 data: data,
@@ -70,7 +75,8 @@ function getData(start, end, callback) {
                 },
                 dataGrouping: {
                     enabled: false
-                }
+                },
+                yAxis: yAxisPosition
             };
             series.push(seri);
         }
@@ -83,6 +89,7 @@ function reDrawChart(series) {
     for (let i = 0; i < series.length; i++) {
         const data = series[i].data;
         chart.series[i].setData(data);
+        chart.series[i].update({ yAxis: series[i].yAxis });
     }
 }
 
@@ -114,10 +121,9 @@ function drawChart(series) {
                 }
             },
         },
-        yAxis: {
-            title: {
-                text: 'Thông số'
-            }
+        yAxis: YAXISES,
+        tooltip: {
+            shared: true
         },
     });
 }
@@ -187,4 +193,41 @@ function toggleAllChartSeries(e) {
 
     $(e).data('show', (isShowing ? '0' : '1'));
     $(e).text(isShowing ? 'Hiện thông số' : 'Ẩn thông số');
+}
+
+// Threshold
+function getThresholds(separation) {
+    if (!separation) {
+        return []
+    }
+
+    var thresholds = separation.split(",").map(parseFloat).filter(function (part) { return !isNaN(part); });
+    return thresholds.sort((a, b) => { return a - b });
+}
+
+function getYaxises(thresholdLenth) {
+    var length = 1;
+    if (thresholdLenth > 0) {
+        length = length + thresholdLenth;
+    }
+
+    var yaxises = [];
+    for (var i = 0; i < length; i++) {
+        yaxises.push({ title: { text: '' }, labels: { enabled: false } });
+    }
+    return yaxises;
+}
+
+function getYaxisPosition(value) {
+    if (THRESHOLDS.length === 0) {
+        return 0;
+    }
+
+    for (var i = 0; i < THRESHOLDS.length; i++) {
+        if (value < THRESHOLDS[i]) {
+            return i;
+        }
+    }
+
+    return THRESHOLDS.length;
 }
